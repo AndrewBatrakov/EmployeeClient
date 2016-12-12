@@ -208,7 +208,6 @@ void VidachaSIZForm::print(QPrinter *printer)
     int mHight;
     int spacing = 30;
 
-    //    //************************************************************
     newLineHight = oneCol.bottom();
     mHight = oneCol.height();
 

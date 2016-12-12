@@ -41,15 +41,15 @@ ProgrammSettings::ProgrammSettings(QWidget *parent) : QDialog(parent)
 
 void ProgrammSettings::writeSettings()
 {
-    QSettings settings("AO_Batrakov_Inc.", "ProgrammSettings");
-    settings.setValue("Geometry", saveGeometry());
+    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
+    settings.setValue("NashaFirmaForm", saveGeometry());
     //settings.setValue("Font","hhh");
 }
 
 void ProgrammSettings::readSettings()
 {
-    QSettings settings("AO_Batrakov_Inc.", "ProgrammSettings");
-    restoreGeometry(settings.value("Geometry").toByteArray());
+    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
+    restoreGeometry(settings.value("NashaFirmaForm").toByteArray());
 }
 
 void ProgrammSettings::fontSet()

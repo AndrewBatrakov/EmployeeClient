@@ -12,6 +12,10 @@
 #include "postform.h"
 #include "harform.h"
 #include "sizpostform.h"
+#include "employee.h"
+#include "dateitemdelegate.h"
+#include "laborprotprogform.h"
+#include "indsecprogform.h"
 
 ViewListTable::ViewListTable(QString idTable, QString nameTable, QWidget *parent) :
     QDialog(parent)
@@ -137,13 +141,15 @@ void ViewListTable::viewTemplateTable(QString)
             templateModel->setFilter(QString("legalactsname LIKE '%%1%'").arg(filterTable));
         }
     }else if(tableName == "employee"){
-        templateModel->setHeaderData(1,Qt::Horizontal,tr("FIO"));
-        templateModel->setHeaderData(3,Qt::Horizontal,tr("Organization"));
-        templateModel->setRelation(3,QSqlRelation("organization","organizationid","organizationname"));
-        templateModel->setHeaderData(4,Qt::Horizontal,tr("Subdivision"));
-        templateModel->setRelation(4,QSqlRelation("subdivision","subdivisionid","subdivisionname"));
-        templateModel->setHeaderData(5,Qt::Horizontal,tr("Post"));
-        templateModel->setRelation(5,QSqlRelation("post","postid","postname"));
+        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("ФИО"));
+        templateModel->setRelation(5,QSqlRelation("subdivision","subdivisionid","subdivisionname"));
+        templateModel->setHeaderData(5,Qt::Horizontal,trUtf8("Подразделение"));
+        templateModel->setRelation(6,QSqlRelation("post","postid","postname"));
+        templateModel->setHeaderData(6,Qt::Horizontal,trUtf8("Должность"));
+        templateModel->setHeaderData(8,Qt::Horizontal,trUtf8("День рождения"));
+        if(setFilter){
+            templateModel->setFilter(QString("employeenameupper LIKE '%%1%'").arg(filterTable));
+        }
         labelName = trUtf8("Сотрудники");
         if(setFilter){
             templateModel->setFilter(QString("employeenameupper LIKE '%%1%'").arg(filterTable));
@@ -178,6 +184,20 @@ void ViewListTable::viewTemplateTable(QString)
         if(setFilter){
             templateModel->setFilter(QString("postsizname LIKE '%%1%'").arg(filterTable));
         }
+    }else if(tableName == "komissiya"){
+        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("Председатель"));
+        templateModel->setRelation(1,QSqlRelation("employee","employeeid","employeename"));
+        templateModel->setHeaderData(2,Qt::Horizontal,trUtf8("Член комиссии"));
+        templateModel->setRelation(2,QSqlRelation("employee","employeeid","employeename"));
+        templateModel->setHeaderData(3,Qt::Horizontal,trUtf8("Член комиссии"));
+        templateModel->setRelation(3,QSqlRelation("employee","employeeid","employeename"));
+        labelName = trUtf8("Комиссия");
+    }else if(tableName == "otprogramma"){
+        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("Программа ОТ"));
+        labelName = trUtf8("Программа ОТ");
+    }else if(tableName == "pbprogramma"){
+        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("Программа Промбезопасности"));
+        labelName = trUtf8("Программа Промбезопасности");
     }
 
     templateModel->setSort(1,Qt::AscendingOrder);
@@ -190,12 +210,14 @@ void ViewListTable::viewTemplateTable(QString)
     if(tableName == "employee"){
         tableView->setColumnHidden(2,true);
         tableView->setColumnHidden(3,true);
-        //tableView->setColumnHidden(5,true);
-        for(int i = 6; i < 18; ++i){
+        tableView->setColumnHidden(4,true);
+        tableView->setColumnHidden(7,true);
+        tableView->setItemDelegateForColumn(8,new DateItemDelegate);
+        for(int i = 9; i < 19; ++i){
             tableView->setColumnHidden(i,true);
         }
-        tableView->setColumnWidth(4,350);
         tableView->setColumnWidth(5,300);
+        tableView->setColumnWidth(6,300);
     }else if(tableName == "empcertdate"){
         //tableView->setColumnHidden(1,true);
     }else if(tableName == "post"){
@@ -264,6 +286,18 @@ void ViewListTable::addRecord()
         SizPostForm listForm("",this,false);
         listForm.exec();
         nameList = listForm.returnValue();
+    }else if(tableName == "employee"){
+        EmployeeForm listForm("",this,false);
+        listForm.exec();
+        nameList = listForm.returnValue();
+    }else if(tableName == "otprogramma"){
+        LaborProtProgForm listForm("",this,false);
+        listForm.exec();
+        nameList = listForm.returnValue();
+    }else if(tableName == "pbprogramma"){
+        IndSecProgForm listForm("",this,false);
+        listForm.exec();
+        nameList = listForm.returnValue();
     }
     templateModel->select();
     for(int row = 0; row < templateModel->rowCount(); ++row){
@@ -317,6 +351,15 @@ void ViewListTable::deleteRecord()
         }else if(tableName == "postsiz"){
             SizPostForm listForm(idList,this,false);
             listForm.deleteRecord();
+        }else if(tableName == "employee"){
+            //EmployeeForm listForm(idList,this,false);
+            //listForm.deleteRecord();
+        }else if(tableName == "otprogramma"){
+            LaborProtProgForm listForm(idList,this,false);
+            listForm.deleteRecord();
+        }else if(tableName == "pbprogramma"){
+            IndSecProgForm listForm(idList,this,false);
+            listForm.deleteRecord();
         }
         updatePanel(index);
     }
@@ -354,6 +397,15 @@ void ViewListTable::editRecord()
     }else if(tableName == "postsiz"){
         SizPostForm listFrom(idList,this,false);
         listFrom.exec();
+    }else if(tableName == "employee"){
+        EmployeeForm listFrom(idList,this,false);
+        listFrom.exec();
+    }else if(tableName == "otprogramma"){
+        LaborProtProgForm listFrom(idList,this,false);
+        listFrom.exec();
+    }else if(tableName == "pbprogramma"){
+        IndSecProgForm listFrom(idList,this,false);
+        listFrom.exec();
     }
     updatePanel(index);
 }
@@ -366,18 +418,18 @@ void ViewListTable::updatePanel(QModelIndex index)
 
 void ViewListTable::createContextMenu()
 {
-    addAction = new QAction(tr("Add Record"),this);
+    addAction = new QAction(trUtf8("Добавить"),this);
     QPixmap pixAdd(":/add.png");
     addAction->setIcon(pixAdd);
     connect(addAction,SIGNAL(triggered()),this,SLOT(addRecord()));
 
     QPixmap pixDelete(":/delete.png");
-    deleteAction = new QAction(tr("Delete Record"),this);
+    deleteAction = new QAction(trUtf8("Удалить"),this);
     deleteAction->setIcon(pixDelete);
     connect(deleteAction,SIGNAL(triggered()),this,SLOT(deleteRecord()));
 
     QPixmap pixEdit(":/edit.png");
-    editAction = new QAction(tr("Edit Record"),this);
+    editAction = new QAction(trUtf8("Редактировать"),this);
     editAction->setIcon(pixEdit);
     connect(editAction,SIGNAL(triggered()),this,SLOT(editRecord()));
 
@@ -402,13 +454,13 @@ void ViewListTable::searchProcedure()
 void ViewListTable::readSettings()
 {
     QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
-    restoreGeometry(settings.value("Geometry").toByteArray());
+    restoreGeometry(settings.value("ViewListTable").toByteArray());
 }
 
 void ViewListTable::writeSettings()
 {
     QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
-    settings.setValue("Geometry", saveGeometry());
+    settings.setValue("ViewListTable", saveGeometry());
 }
 
 void ViewListTable::keyReleaseEvent(QKeyEvent *event)

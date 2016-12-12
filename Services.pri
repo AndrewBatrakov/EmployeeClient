@@ -13,15 +13,15 @@ HEADERS +=  viewlisttable.h\
             prefixnumber.h \
             ftpform.h\
             boolitemdelegate.h\
-    bolditemdelegate.h \
-    uploadbase.h \
-    intitemdelegate.h \
-    $$PWD/dateitemdelegate.h \
-    $$PWD/noedititemdelegat.h \
-    $$PWD/putfile.h \
-    $$PWD/sqlform.h
-
-    $$PWD/programmsettings.h
+            bolditemdelegate.h \
+            uploadbase.h \
+            intitemdelegate.h \
+            dateitemdelegate.h \
+            noedititemdelegat.h \
+            putfile.h \
+            sqlform.h \
+            nashafirmaform.h\
+            programmsettings.h\
 
 SOURCES +=  viewlisttable.cpp\
             databasedirection.cpp\
@@ -38,13 +38,13 @@ SOURCES +=  viewlisttable.cpp\
             prefixnumber.cpp \
             ftpform.cpp\
             boolitemdelegate.cpp\
-    bolditemdelegate.cpp \
-    uploadbase.cpp \
-    intitemdelegate.cpp \
-    $$PWD/dateitemdelegate.cpp \
-    $$PWD/putfile.cpp \
-    $$PWD/sqlform.cpp
-
-    $$PWD/programmsettings.cpp
+            bolditemdelegate.cpp \
+            uploadbase.cpp \
+            intitemdelegate.cpp \
+            dateitemdelegate.cpp \
+            putfile.cpp \
+            sqlform.cpp \
+            nashafirmaform.cpp\
+            programmsettings.cpp\
 
 include(Import.pri)

@@ -1,8 +1,13 @@
+HEADERS +=  protocollaborprotectionform.h\
+            kommisiyaform.h\
+    $$PWD/laborprotprogform.h \
+    $$PWD/industrialsecurityform.h \
+    $$PWD/indsecprogform.h \
+    $$PWD/attestpbpostform.h
 
-HEADERS += \
-    $$PWD/protocollaborprotectionform.h\
-    $$PWD/kommisiyaform.h\
-
-SOURCES += \
-    $$PWD/protocollaborprotectionform.cpp\
-    $$PWD/kommisiyaform.cpp\
+SOURCES +=  protocollaborprotectionform.cpp\
+            kommisiyaform.cpp\
+    $$PWD/laborprotprogform.cpp \
+    $$PWD/industrialsecurityform.cpp \
+    $$PWD/indsecprogform.cpp \
+    $$PWD/attestpbpostform.cpp

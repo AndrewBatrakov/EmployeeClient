@@ -1,28 +1,28 @@
-#ifndef PROTOCOLLABORPROTECTIONFORM_H
-#define PROTOCOLLABORPROTECTIONFORM_H
+#ifndef INDUSTRIALSECURITYFORM_H
+#define INDUSTRIALSECURITYFORM_H
 
 #include <QtWidgets>
 #include "lineedit.h"
 #include <QtPrintSupport>
 
-class ProtocolLaborprotectionForm : public QDialog
+class IndustrialSecurityForm : public QDialog
 {
     Q_OBJECT
 public:
-    ProtocolLaborprotectionForm(QString,QString,QWidget *parent,bool);
+    IndustrialSecurityForm(QString,QString,QWidget *parent,bool);
     void done(int);
 
 public slots:
     void deleteRecord();
     QString returnValue() const {return indexTemp;};
-    void printTable();
 
 private slots:
+    void printTable();
     void printUdTable();
     void editRecord();
-    void addEmpRecord();
-    void seeEmpRecord();
-    void listEmpRecord();
+//    void addEmpRecord();
+//    void seeEmpRecord();
+//    void listEmpRecord();
     void addProgRecord();
     void seeProgRecord();
     void listProgRecord();
@@ -69,5 +69,4 @@ private:
     QFile exchangeFile;
 
 };
-
-#endif // PROTOCOLLABORPROTECTIONFORM_H
+#endif // INDUSTRIALSECURITYFORM_H

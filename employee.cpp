@@ -11,6 +11,7 @@
 #include "dateitemdelegate.h"
 #include "vidachasizform.h"
 #include "protocollaborprotectionform.h"
+#include "industrialsecurityform.h"
 
 EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     QDialog(parent)
@@ -461,20 +462,24 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     //Labor Protection
     //*****************************************************
     laborProtectionWidget = new QTableView;
-    QSqlRelationalTableModel *laborProtectionModel = new QSqlRelationalTableModel;
+    laborProtectionModel = new QSqlRelationalTableModel;
     laborProtectionModel->setTable("laborprotection");
     laborProtectionModel->setFilter(filterP);
     laborProtectionModel->setHeaderData(2,Qt::Horizontal,trUtf8("Дата"));
     laborProtectionModel->setHeaderData(3,Qt::Horizontal,trUtf8("Программа обучения"));
     laborProtectionModel->setRelation(3,QSqlRelation("otprogramma","otprogrammaid","otprogrammaname"));
     laborProtectionModel->setHeaderData(4,Qt::Horizontal,trUtf8("Номер"));
-    laborProtectionModel->setHeaderData(5,Qt::Horizontal,tr("Дата\nудостоверения"));
+    laborProtectionModel->setHeaderData(5,Qt::Horizontal,tr("Номер\nудостоверения"));
+    laborProtectionModel->setHeaderData(6,Qt::Horizontal,tr("Дата\nудостоверения"));
+    laborProtectionModel->setHeaderData(8,Qt::Horizontal,tr("Причина\nпроверки"));
+    laborProtectionModel->setRelation(8,QSqlRelation("prichinaobuch","prichinaobuchid","prichinaobuchname"));
     laborProtectionModel->select();
     laborProtectionWidget->setModel(laborProtectionModel);
     laborProtectionWidget->setColumnHidden(0,true);
     laborProtectionWidget->setColumnHidden(1,true);
+    laborProtectionWidget->setColumnHidden(7,true);
     laborProtectionWidget->setItemDelegateForColumn(2, new DateItemDelegate);
-    laborProtectionWidget->setItemDelegateForColumn(5, new DateItemDelegate);
+    laborProtectionWidget->setItemDelegateForColumn(6, new DateItemDelegate);
     laborProtectionWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     laborProtectionWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     laborProtectionWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -484,24 +489,29 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     QHeaderView *headLabProt = laborProtectionWidget->horizontalHeader();
     headLabProt->setStretchLastSection(true);
     contextLaborProtection();
+    connect(laborProtectionWidget,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(laborProtection()));
     //*****************************************************
     //Inductrial Security
     //*****************************************************
-    QTableView *industrialSecurityWidget = new QTableView;
-    QSqlRelationalTableModel *industrialSecurityModel = new QSqlRelationalTableModel;
+    industrialSecurityWidget = new QTableView;
+    industrialSecurityModel = new QSqlRelationalTableModel;
     industrialSecurityModel->setTable("industrialsecurity");
     industrialSecurityModel->setFilter(filterP);
-    industrialSecurityModel->setHeaderData(1,Qt::Horizontal,tr("Date"));
-    industrialSecurityModel->setHeaderData(3,Qt::Horizontal,tr("Training Programm"));
+    industrialSecurityModel->setHeaderData(2,Qt::Horizontal,trUtf8("Дата"));
+    industrialSecurityModel->setHeaderData(3,Qt::Horizontal,trUtf8("Программа обучения"));
     industrialSecurityModel->setRelation(3,QSqlRelation("pbprogramma","pbprogrammaid","pbprogrammaname"));
-    industrialSecurityModel->setHeaderData(4,Qt::Horizontal,tr("Number"));
-    industrialSecurityModel->setHeaderData(5,Qt::Horizontal,tr("Obem chasov"));
+    industrialSecurityModel->setHeaderData(4,Qt::Horizontal,trUtf8("Номер"));
+    industrialSecurityModel->setHeaderData(5,Qt::Horizontal,tr("Номер\nудостоверения"));
+    industrialSecurityModel->setHeaderData(6,Qt::Horizontal,tr("Дата\nудостоверения"));
+    industrialSecurityModel->setHeaderData(8,Qt::Horizontal,tr("Причина\nпроверки"));
+    industrialSecurityModel->setRelation(8,QSqlRelation("prichinaobuch","prichinaobuchid","prichinaobuchname"));
     industrialSecurityModel->select();
     industrialSecurityWidget->setModel(industrialSecurityModel);
     industrialSecurityWidget->setColumnHidden(0,true);
-    industrialSecurityWidget->setItemDelegateForColumn(1,new DateItemDelegate);
-    industrialSecurityWidget->setColumnHidden(2,true);
-    industrialSecurityWidget->setItemDelegateForColumn(5,new DateItemDelegate);
+    industrialSecurityWidget->setColumnHidden(1,true);
+    industrialSecurityWidget->setColumnHidden(7,true);
+    industrialSecurityWidget->setItemDelegateForColumn(2, new DateItemDelegate);
+    industrialSecurityWidget->setItemDelegateForColumn(6, new DateItemDelegate);
     industrialSecurityWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     industrialSecurityWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     industrialSecurityWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -510,6 +520,8 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     //industrialSecurityWidget->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
     QHeaderView *headIndustrialSecurity = industrialSecurityWidget->horizontalHeader();
     headIndustrialSecurity->setStretchLastSection(true);
+    contextIndustrialSecurity();
+    connect(industrialSecurityWidget,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(industrialSecurity()));
     //*****************************************************
     //Fire Protection
     //*****************************************************
@@ -742,11 +754,11 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
 
             experience = QString::number(years);
             if(years == 1){
-                experience += tr(" god, ");
+                experience += trUtf8(" год, ");
             }else if(years == 2 || years == 3 || years == 4){
-                experience += tr(" goda, ");
+                experience += trUtf8(" года, ");
             }else{
-                experience += tr(" let, ");
+                experience += trUtf8(" лет, ");
             }
             experience += QString::number(mounth);
             if(mounth == 1){
@@ -845,7 +857,15 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     tabWidget = new QTabWidget;
     tabWidget->addTab(sizWidget,trUtf8("СИЗ"));
     tabWidget->addTab(laborProtectionWidget,trUtf8("Охрана труда"));
-    tabWidget->addTab(industrialSecurityWidget,trUtf8("Промбезопасность"));
+    QSqlQuery queryPost;
+    queryPost.prepare("SELECT (SELECT post.itr FROM post WHERE post.postid = employee.postid) FROM "
+                      "employee WHERE employeeid = :employeeid");
+    queryPost.bindValue(":employeeid",indexTemp);
+    queryPost.exec();
+    queryPost.next();
+    if(queryPost.value(0).toBool()){
+        tabWidget->addTab(industrialSecurityWidget,trUtf8("Промбезопасность"));
+    }
     tabWidget->addTab(fireProtectionWidget,trUtf8("ПТМ"));
     tabWidget->addTab(visWidget,trUtf8("Высота"));
     tabWidget->addTab(physicalWidget,trUtf8("Медицина"));
@@ -1575,6 +1595,17 @@ void EmployeeForm::contextLaborProtection()
     laborProtectionWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
+void EmployeeForm::contextIndustrialSecurity()
+{
+    QPixmap pixEdit(":/edit.png");
+    QAction *editAction = new QAction(trUtf8("Протокол Промбезопасности (Открыть)"),this);
+    editAction->setIcon(pixEdit);
+    connect(editAction,SIGNAL(triggered()),this,SLOT(industrialSecurity()));
+
+    industrialSecurityWidget->addAction(editAction);
+    industrialSecurityWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
+}
+
 void EmployeeForm::sizQuery()
 {
     int rowCount = 0;
@@ -1675,6 +1706,24 @@ void EmployeeForm::vidachaSIZ()
 
 void EmployeeForm::laborProtection()
 {
-    ProtocolLaborprotectionForm openForm("",indexTemp,this,false);
+    QModelIndex index = laborProtectionWidget->currentIndex();
+    QSqlRecord record = laborProtectionModel->record(index.row());
+
+    QString iDValue = record.value("laborprotectionid").toString();
+    ProtocolLaborprotectionForm openForm(iDValue,indexTemp,this,false);
     openForm.exec();
+    laborProtectionModel->select();
+    //laborProtectionWidget->repaint();
+}
+
+void EmployeeForm::industrialSecurity()
+{
+    QModelIndex index = industrialSecurityWidget->currentIndex();
+    QSqlRecord record = industrialSecurityModel->record(index.row());
+
+    QString iDValue = record.value("industrialsecurityid").toString();
+    IndustrialSecurityForm openForm(iDValue,indexTemp,this,false);
+    openForm.exec();
+    industrialSecurityModel->select();
+    industrialSecurityWidget->repaint();
 }

@@ -39,6 +39,8 @@ private slots:
     void vidachaSIZ();
     void contextLaborProtection();
     void laborProtection();
+    void contextIndustrialSecurity();
+    void industrialSecurity();
 
 public slots:
     void deleteEmployee();
@@ -132,6 +134,9 @@ private:
     QTableWidget *tableSizWidget;
     QWidget *passportWidget;
     QTableView *laborProtectionWidget;
+    QSqlRelationalTableModel *laborProtectionModel;
+    QTableView *industrialSecurityWidget;
+    QSqlRelationalTableModel *industrialSecurityModel;
 
     QTabWidget *tabWidget;
     QAction *addAction;

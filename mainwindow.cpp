@@ -63,6 +63,8 @@
 #include "sqlform.h"
 #include "stagirovkaform.h"
 #include "kommisiyaform.h"
+#include "nashafirmaform.h"
+#include "attestpbpostform.h"
 
 MainWindow::MainWindow()
 {
@@ -210,7 +212,7 @@ void MainWindow::writeSettings()
     PutFile putFile;
     putFile.putFile(fN);
 
-    PutFile *putFtp1 = new PutFile;
+    PutFile putFtp1;
     QString nullFileName = "Null.txt";
     //nullFileName += fN;
     QFile nullFile;
@@ -219,7 +221,7 @@ void MainWindow::writeSettings()
     QByteArray rr = "22\n10";
     nullFile.write(rr);
     nullFile.close();
-    putFtp1->putFile(nullFileName);
+    putFtp1.putFile(nullFileName);
     nullFile.remove();
 
 }
@@ -237,6 +239,8 @@ void MainWindow::createActions()
     connect(importXmlTableAction,SIGNAL(triggered()),this,SLOT(importXmlTable()));
     importExcelAction = new QAction(trUtf8("Импорт остатков по складам (Excel)..."),this);
     connect(importExcelAction,SIGNAL(triggered()),this,SLOT(importExcelOstatki()));
+    nashaFirmaAction = new QAction(trUtf8("Наименование нашей фирмы..."),this);
+    connect(nashaFirmaAction,SIGNAL(triggered()),this,SLOT(viewNashaFirma()));
     exitAction = new QAction(trUtf8("Выход..."),this);
     connect(exitAction,SIGNAL(triggered()),this,SLOT(close()));
 
@@ -322,6 +326,8 @@ void MainWindow::createActions()
     connect(scoreAction,SIGNAL(triggered()),this,SLOT(viewScore()));
     stagirovkaAction = new QAction(trUtf8("Стажировка..."),this);
     connect(stagirovkaAction,SIGNAL(triggered()),this,SLOT(viewStagirovka()));
+    attestPBPostAction = new QAction(trUtf8("Область аттестации (Промбезопасность)..."),this);
+    connect(attestPBPostAction,SIGNAL(triggered()),this,SLOT(viewAttestPBPost()));
 
 
     //Reports Action
@@ -361,6 +367,7 @@ void MainWindow::createMenus()
 {
     fileMenu = menuBar()->addMenu(trUtf8("Файл"));
     fileMenu->addAction(prefixAction);
+    fileMenu->addAction(nashaFirmaAction);
     importMenu = fileMenu->addMenu(trUtf8("Импорт ..."));
     importMenu->addAction(importExcelAction);
     importMenu->addAction(getXMLAction);
@@ -388,6 +395,7 @@ void MainWindow::createMenus()
     //sizMenu->addAction(nomenAction);
     referenceMenu->addSeparator();
     securityProductionMenu = referenceMenu->addMenu(trUtf8("Безопасность производства..."));
+    securityProductionMenu->addAction(attestPBPostAction);
     securityProductionMenu->addAction(securityProductionAction);
     securityProductionMenu->addAction(safetyRequirements);
     securityProductionMenu->addAction(testTask);
@@ -687,6 +695,11 @@ void MainWindow::viewKomissiya()
     viewTemplateTable("komissiya");
 }
 
+void MainWindow::viewAttestPBPost()
+{
+    viewTemplateTable("attestpbpost");
+}
+
 void MainWindow::viewTemplateTable(QString tempTable)
 {
     if(tableView->model())
@@ -935,12 +948,22 @@ void MainWindow::viewTemplateTable(QString tempTable)
 //        }
         strivgValue = trUtf8("Стажировка");
     }else if(tempTable == "komissiya"){
-        //        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("Наименование"));
-        //        if(setFilter){
-        //            templateModel->setFilter(QString("nomenname LIKE '%%1%'").arg(filterTable));
-        //        }
-                strivgValue = trUtf8("Комиссия");
-            }
+        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("Председатель"));
+        templateModel->setRelation(1,QSqlRelation("employee","employeeid","employeename"));
+        templateModel->setHeaderData(2,Qt::Horizontal,trUtf8("Член комиссии"));
+        templateModel->setRelation(2,QSqlRelation("employee","employeeid","employeename"));
+        templateModel->setHeaderData(3,Qt::Horizontal,trUtf8("Член комиссии"));
+        templateModel->setRelation(3,QSqlRelation("employee","employeeid","employeename"));
+        strivgValue = trUtf8("Комиссия");
+    }else if(tempTable == "attestpbpost"){
+//        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("Председатель"));
+//        templateModel->setRelation(1,QSqlRelation("employee","employeeid","employeename"));
+//        templateModel->setHeaderData(2,Qt::Horizontal,trUtf8("Член комиссии"));
+//        templateModel->setRelation(2,QSqlRelation("employee","employeeid","employeename"));
+//        templateModel->setHeaderData(3,Qt::Horizontal,trUtf8("Член комиссии"));
+//        templateModel->setRelation(3,QSqlRelation("employee","employeeid","employeename"));
+        strivgValue = trUtf8("Области аттестации ПБ");
+    }
     else{
         tableView->setModel(0);
         tableLabel->clear();
@@ -1012,7 +1035,7 @@ void MainWindow::viewTemplateTable(QString tempTable)
         }
         head->setStretchLastSection(true);
         tableLabel->clear();
-        tableLabel->setText(trUtf8("Name of Table: %1").arg(strivgValue));
+        tableLabel->setText(trUtf8("Наименование таблицы: %1").arg(strivgValue));
         tableLabel->setStyleSheet("font: bold; color: darkblue;");
         setFilter = false;
         sortTable(1);
@@ -1341,6 +1364,15 @@ void MainWindow::editRecordOfTable()
                 KommisiyaForm openForm(iDTemp,this,true);
                 openForm.exec();
             }
+        }else if(valueTemp == "attestpbpost"){
+            iDTemp = record.value("attestpbpostid").toString();
+            if(query.value(0).toInt() == 1){
+                AttestPBPostForm openForm(iDTemp,this,false);
+                openForm.exec();
+            }else{
+                AttestPBPostForm openForm(iDTemp,this,true);
+                openForm.exec();
+            }
         }
     }
     MainWindow::updateRightPanel(index);
@@ -1458,6 +1490,9 @@ void MainWindow::addRecordOfTable()
             openForm.exec();
         }else if(valueTemp == "komissiya"){
             KommisiyaForm openForm("",this,false);
+            openForm.exec();
+        }else if(valueTemp == "attestpbpost"){
+            AttestPBPostForm openForm("",this,false);
             openForm.exec();
         }
         QModelIndex modIndex = tableView->currentIndex();
@@ -1626,6 +1661,10 @@ void MainWindow::deleteRecordOfTable()
                 }else if(valueTemp == "komissiya"){
                     iDValue = record.value("komissiyaid").toString();
                     KommisiyaForm openForm(iDValue,this,false);
+                    openForm.deleteRecord();
+                }else if(valueTemp == "attestpbpost"){
+                    iDValue = record.value("attestpbpostid").toString();
+                    AttestPBPostForm openForm(iDValue,this,false);
                     openForm.deleteRecord();
                 }
             }
@@ -1842,3 +1881,10 @@ void MainWindow::sqlQuery()
     SQLForm openForm(this);
     openForm.exec();
 }
+
+void MainWindow::viewNashaFirma()
+{
+    NashaFirmaForm openForm(this);
+    openForm.exec();
+}
+

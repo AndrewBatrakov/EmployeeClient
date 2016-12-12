@@ -62,10 +62,13 @@ private slots:
     void viewObuchPtm();
     void viewScore();
     void viewNomen();
-    void viewKomissiya();
+    void viewNashaFirma();
 
     //Охрана труда
     void viewStagirovka();
+    void viewKomissiya();
+//    void viewLaborProtProg();
+    void viewAttestPBPost();
 
     void reportGrafikPromBez();
     void reportAllEmployeeSiz();
@@ -108,6 +111,7 @@ private:
     QAction *getXMLAction;
     QAction *getPhotoAction;
     QAction *importXmlTableAction;
+    QAction *nashaFirmaAction;
     QAction *exitAction;
 
     QMenu *referenceMenu;
@@ -134,6 +138,7 @@ private:
     QAction *testTask;
     QAction *legalActs;
     QAction *venueAction;
+    QAction *attestPBPostAction;
     QMenu *laboratoriyaRef;
     QAction *laProductionFactors;
     QAction *laNormLink;

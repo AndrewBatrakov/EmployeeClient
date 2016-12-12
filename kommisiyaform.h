@@ -21,6 +21,12 @@ private slots:
     void addEmp1Record();
     void seeEmp1Record();
     void listEmp1Record();
+    void addEmp2Record();
+    void seeEmp2Record();
+    void listEmp2Record();
+    void addEmp3Record();
+    void seeEmp3Record();
+    void listEmp3Record();
 
     void readSettings();
     void writeSettings();

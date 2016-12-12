@@ -1,12 +1,12 @@
+#include "laborprotprogform.h"
 #include <QtWidgets>
 #include <QtSql>
 
-#include "organization.h"
 #include "lineedit.h"
 #include "numprefix.h"
 #include "fordelete.h"
 
-OrganizationForm::OrganizationForm(QString id, QWidget *parent, bool onlyForRead) :
+LaborProtProgForm::LaborProtProgForm(QString id, QWidget *parent, bool onlyForRead) :
     QDialog(parent)
 {
     exchangeFile.setFileName("Message.txt");
@@ -38,7 +38,7 @@ OrganizationForm::OrganizationForm(QString id, QWidget *parent, bool onlyForRead
 
     if(indexTemp != ""){
         QSqlQuery query;
-        query.prepare("SELECT organizationname FROM organization WHERE organizationid = ?");
+        query.prepare("SELECT otprogrammaname FROM otprogramma WHERE otprogrammaid = ?");
         query.addBindValue(indexTemp);
         query.exec();
         while(query.next()){
@@ -58,11 +58,11 @@ OrganizationForm::OrganizationForm(QString id, QWidget *parent, bool onlyForRead
 
     setLayout(mainLayout);
 
-    setWindowTitle(trUtf8("Организация"));
+    setWindowTitle(trUtf8("Программа обучения ОТ"));
     readSettings();
 }
 
-void OrganizationForm::editRecord()
+void LaborProtProgForm::editRecord()
 {
     QTextStream stream(&exchangeFile);
     QString line;
@@ -72,35 +72,32 @@ void OrganizationForm::editRecord()
 
     if(indexTemp != ""){
         QSqlQuery query;
-        query.prepare("UPDATE organization SET organizationname = :name WHERE  organizationid = :id");
+        query.prepare("UPDATE otprogramma SET otprogrammaname = :name WHERE  otprogrammaid = :id");
         query.bindValue(":name",editName->text());
         query.bindValue(":id",indexTemp);
         query.exec();
-        line += "UPDATE organization SET organizationname = '";
+        line += "UPDATE otprogramma SET otprogrammaname = '";
         line += editName->text().toUtf8();
-        line += "' WHERE  organizationid = '";
+        line += "' WHERE  otprogrammaid = '";
         line += indexTemp;
         line += "'";
         line += "\r\n";
         stream<<line;
     }else{
         QSqlQuery query;
-        query.prepare("SELECT * FROM organization WHERE organizationname = :name");
+        query.prepare("SELECT * FROM otprogramma WHERE otprogrammaname = :name");
         query.bindValue(":name",editName->text().simplified());
         query.exec();
         query.next();
         if(!query.isValid()){
             NumPrefix numPrefix;
-            indexTemp = numPrefix.getPrefix("organization");
-            if(indexTemp == ""){
-                close();
-            }
+            indexTemp = numPrefix.getPrefix("otprogramma");
             QSqlQuery query;
-            query.prepare("INSERT INTO organization (organizationid, organizationname) VALUES(:id, :name)");
+            query.prepare("INSERT INTO otprogramma (otprogrammaid, otprogrammaname) VALUES(:id, :name)");
             query.bindValue(":id",indexTemp);
             query.bindValue(":name",editName->text().simplified());
             query.exec();
-            line += "INSERT INTO organization (organizationid, organizationname) VALUES('";
+            line += "INSERT INTO otprogramma (otprogrammaid, otprogrammaname) VALUES('";
             line += indexTemp;
             line += "', '";
             line += editName->text().simplified().toUtf8();
@@ -117,7 +114,7 @@ void OrganizationForm::editRecord()
     close();
 }
 
-void OrganizationForm::deleteRecord()
+void LaborProtProgForm::deleteRecord()
 {
     QTextStream stream(&exchangeFile);
     QString line;
@@ -127,38 +124,38 @@ void OrganizationForm::deleteRecord()
 
     //QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
     //if(settings.value("CurrentUser") == "root" || settings.value("CurrentUser") == "Nataly"){
-    ForDelete forDelete(indexTemp,"organization",this);
+    ForDelete forDelete(indexTemp,"otprogramma",this);
 
     forDelete.exec();
     forDelete.deleteOnDefault();
 
     QSqlQuery query;
-    query.prepare("DELETE FROM organization WHERE organizationid = :id");
+    query.prepare("DELETE FROM otprogramma WHERE otprogrammaid = :id");
     query.bindValue(":id",indexTemp);
     query.exec();
     query.next();
 
-    line += "DELETE FROM organization WHERE organizationid = '";
+    line += "DELETE FROM otprogramma WHERE otprogrammaid = '";
     line += indexTemp;
     line += "'";
     line += "\r\n";
     stream<<line;
 }
 
-void OrganizationForm::done(int result)
+void LaborProtProgForm::done(int result)
 {
     writeSettings();
     QDialog::done(result);
 }
 
-void OrganizationForm::readSettings()
+void LaborProtProgForm::readSettings()
 {
     QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
-    restoreGeometry(settings.value("OrganizationForm").toByteArray());
+    restoreGeometry(settings.value("LaborProtProgForm").toByteArray());
 }
 
-void OrganizationForm::writeSettings()
+void LaborProtProgForm::writeSettings()
 {
     QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
-    settings.setValue("OrganizationForm", saveGeometry());
+    settings.setValue("LaborProtProgForm", saveGeometry());
 }
