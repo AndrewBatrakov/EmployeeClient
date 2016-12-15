@@ -24,7 +24,7 @@ PostSizTableForm::PostSizTableForm(QString id, QWidget *parent, bool onlyForRead
     //**********************************************************
     //SIZ
     //**********************************************************
-    labelPostSIZ = new QLabel(tr("PostSIZ Name:"));
+    labelPostSIZ = new QLabel(trUtf8("PostSIZ Name:"));
     editPostSIZ = new LineEdit;
     editPostSIZ->setReadOnly(onlyForRead);
     QRegExp regExpFamiliya("[\\x0410-\\x044f 0-9 \" -]{150}");
@@ -35,31 +35,31 @@ PostSizTableForm::PostSizTableForm(QString id, QWidget *parent, bool onlyForRead
     editLayout->addWidget(editPostSIZ);
 
 
-    savePushButton = new QPushButton(tr("Save"));
+    savePushButton = new QPushButton(trUtf8("Save"));
     connect(savePushButton,SIGNAL(clicked()),this,SLOT(saveRecord()));
-    savePushButton->setToolTip(tr("Save And Close Button"));
+    savePushButton->setToolTip(trUtf8("Save And Close Button"));
 
-    cancelPushButton = new QPushButton(tr("Cancel"));
+    cancelPushButton = new QPushButton(trUtf8("Cancel"));
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(cancelRecord()));
-    cancelPushButton->setToolTip(tr("Cancel Button"));
+    cancelPushButton->setToolTip(trUtf8("Cancel Button"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(cancelPushButton,QDialogButtonBox::ActionRole);
     buttonBox->addButton(savePushButton,QDialogButtonBox::ActionRole);
 
-    QPushButton *addTableButton = new QPushButton(tr("Add"));
+    QPushButton *addTableButton = new QPushButton(trUtf8("Add"));
     QPixmap pixAdd(":/add.png");
     addTableButton->setIcon(pixAdd);
     connect(addTableButton,SIGNAL(clicked()),this,SLOT(addRecordOfTable()));
 
-    QPushButton *deleteTableButton = new QPushButton(tr("Delete"));
+    QPushButton *deleteTableButton = new QPushButton(trUtf8("Delete"));
     QPixmap pixDelete(":/delete.png");
     deleteTableButton->setIcon(pixDelete);
     connect(deleteTableButton,SIGNAL(clicked()),this,SLOT(deleteRecordOfTable()));
 
-    QPushButton *editTableButton = new QPushButton(tr("Edit"));
+    QPushButton *editTableButton = new QPushButton(trUtf8("Edit"));
     QPixmap pixEdit(":/edit.png");
     editTableButton->setIcon(pixEdit);
     connect(editTableButton,SIGNAL(clicked()),this,SLOT(editRecordOfTable()));
@@ -74,7 +74,7 @@ PostSizTableForm::PostSizTableForm(QString id, QWidget *parent, bool onlyForRead
     //SIZ TableView
     //*****************************************************
     sizView = new QTableWidget(0,6);
-    sizView->setHorizontalHeaderLabels(QStringList()<<tr("ID")<<tr("P")<<trUtf8("Наименование СИЗ")<<
+    sizView->setHorizontalHeaderLabels(QStringList()<<trUtf8("ID")<<trUtf8("P")<<trUtf8("Наименование СИЗ")<<
                                        trUtf8("Характеристика")<<trUtf8("Количество")<<trUtf8("Срок"));
     sizView->hideColumn(0);
     sizView->hideColumn(1);
@@ -171,7 +171,7 @@ void PostSizTableForm::cancelRecord()
         query.bindValue(":postsizid",indexTemp);
         query.exec();
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("Post Siz Table, DELETE ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Post Siz Table, DELETE ERROR!"),query.lastError().text());
             return;
         }
         line += "DELETE FROM postsiztable WHERE postsizid = '";
@@ -200,7 +200,7 @@ void PostSizTableForm::editRecord()
             query.bindValue(":postsizid",indexTemp);
             query.exec();
             if(!query.isActive()){
-                QMessageBox::warning(this,QObject::tr("Post SIZ, UPDATE ERROR!"),query.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("Post SIZ, UPDATE ERROR!"),query.lastError().text());
                 return;
             }
             line += "UPDATE postsiz SET postsizname = '";
@@ -228,7 +228,7 @@ void PostSizTableForm::editRecord()
                 queryInsert.bindValue(":postsizname",editPostSIZ->text().simplified());
                 queryInsert.exec();
                 if(!queryInsert.isActive()){
-                    QMessageBox::warning(this,QObject::tr("Post SIZ, INSERT ERROR!"),queryInsert.lastError().text());
+                    QMessageBox::warning(this,QObject::trUtf8("Post SIZ, INSERT ERROR!"),queryInsert.lastError().text());
                     return;
                 }
                 line += "INSERT INTO postsiz (postsizid, postsizname) VALUES('";
@@ -257,7 +257,7 @@ void PostSizTableForm::deleteRecord()
     ForDelete forDelete(indexTemp,"postsiz",this);
 
     forDelete.exec();
-    int k = QMessageBox::warning(this,tr("Attention!!!"),tr("Delete item with the replacement for default value?"),
+    int k = QMessageBox::warning(this,trUtf8("Attention!!!"),trUtf8("Delete item with the replacement for default value?"),
                                  QMessageBox::No|QMessageBox::Yes,QMessageBox::No);
     if(k == QMessageBox::Yes){
         QTextStream stream(&exchangeFile);
@@ -321,8 +321,8 @@ void PostSizTableForm::addRecordOfTable()
                     QString pp = query.value(0).toString();
                     if(yy == pp){
                         QString tempString = query.value(1).toString();
-                        tempString += QObject::tr(" is availble!");
-                        QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+                        tempString += QObject::trUtf8(" is availble!");
+                        QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
                         insert = false;
                         break;
                     }
@@ -353,7 +353,7 @@ void PostSizTableForm::addRecordOfTable()
 //                queryPSL.bindValue(":postid",query.value(0).toString());
 //                queryPSL.exec();
 //                if(!queryPSL.isActive()){
-//                    QMessageBox::warning(this,QObject::tr("Post SIZ List Table, INSERT ERROR!"),queryPSL.lastError().text());
+//                    QMessageBox::warning(this,QObject::trUtf8("Post SIZ List Table, INSERT ERROR!"),queryPSL.lastError().text());
 //                    return;
 //                }
 //                line += "INSERT INTO postsizlist (postsizlistid, postsizid, postid) VALUES('";

@@ -45,21 +45,21 @@ StagirovkaForm::StagirovkaForm(QString id, QWidget *parent, bool onlyForRead) :
     QToolButton *addEmpButton = new QToolButton;
     QPixmap addPix(":/add.png");
     addEmpButton->setIcon(addPix);
-    addEmpButton->setToolTip(tr("Добавить новую запись"));
+    addEmpButton->setToolTip(trUtf8("Добавить новую запись"));
     addEmpButton->setStyleSheet(toolButtonStyle);
     connect(addEmpButton,SIGNAL(clicked()),this,SLOT(addEmpRecord()));
 
     QToolButton *seeEmpButton = new QToolButton;
     QPixmap seePix(":/see.png");
     seeEmpButton->setIcon(seePix);
-    seeEmpButton->setToolTip(tr("Смотреть выбранную запись"));
+    seeEmpButton->setToolTip(trUtf8("Смотреть выбранную запись"));
     seeEmpButton->setStyleSheet(toolButtonStyle);
     connect(seeEmpButton,SIGNAL(clicked()),this,SLOT(seeEmpRecord()));
 
     QToolButton *listEmpButton = new QToolButton;
     QPixmap listPix(":/list.png");
     listEmpButton->setIcon(listPix);
-    listEmpButton->setToolTip(tr("Смотреть список записей"));
+    listEmpButton->setToolTip(trUtf8("Смотреть список записей"));
     listEmpButton->setStyleSheet(toolButtonStyle);
     connect(listEmpButton,SIGNAL(clicked()),this,SLOT(listEmpRecord()));
 
@@ -126,10 +126,10 @@ StagirovkaForm::StagirovkaForm(QString id, QWidget *parent, bool onlyForRead) :
         otvLayout->addWidget(listOtvButton);
     }
 
-    saveButton = new QPushButton(tr("Save"));
+    saveButton = new QPushButton(trUtf8("Save"));
     connect(saveButton,SIGNAL(clicked()),this,SLOT(editRecord()));
 
-    cancelButton = new QPushButton(tr("Cancel"));
+    cancelButton = new QPushButton(trUtf8("Cancel"));
     cancelButton->setDefault(true);
     cancelButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelButton,SIGNAL(clicked()),this,SLOT(accept()));
@@ -215,7 +215,7 @@ void StagirovkaForm::editRecord()
         query.bindValue(":orgname",editEmployee->text());
         query.exec();
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("DataBase ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("DataBase ERROR!"),query.lastError().text());
         }
     }else{
         index = indexTemp;
@@ -228,7 +228,7 @@ void StagirovkaForm::editRecord()
         query.bindValue(":orgname",editEmployee->text());
         query.exec();
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("DataBase ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("DataBase ERROR!"),query.lastError().text());
         }
     }
     emit accept();
@@ -240,7 +240,7 @@ void StagirovkaForm::deleteRecord()
     ForDelete forDelete(indexTemp,"subdivision",this);
     //if(forDelete.result() == QDialog::Accepted){
         forDelete.exec();
-        //int k = QMessageBox::warning(this,tr("Attention!!!"),tr("Delete item with the replacement for default value?"),
+        //int k = QMessageBox::warning(this,trUtf8("Attention!!!"),trUtf8("Delete item with the replacement for default value?"),
         //                     QMessageBox::No|QMessageBox::Yes,QMessageBox::No);
         //if(k == QMessageBox::Yes){
             forDelete.deleteOnDefault();
@@ -251,7 +251,7 @@ void StagirovkaForm::deleteRecord()
                 query.exec();
                 query.next();
             }else{
-                QMessageBox::warning(this,QObject::tr("Attention"),QObject::tr("You dont may delete default value!"));
+                QMessageBox::warning(this,QObject::trUtf8("Attention"),QObject::trUtf8("You dont may delete default value!"));
             }
         //}
    // }

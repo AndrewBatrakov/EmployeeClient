@@ -11,9 +11,7 @@ public:
     DataBaseDirection();
 
 public:
-    void createDataBase(QString base);
     bool connectDataBase();
-    void cancelCangesDataBase();
     void closeDataBase();
 
 private:

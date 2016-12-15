@@ -6,7 +6,7 @@ SearchForm::SearchForm(QString valueTempModel,QWidget *parent) :
     QDialog(parent)
 {
     stTemp = "";
-    labelSearch = new QLabel(tr("Search:"));
+    labelSearch = new QLabel(trUtf8("Search:"));
     editSearch = new LineEdit;
 
     /*QString textQuery = "SHOW COLUMNS FROM ";
@@ -28,11 +28,11 @@ SearchForm::SearchForm(QString valueTempModel,QWidget *parent) :
     field = new QComboBox;
     field->addItems(stringList);*/
 
-    searchPushButton = new QPushButton(tr("Search"));
+    searchPushButton = new QPushButton(trUtf8("Search"));
     connect(searchPushButton,SIGNAL(clicked()),this,SLOT(accept()));
     searchPushButton->setDefault(true);
 
-    cancelPushButton = new QPushButton(tr("Cancel"));
+    cancelPushButton = new QPushButton(trUtf8("Cancel"));
     //cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(close()));
@@ -47,7 +47,7 @@ SearchForm::SearchForm(QString valueTempModel,QWidget *parent) :
     //mainLayout->addWidget(field,1,1);
     mainLayout->addWidget(buttonBox,2,1);
     setLayout(mainLayout);
-    setWindowTitle(tr("Search"));
+    setWindowTitle(trUtf8("Search"));
 }
 
 

@@ -45,7 +45,7 @@ KommisiyaForm::KommisiyaForm(QString id, QWidget *parent, bool onlyForRead) :
     QToolButton *list1Button = new QToolButton;
     QPixmap listPix(":/list.png");
     list1Button->setIcon(listPix);
-    list1Button->setToolTip(tr("Просмотр списка записей"));
+    list1Button->setToolTip(trUtf8("Просмотр списка записей"));
     connect(list1Button,SIGNAL(clicked()),this,SLOT(listEmp1Record()));
 
     QHBoxLayout *editEmp1Layout = new QHBoxLayout;
@@ -79,7 +79,7 @@ KommisiyaForm::KommisiyaForm(QString id, QWidget *parent, bool onlyForRead) :
 
     QToolButton *list2Button = new QToolButton;
     list2Button->setIcon(listPix);
-    list2Button->setToolTip(tr("Просмотр списка записей"));
+    list2Button->setToolTip(trUtf8("Просмотр списка записей"));
     connect(list2Button,SIGNAL(clicked()),this,SLOT(listEmp2Record()));
 
     QHBoxLayout *editEmp2Layout = new QHBoxLayout;
@@ -113,7 +113,7 @@ KommisiyaForm::KommisiyaForm(QString id, QWidget *parent, bool onlyForRead) :
 
     QToolButton *list3Button = new QToolButton;
     list3Button->setIcon(listPix);
-    list3Button->setToolTip(tr("Просмотр списка записей"));
+    list3Button->setToolTip(trUtf8("Просмотр списка записей"));
     connect(list3Button,SIGNAL(clicked()),this,SLOT(listEmp3Record()));
 
     QHBoxLayout *editEmp3Layout = new QHBoxLayout;
@@ -153,13 +153,13 @@ KommisiyaForm::KommisiyaForm(QString id, QWidget *parent, bool onlyForRead) :
         editEmp3->setText(query.value(2).toString());
     }else{
         editEmp1->clear();
-        editEmp1->setText(QObject::tr("Председатель комиссии"));
+        editEmp1->setText(QObject::trUtf8("Председатель комиссии"));
         editEmp1->selectAll();
         editEmp2->clear();
-        editEmp2->setText(QObject::tr("Член комиссии"));
+        editEmp2->setText(QObject::trUtf8("Член комиссии"));
         editEmp2->selectAll();
         editEmp3->clear();
-        editEmp3->setText(QObject::tr("Член комиссии"));
+        editEmp3->setText(QObject::trUtf8("Член комиссии"));
         editEmp3->selectAll();
         newRecord = true;
     }
@@ -202,7 +202,7 @@ void KommisiyaForm::editRecord()
             query.bindValue(":namethree",editEmp3->text());
             query.exec();
             if(!query.isActive()){
-                QMessageBox::warning(this,QObject::tr("DataBase ERROR! INSERT INTO komissiya"),query.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("DataBase ERROR! INSERT INTO komissiya"),query.lastError().text());
                 return;
             }
 

@@ -65,6 +65,8 @@
 #include "kommisiyaform.h"
 #include "nashafirmaform.h"
 #include "attestpbpostform.h"
+#include "exchangefile.h"
+#include "update.h"
 
 MainWindow::MainWindow()
 {
@@ -106,6 +108,10 @@ MainWindow::MainWindow()
 
     fileExchange.setFileName("Message.txt");
     fileExchange.open(QIODevice::ReadWrite);
+
+    QTimer *timer = new QTimer(this);
+    connect(timer,SIGNAL(timeout()),this,SLOT(getProcedure()));
+    timer->start(300000);
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
@@ -139,11 +145,35 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         setFilter = true;
         viewTemplateTable(tm);
     }
+    if(event->key() == Qt::Key_F5){
+        templateModel->select();
+        tableView->reset();
+    }
 }
 
 MainWindow::~MainWindow()
-{
+{   
+    QSqlQuery query;
+    query.exec("select tbl_name from sqlite_master where type = 'table'");
 
+    QSqlQuery queryT;
+
+    while(query.next()){
+      queryT.exec(QString("TRUNCATE TABLE %1").arg(query.value(0).toString()));
+      queryT.clear();
+      queryT.exec(QString("DROP TABLE %1").arg(query.value(0).toString()));
+      queryT.clear();
+    }
+
+    QSqlDatabase db = QSqlDatabase::database();
+    db.close();
+
+    QFile file;
+    file.setFileName("CE_SQLite.arh");
+    file.remove();
+    file.setFileName("CE_SQLite.dat");
+    file.setPermissions(QFile::ReadOwner | QFile::WriteOwner);
+    file.remove();
 }
 
 void MainWindow::createRightPanel()
@@ -195,35 +225,9 @@ void MainWindow::writeSettings()
     QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
     settings.setValue("MainWindow", saveGeometry());
     settings.remove("CurrentUser");
-    if(fileExchange.size() == 0){
-        fileExchange.remove();
-        return;
-    }else{
-        fileExchange.close();
-    }
 
-    QString fileName = settings.value("numprefix").toString();
-    fileName += "_SRV.txt";
-    fileExchange.rename(fileName);
-    fileExchange.close();
-
-    QString fN = fileExchange.fileName();
-
-    PutFile putFile;
-    putFile.putFile(fN);
-
-    PutFile putFtp1;
-    QString nullFileName = "Null.txt";
-    //nullFileName += fN;
-    QFile nullFile;
-    nullFile.setFileName(nullFileName);
-    nullFile.open(QIODevice::WriteOnly);
-    QByteArray rr = "22\n10";
-    nullFile.write(rr);
-    nullFile.close();
-    putFtp1.putFile(nullFileName);
-    nullFile.remove();
-
+    ExchangeFile ex;
+    ex.toServer();
 }
 
 void MainWindow::createActions()
@@ -1743,7 +1747,7 @@ void MainWindow::createContextMenu()
 void MainWindow::getXMLProcedure()
 {
     XMLImport xmlImport(this);
-    xmlImport.updateDir("");
+    xmlImport.updateDir();
 }
 
 void MainWindow::ftpForm()
@@ -1783,8 +1787,17 @@ void MainWindow::putProcedure()
 
 void MainWindow::getProcedure()
 {
+    fileExchange.close();
+    ExchangeFile ex;
+    ex.toServer();
+
+    Update upDateFile(this);
+    upDateFile.iniVersion();
+
     UpLoadBase upLoad(this);
     upLoad.exeVersion();
+
+    removeFiles();
 }
 
 void MainWindow::vaccumProcedure()
@@ -1867,12 +1880,6 @@ void MainWindow::removeFiles()
     QFile file;
 
     file.setFileName("null.txt");
-    file.remove();
-
-    file.setFileName("Ecolog.arh");
-    file.remove();
-
-    file.setFileName("Ecolog.dat");
     file.remove();
 }
 

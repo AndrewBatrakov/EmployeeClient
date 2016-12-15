@@ -39,13 +39,13 @@ void BackUpFTP::BackUpProcedure()
         connect(reply,SIGNAL(finished()),SLOT(httpDoneExe()));
         filePut->setParent(reply);
 
-        progressDialogDat->setLabelText(tr("Downloading %1 ...").arg(localFileName));
+        progressDialogDat->setLabelText(trUtf8("Downloading %1 ...").arg(localFileName));
         progressDialogDat->setEnabled(true);
         if(reply->isRunning()){
             loop.exec();
         }
     }else{
-        QMessageBox::warning(this,tr("Attention"),tr("Don't open %1").arg(localFileName));
+        QMessageBox::warning(this,trUtf8("Attention"),trUtf8("Don't open %1").arg(localFileName));
     }
 }
 

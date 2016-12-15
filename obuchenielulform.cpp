@@ -49,7 +49,7 @@ ObuchenieLulForm::ObuchenieLulForm(QString id, QWidget *parent, bool onlyForRead
     dateLayout->addWidget(editDateObuch);
     dateLayout->addStretch();
 
-    labelPrichina = new QLabel(tr("Prichina:"));
+    labelPrichina = new QLabel(trUtf8("Prichina:"));
     editPrichina = new LineEdit;
     editPrichina->setReadOnly(onlyForRead);
     labelPrichina->setBuddy(editPrichina);
@@ -61,7 +61,7 @@ ObuchenieLulForm::ObuchenieLulForm(QString id, QWidget *parent, bool onlyForRead
     prichCompleter->setCaseSensitivity(Qt::CaseInsensitive);
     editPrichina->setCompleter(prichCompleter);
 
-    labelVidAtest = new QLabel(tr("Vid Atestat:"));
+    labelVidAtest = new QLabel(trUtf8("Vid Atestat:"));
     editVidAtest = new LineEdit;
     editVidAtest->setReadOnly(onlyForRead);
     labelVidAtest->setBuddy(editVidAtest);
@@ -78,41 +78,41 @@ ObuchenieLulForm::ObuchenieLulForm(QString id, QWidget *parent, bool onlyForRead
     vidLayout->addWidget(labelVidAtest);
     vidLayout->addWidget(editVidAtest);
 
-    savePushButton = new QPushButton(tr("Save"));
+    savePushButton = new QPushButton(trUtf8("Save"));
     connect(savePushButton,SIGNAL(clicked()),this,SLOT(saveRecord()));
-    savePushButton->setToolTip(tr("Save And Close Button"));
+    savePushButton->setToolTip(trUtf8("Save And Close Button"));
 
-    cancelPushButton = new QPushButton(tr("Cancel"));
+    cancelPushButton = new QPushButton(trUtf8("Cancel"));
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(cancelRecord()));
-    cancelPushButton->setToolTip(tr("Cancel Button"));
+    cancelPushButton->setToolTip(trUtf8("Cancel Button"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(cancelPushButton,QDialogButtonBox::ActionRole);
     buttonBox->addButton(savePushButton,QDialogButtonBox::ActionRole);
 
-    QPushButton *addTableButton = new QPushButton(tr("Add"));
+    QPushButton *addTableButton = new QPushButton(trUtf8("Add"));
     QPixmap pixAdd(":/add.png");
     addTableButton->setIcon(pixAdd);
     connect(addTableButton,SIGNAL(clicked()),this,SLOT(addRecordOfTable()));
 
-    QPushButton *deleteTableButton = new QPushButton(tr("Delete"));
+    QPushButton *deleteTableButton = new QPushButton(trUtf8("Delete"));
     QPixmap pixDelete(":/delete.png");
     deleteTableButton->setIcon(pixDelete);
     connect(deleteTableButton,SIGNAL(clicked()),this,SLOT(deleteRecordOfTable()));
 
-    QPushButton *editTableButton = new QPushButton(tr("Edit"));
+    QPushButton *editTableButton = new QPushButton(trUtf8("Edit"));
     QPixmap pixEdit(":/edit.png");
     editTableButton->setIcon(pixEdit);
     connect(editTableButton,SIGNAL(clicked()),this,SLOT(editRecordOfTable()));
 
-    QPushButton *printTableButton = new QPushButton(tr("Print"));
+    QPushButton *printTableButton = new QPushButton(trUtf8("Print"));
     QPixmap pixPrint(":/print.png");
     printTableButton->setIcon(pixPrint);
     connect(printTableButton,SIGNAL(clicked()),this,SLOT(printTable()));
 
-    QPushButton *exportTableButton = new QPushButton(tr("Excel"));
+    QPushButton *exportTableButton = new QPushButton(trUtf8("Excel"));
     QPixmap excelPrint(":/microsoft_excel.png");
     exportTableButton->setIcon(excelPrint);
     connect(exportTableButton,SIGNAL(clicked()),this,SLOT(excelExport()));
@@ -130,7 +130,7 @@ ObuchenieLulForm::ObuchenieLulForm(QString id, QWidget *parent, bool onlyForRead
     //*****************************************************
     employeeView = new QTableWidget;
     employeeView->setColumnCount(3);
-    employeeView->setHorizontalHeaderLabels(QStringList()<<tr("ID")<<tr("FIO")<<tr("Post"));
+    employeeView->setHorizontalHeaderLabels(QStringList()<<trUtf8("ID")<<trUtf8("FIO")<<trUtf8("Post"));
     QHeaderView *head = employeeView->horizontalHeader();
     head->setStretchLastSection(true);
     employeeView->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -223,7 +223,7 @@ ObuchenieLulForm::ObuchenieLulForm(QString id, QWidget *parent, bool onlyForRead
 
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Obuchenie Lul"));
+    setWindowTitle(trUtf8("Obuchenie Lul"));
     readSettings();
     createContextMenu();
     editNumber->setText(indexTemp);
@@ -258,7 +258,7 @@ void ObuchenieLulForm::cancelRecord()
             queryCD.bindValue(":id",indexTemp);
             queryCD.exec();
             if(!queryCD.isActive()){
-                QMessageBox::warning(this,QObject::tr("Obuc Lul Table, DELETE ERROR!"),queryCD.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("Obuc Lul Table, DELETE ERROR!"),queryCD.lastError().text());
                 return;
             }
             line += "DELETE FROM obuchlultable WHERE obuchlulid = '";
@@ -342,7 +342,7 @@ void ObuchenieLulForm::editRecord()
         line += "\r\n";
         stream<<line;
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("Obuch Lul, UPDATE ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Obuch Lul, UPDATE ERROR!"),query.lastError().text());
             return;
         }
     }else{
@@ -406,7 +406,7 @@ void ObuchenieLulForm::editRecord()
         line += "\r\n";
         stream<<line;
         if(!queryInsert.isActive()){
-            QMessageBox::warning(this,QObject::tr("Obuch Lul, INSERT ERROR!"),queryInsert.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Obuch Lul, INSERT ERROR!"),queryInsert.lastError().text());
             return;
         }
     }
@@ -428,7 +428,7 @@ void ObuchenieLulForm::deleteRecord()
     ForDelete forDelete(indexTemp,"obuchlul",this);
 
     forDelete.exec();
-    int k = QMessageBox::warning(this,tr("Attention!!!"),tr("Delete item with the replacement for default value?"),
+    int k = QMessageBox::warning(this,trUtf8("Attention!!!"),trUtf8("Delete item with the replacement for default value?"),
                                  QMessageBox::No|QMessageBox::Yes,QMessageBox::No);
     if(k == QMessageBox::Yes){
         forDelete.deleteOnDefault();
@@ -488,8 +488,8 @@ void ObuchenieLulForm::addRecordOfTable()
                     QString pp = query.value(0).toString();
                     if(yy == pp){
                         QString tempString = query.value(1).toString();
-                        tempString += QObject::tr(" is availble!");
-                        QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+                        tempString += QObject::trUtf8(" is availble!");
+                        QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
                         insert = false;
                         break;
                     }
@@ -503,9 +503,9 @@ void ObuchenieLulForm::addRecordOfTable()
             queryDoc.next();
             if(queryDoc.isValid()){
                 QString tempString = query.value(1).toString();
-                tempString += QObject::tr(" trained - ");
+                tempString += QObject::trUtf8(" trained - ");
                 tempString += queryDoc.value(0).toDate().toString("dd.MM.yyyy");
-                QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+                QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
                 insert = false;
             }
             if(insert){
@@ -543,7 +543,7 @@ void ObuchenieLulForm::addRecordOfTable()
                 queryPSL.bindValue(":employeeid",query.value(0).toString());
                 queryPSL.exec();
                 if(!queryPSL.isActive()){
-                    QMessageBox::warning(this,QObject::tr("Obuch Lul List Table, INSERT ERROR!"),queryPSL.lastError().text());
+                    QMessageBox::warning(this,QObject::trUtf8("Obuch Lul List Table, INSERT ERROR!"),queryPSL.lastError().text());
                     return;
                 }
                 line += "INSERT INTO obuchlultable (obuchlultableid, obuchlulid, employeeid) VALUES('";
@@ -569,8 +569,8 @@ void ObuchenieLulForm::deleteRecordOfTable()
         stream.readLine();
     }
 
-    int k = QMessageBox::question(this,tr("Attention!!"),
-                              tr("Really delete?"),
+    int k = QMessageBox::question(this,trUtf8("Attention!!"),
+                              trUtf8("Really delete?"),
                                   QMessageBox::Yes|QMessageBox::No,QMessageBox::No);
     if(k == QMessageBox::Yes){
         QSqlQuery query;
@@ -580,7 +580,7 @@ void ObuchenieLulForm::deleteRecordOfTable()
         query.exec();
 
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("Post Siz Table, DELETE ERROR!"),
+            QMessageBox::warning(this,QObject::trUtf8("Post Siz Table, DELETE ERROR!"),
                                  query.lastError().text());
             return;
         }
@@ -632,18 +632,18 @@ void ObuchenieLulForm::updateTable()
 
 void ObuchenieLulForm::createContextMenu()
 {
-    addAction = new QAction(tr("Add Record"),this);
+    addAction = new QAction(trUtf8("Add Record"),this);
     QPixmap pixAdd(":/add.png");
     addAction->setIcon(pixAdd);
     connect(addAction,SIGNAL(triggered()),this,SLOT(addRecordOfTable()));
 
     QPixmap pixDelete(":/delete.png");
-    deleteAction = new QAction(tr("Delete Record"),this);
+    deleteAction = new QAction(trUtf8("Delete Record"),this);
     deleteAction->setIcon(pixDelete);
     connect(deleteAction,SIGNAL(triggered()),this,SLOT(deleteRecordOfTable()));
 
     QPixmap pixEdit(":/edit.png");
-    editAction = new QAction(tr("Edit Record"),this);
+    editAction = new QAction(trUtf8("Edit Record"),this);
     editAction->setIcon(pixEdit);
     connect(editAction,SIGNAL(triggered()),this,SLOT(editRecordOfTable()));
 
@@ -726,7 +726,7 @@ void ObuchenieLulForm::print(QPrinter *printer)
 
     //************************************************************
     //painter.drawRect(allCol);
-    //painter.drawText(allCol,Qt::AlignCenter,tr("Clothes"));
+    //painter.drawText(allCol,Qt::AlignCenter,trUtf8("Clothes"));
 
     int newLineHight;
     int mHight;

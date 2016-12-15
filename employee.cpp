@@ -12,6 +12,9 @@
 #include "vidachasizform.h"
 #include "protocollaborprotectionform.h"
 #include "industrialsecurityform.h"
+#include "fireprotectionform.h"
+#include "exchangefile.h"
+#include "electrobezform.h"
 
 EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     QDialog(parent)
@@ -61,21 +64,21 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     QToolButton *addButton = new QToolButton;
     QPixmap addPix(":/add.png");
     addButton->setIcon(addPix);
-    addButton->setToolTip(tr("Add new record"));
+    addButton->setToolTip(trUtf8("Add new record"));
     connect(addButton,SIGNAL(clicked()),this,SLOT(addOrgRecord()));
     addButton->setStyleSheet(styleSheetString);
 
     QToolButton *seeButton = new QToolButton;
     QPixmap seePix(":/see.png");
     seeButton->setIcon(seePix);
-    seeButton->setToolTip(tr("See select item"));
+    seeButton->setToolTip(trUtf8("See select item"));
     connect(seeButton,SIGNAL(clicked()),this,SLOT(seeOrgRecord()));
     seeButton->setStyleSheet(styleSheetString);
 
     QToolButton *listButton = new QToolButton;
     QPixmap listPix(":/list.png");
     listButton->setIcon(listPix);
-    listButton->setToolTip(tr("See list of item"));
+    listButton->setToolTip(trUtf8("See list of item"));
     connect(listButton,SIGNAL(clicked()),this,SLOT(listOrgRecord()));
     listButton->setStyleSheet(styleSheetString);
 
@@ -170,7 +173,7 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     }
 
     //********************************************************************
-    labelDateBirthday = new QLabel(tr("Дата рождения:"));
+    labelDateBirthday = new QLabel(trUtf8("Дата рождения:"));
     editDateBirthday = new QDateEdit;
     editDateBirthday->setCalendarPopup(true);
     //nameEditDateBirthday->setDate(QDate::currentDate());
@@ -285,7 +288,7 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     nameLabelExperience = new QLabel(trUtf8("Стаж работы:"));
     nameEditExperience = new LineEdit;
 
-    nameLabelWithOrganization = new QLabel(tr("Дата приема:"));
+    nameLabelWithOrganization = new QLabel(trUtf8("Дата приема:"));
     nameEditWithOrganization = new QDateEdit;
     nameEditWithOrganization->setCalendarPopup(true);
     nameEditWithOrganization->setDate(QDate::currentDate());
@@ -329,7 +332,7 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     filterP += indexTemp;
     filterP += "'";
     addressModel->setFilter(filterP);
-    addressModel->setHeaderData(2,Qt::Horizontal,tr("Information"));
+    addressModel->setHeaderData(2,Qt::Horizontal,trUtf8("Information"));
     addressModel->select();
     addressWidget->setModel(addressModel);
     addressWidget->setColumnHidden(0,true);
@@ -396,9 +399,9 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     //***********************************************************
     //Driver License
     //***********************************************************
-    nameLabelDriverLicenseSeriya = new QLabel(tr("Seriya:"));
+    nameLabelDriverLicenseSeriya = new QLabel(trUtf8("Seriya:"));
     nameEditDriverLicenseSeriya = new LineEdit;
-    nameLabelDriverLicenseNumber = new QLabel(tr("Number"));
+    nameLabelDriverLicenseNumber = new QLabel(trUtf8("Number"));
     nameEditDriverLicenseNumber = new LineEdit;
 
     QHBoxLayout *lsnLayout = new QHBoxLayout;
@@ -407,7 +410,7 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     lsnLayout->addWidget(nameLabelDriverLicenseNumber);
     lsnLayout->addWidget(nameEditDriverLicenseNumber);
 
-    nameLabelDriverLicenseDate = new QLabel(tr("Date Issued:"));
+    nameLabelDriverLicenseDate = new QLabel(trUtf8("Date Issued:"));
     nameEditDriverLicenseDate = new QDateEdit;
     nameEditDriverLicenseDate->setCalendarPopup(true);
     nameEditDriverLicenseDate->setDate(QDate::currentDate());
@@ -417,7 +420,7 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     lsdLayout->addWidget(nameEditDriverLicenseDate);
     lsdLayout->addStretch();
 
-    nameLabelDriverLicenseIssuedBy = new QLabel(tr("Who's Issued:"));
+    nameLabelDriverLicenseIssuedBy = new QLabel(trUtf8("Who's Issued:"));
     nameEditDriverLicenseIssuedBy = new LineEdit;
 
     QHBoxLayout *issLayout = new QHBoxLayout;
@@ -446,7 +449,7 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     catLayout->addWidget(nameLabelDriverE);
     catLayout->addWidget(nameEditDriverE);
 
-    QGroupBox *permittedGroup = new QGroupBox(tr("Permitted category"));
+    QGroupBox *permittedGroup = new QGroupBox(trUtf8("Permitted category"));
     permittedGroup->setStyleSheet(styleGroupString);
     permittedGroup->setLayout(catLayout);
 
@@ -469,9 +472,9 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     laborProtectionModel->setHeaderData(3,Qt::Horizontal,trUtf8("Программа обучения"));
     laborProtectionModel->setRelation(3,QSqlRelation("otprogramma","otprogrammaid","otprogrammaname"));
     laborProtectionModel->setHeaderData(4,Qt::Horizontal,trUtf8("Номер"));
-    laborProtectionModel->setHeaderData(5,Qt::Horizontal,tr("Номер\nудостоверения"));
-    laborProtectionModel->setHeaderData(6,Qt::Horizontal,tr("Дата\nудостоверения"));
-    laborProtectionModel->setHeaderData(8,Qt::Horizontal,tr("Причина\nпроверки"));
+    laborProtectionModel->setHeaderData(5,Qt::Horizontal,trUtf8("Номер\nудостоверения"));
+    laborProtectionModel->setHeaderData(6,Qt::Horizontal,trUtf8("Дата\nудостоверения"));
+    laborProtectionModel->setHeaderData(8,Qt::Horizontal,trUtf8("Причина\nпроверки"));
     laborProtectionModel->setRelation(8,QSqlRelation("prichinaobuch","prichinaobuchid","prichinaobuchname"));
     laborProtectionModel->select();
     laborProtectionWidget->setModel(laborProtectionModel);
@@ -501,9 +504,9 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     industrialSecurityModel->setHeaderData(3,Qt::Horizontal,trUtf8("Программа обучения"));
     industrialSecurityModel->setRelation(3,QSqlRelation("pbprogramma","pbprogrammaid","pbprogrammaname"));
     industrialSecurityModel->setHeaderData(4,Qt::Horizontal,trUtf8("Номер"));
-    industrialSecurityModel->setHeaderData(5,Qt::Horizontal,tr("Номер\nудостоверения"));
-    industrialSecurityModel->setHeaderData(6,Qt::Horizontal,tr("Дата\nудостоверения"));
-    industrialSecurityModel->setHeaderData(8,Qt::Horizontal,tr("Причина\nпроверки"));
+    industrialSecurityModel->setHeaderData(5,Qt::Horizontal,trUtf8("Номер\nудостоверения"));
+    industrialSecurityModel->setHeaderData(6,Qt::Horizontal,trUtf8("Дата\nудостоверения"));
+    industrialSecurityModel->setHeaderData(8,Qt::Horizontal,trUtf8("Причина\nпроверки"));
     industrialSecurityModel->setRelation(8,QSqlRelation("prichinaobuch","prichinaobuchid","prichinaobuchname"));
     industrialSecurityModel->select();
     industrialSecurityWidget->setModel(industrialSecurityModel);
@@ -525,22 +528,23 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     //*****************************************************
     //Fire Protection
     //*****************************************************
-    QTableView *fireProtectionWidget = new QTableView;
-    QSqlRelationalTableModel *fireProtectionModel = new QSqlRelationalTableModel;
-    fireProtectionModel->setTable("firesafety");
+    fireProtectionWidget = new QTableView;
+    fireProtectionModel = new QSqlRelationalTableModel;
+    fireProtectionModel->setTable("ptm");
     fireProtectionModel->setFilter(filterP);
-    fireProtectionModel->setHeaderData(1,Qt::Horizontal,tr("Date"));
-    fireProtectionModel->setHeaderData(3,Qt::Horizontal,tr("Number"));
-    fireProtectionModel->setHeaderData(4,Qt::Horizontal,tr("Hour"));
-    fireProtectionModel->setHeaderData(5,Qt::Horizontal,tr("Sostav"));
-    fireProtectionModel->setHeaderData(6,Qt::Horizontal,tr("Number"));
-    fireProtectionModel->setHeaderData(7,Qt::Horizontal,tr("Date of issuance"));
+    fireProtectionModel->setHeaderData(2,Qt::Horizontal,trUtf8("Дата"));
+    fireProtectionModel->setHeaderData(3,Qt::Horizontal,trUtf8("Номер"));
+    fireProtectionModel->setHeaderData(4,Qt::Horizontal,trUtf8("Номер\nудостоверения"));
+    fireProtectionModel->setHeaderData(5,Qt::Horizontal,trUtf8("Дата\nудостоверения"));
+    fireProtectionModel->setHeaderData(7,Qt::Horizontal,trUtf8("Причина\nпроверки"));
+    fireProtectionModel->setRelation(7,QSqlRelation("prichinaobuch","prichinaobuchid","prichinaobuchname"));
     fireProtectionModel->select();
     fireProtectionWidget->setModel(fireProtectionModel);
     fireProtectionWidget->setColumnHidden(0,true);
-    fireProtectionWidget->setItemDelegateForColumn(1,new DateItemDelegate);
-    fireProtectionWidget->setColumnHidden(2,true);
-    fireProtectionWidget->setItemDelegateForColumn(7,new DateItemDelegate);
+    fireProtectionWidget->setColumnHidden(1,true);
+    fireProtectionWidget->setItemDelegateForColumn(2,new DateItemDelegate);
+    fireProtectionWidget->setItemDelegateForColumn(5,new DateItemDelegate);
+    fireProtectionWidget->setColumnHidden(6,true);
     fireProtectionWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     fireProtectionWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
     fireProtectionWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -549,6 +553,38 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     //fireProtectionWidget->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
     QHeaderView *headFireProtection = fireProtectionWidget->horizontalHeader();
     headFireProtection->setStretchLastSection(true);
+    contextPTM();
+    connect(fireProtectionWidget,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(ptm()));
+    //*****************************************************
+    //Electro Protection
+    //*****************************************************
+    electroProtWidget = new QTableView;
+    electroProtModel = new QSqlRelationalTableModel;
+    electroProtModel->setTable("electroprot");
+    electroProtModel->setFilter(filterP);
+    electroProtModel->setHeaderData(2,Qt::Horizontal,trUtf8("Дата"));
+    electroProtModel->setHeaderData(3,Qt::Horizontal,trUtf8("Номер"));
+    electroProtModel->setHeaderData(4,Qt::Horizontal,trUtf8("Номер\nудостоверения"));
+    electroProtModel->setHeaderData(5,Qt::Horizontal,trUtf8("Дата\nудостоверения"));
+    electroProtModel->setHeaderData(7,Qt::Horizontal,trUtf8("Причина\nпроверки"));
+    electroProtModel->setRelation(7,QSqlRelation("prichinaobuch","prichinaobuchid","prichinaobuchname"));
+    electroProtModel->select();
+    electroProtWidget->setModel(electroProtModel);
+    electroProtWidget->setColumnHidden(0,true);
+    electroProtWidget->setColumnHidden(1,true);
+    electroProtWidget->setItemDelegateForColumn(2,new DateItemDelegate);
+    electroProtWidget->setItemDelegateForColumn(5,new DateItemDelegate);
+    electroProtWidget->setColumnHidden(6,true);
+    electroProtWidget->setSelectionMode(QAbstractItemView::SingleSelection);
+    electroProtWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
+    electroProtWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    electroProtWidget->setAlternatingRowColors(true);
+    electroProtWidget->resizeColumnsToContents();
+    //fireProtectionWidget->horizontalHeader()->setResizeMode(QHeaderView::ResizeToContents);
+    QHeaderView *headElectroProtection = electroProtWidget->horizontalHeader();
+    headElectroProtection->setStretchLastSection(true);
+    contextElectroProm();
+    connect(electroProtWidget,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(elektroprom()));
     //*****************************************************
     //Physical
     //*****************************************************
@@ -556,12 +592,12 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     QSqlRelationalTableModel *physicalModel = new QSqlRelationalTableModel;
     physicalModel->setTable("physical");
     physicalModel->setFilter(filterP);
-    physicalModel->setHeaderData(2,Qt::Horizontal,tr("Number"));
-    physicalModel->setHeaderData(3,Qt::Horizontal,tr("Date"));
-    physicalModel->setHeaderData(4,Qt::Horizontal,tr("Passed"));
-    physicalModel->setHeaderData(5,Qt::Horizontal,tr("Fit"));
-    physicalModel->setHeaderData(6,Qt::Horizontal,tr("Date of passge"));
-    physicalModel->setHeaderData(7,Qt::Horizontal,tr("Nubber spravki"));
+    physicalModel->setHeaderData(2,Qt::Horizontal,trUtf8("Number"));
+    physicalModel->setHeaderData(3,Qt::Horizontal,trUtf8("Date"));
+    physicalModel->setHeaderData(4,Qt::Horizontal,trUtf8("Passed"));
+    physicalModel->setHeaderData(5,Qt::Horizontal,trUtf8("Fit"));
+    physicalModel->setHeaderData(6,Qt::Horizontal,trUtf8("Date of passge"));
+    physicalModel->setHeaderData(7,Qt::Horizontal,trUtf8("Nubber spravki"));
     physicalModel->select();
     physicalWidget->setModel(physicalModel);
     physicalWidget->setColumnHidden(0,true);
@@ -583,12 +619,12 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     overalModel = new QSqlRelationalTableModel;
     overalModel->setTable("overal");
     overalModel->setFilter(filterP);
-    overalModel->setHeaderData(2,Qt::Horizontal,tr("Рост"));
-    overalModel->setHeaderData(3,Qt::Horizontal,tr("Головной убор"));
-    overalModel->setHeaderData(4,Qt::Horizontal,tr("Зимняя одежда"));
-    overalModel->setHeaderData(5,Qt::Horizontal,tr("Летняя одежда"));
-    overalModel->setHeaderData(6,Qt::Horizontal,tr("Зимняя обувь"));
-    overalModel->setHeaderData(7,Qt::Horizontal,tr("Летняя обувь"));
+    overalModel->setHeaderData(2,Qt::Horizontal,trUtf8("Рост"));
+    overalModel->setHeaderData(3,Qt::Horizontal,trUtf8("Головной убор"));
+    overalModel->setHeaderData(4,Qt::Horizontal,trUtf8("Зимняя одежда"));
+    overalModel->setHeaderData(5,Qt::Horizontal,trUtf8("Летняя одежда"));
+    overalModel->setHeaderData(6,Qt::Horizontal,trUtf8("Зимняя обувь"));
+    overalModel->setHeaderData(7,Qt::Horizontal,trUtf8("Летняя обувь"));
     overalModel->select();
 
     overalWidget->setModel(overalModel);
@@ -656,10 +692,10 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     QSqlRelationalTableModel *visModel = new QSqlRelationalTableModel;
     visModel->setTable("visota");
     visModel->setFilter(filterP);
-    visModel->setHeaderData(1,Qt::Horizontal,tr("Protokol Number"));
-    visModel->setHeaderData(2,Qt::Horizontal,tr("Protokol Date"));
-    //    sizModel->setHeaderData(4,Qt::Horizontal,tr("Data Polucheniya"));
-    //    sizModel->setHeaderData(5,Qt::Horizontal,tr("Srok Ispolzovaniya"));
+    visModel->setHeaderData(1,Qt::Horizontal,trUtf8("Protokol Number"));
+    visModel->setHeaderData(2,Qt::Horizontal,trUtf8("Protokol Date"));
+    //    sizModel->setHeaderData(4,Qt::Horizontal,trUtf8("Data Polucheniya"));
+    //    sizModel->setHeaderData(5,Qt::Horizontal,trUtf8("Srok Ispolzovaniya"));
     visModel->select();
     visWidget->setModel(visModel);
     visWidget->setColumnHidden(0,true);
@@ -675,8 +711,6 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     headVis->setStretchLastSection(true);
 
     //*****************************************************
-
-
 
     newRecord = false;
     bool loadPhoto = false;
@@ -701,7 +735,7 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
         query.exec();
         query.next();
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("DataBase ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("DataBase ERROR!"),query.lastError().text());
 
         }
         editFIO->setText(query.value(0).toString());
@@ -762,19 +796,19 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
             }
             experience += QString::number(mounth);
             if(mounth == 1){
-                experience += tr(" mesyaz, ");
+                experience += trUtf8(" mesyaz, ");
             }else if(mounth == 2 || mounth == 3 || mounth == 4){
-                experience += tr(" mesyaza, ");
+                experience += trUtf8(" mesyaza, ");
             }else{
-                experience += tr(" mesyazev, ");
+                experience += trUtf8(" mesyazev, ");
             }
             experience += QString::number(days);
             if(mounth == 1){
-                experience += tr(" den.");
+                experience += trUtf8(" den.");
             }else if(mounth == 2 || mounth == 3 || mounth == 4){
-                experience += tr(" dnya.");
+                experience += trUtf8(" dnya.");
             }else{
-                experience += tr(" dney.");
+                experience += trUtf8(" dney.");
             }
         }else{
             experience = "";
@@ -867,6 +901,7 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
         tabWidget->addTab(industrialSecurityWidget,trUtf8("Промбезопасность"));
     }
     tabWidget->addTab(fireProtectionWidget,trUtf8("ПТМ"));
+    tabWidget->addTab(electroProtWidget,trUtf8("Электро"));
     tabWidget->addTab(visWidget,trUtf8("Высота"));
     tabWidget->addTab(physicalWidget,trUtf8("Медицина"));
     tabWidget->addTab(overalWidget,trUtf8("Размеры"));
@@ -886,11 +921,16 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     }
     //mainLayout->addStretch();
     if(!loadPhoto){
-        editFoto->setText(tr("No Photo"));
+        editFoto->setText(trUtf8("Нет Фото"));
     }
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Employee"));
+    setWindowTitle(trUtf8("Сотрудник"));
+
+}
+
+EmployeeForm::~EmployeeForm()
+{
 
 }
 
@@ -912,12 +952,12 @@ void EmployeeForm::photoRead()
         query.exec();
         query.next();
         if(query.value(0).toBool()){
-            QString fileName = QFileDialog::getOpenFileName(this,tr("Open file"),"*.jpg","Foto (*.jpg)");
+            QString fileName = QFileDialog::getOpenFileName(this,trUtf8("Open file"),"*.jpg","Foto (*.jpg)");
             QFile file(fileName);
             if(file.open(QIODevice::ReadOnly)){
                 newImage = true;
                 if(file.size() > 300000){
-                    QMessageBox::warning(this,tr("Attention"),tr("Size of file must be < 300 kByte"));
+                    QMessageBox::warning(this,trUtf8("Attention"),trUtf8("Size of file must be < 300 kByte"));
                     return;
                 }
                 pixMap.load(fileName);
@@ -941,7 +981,7 @@ void EmployeeForm::photoRead()
                     query.bindValue(":photoname",imageByte);
                     query.exec();
                     if(!query.isActive()){
-                        QMessageBox::warning(this,QObject::tr("DataBase ERROR!"),query.lastError().text());
+                        QMessageBox::warning(this,QObject::trUtf8("DataBase ERROR!"),query.lastError().text());
                     }
                 }else{
                     QSqlQuery query;
@@ -952,7 +992,7 @@ void EmployeeForm::photoRead()
                     query.bindValue(":bod",imageByte);
                     query.exec();
                     if(!query.isActive()){
-                        QMessageBox::warning(this,QObject::tr("DataBase ERROR!"),query.lastError().text(),QMessageBox::Yes);
+                        QMessageBox::warning(this,QObject::trUtf8("DataBase ERROR!"),query.lastError().text(),QMessageBox::Yes);
                     }
                 }
             }
@@ -1283,7 +1323,7 @@ void EmployeeForm::editRecord()
             queryDriver.bindValue(":licsnsee",nameEditDriverE->checkState());
             queryDriver.exec();
             if(!queryDriver.isActive()){
-                QMessageBox::warning(this,QObject::tr("DataBase ERROR!"),queryDriver.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("DataBase ERROR!"),queryDriver.lastError().text());
             }
         }else{
             QSqlQuery queryDriver;
@@ -1312,7 +1352,7 @@ void EmployeeForm::editRecord()
             queryDriver.bindValue(":licsnsee",nameEditDriverE->checkState());
             queryDriver.exec();
             if(!queryDriver.isActive()){
-                QMessageBox::warning(this,QObject::tr("DataBase ERROR!"),queryDriver.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("DataBase ERROR!"),queryDriver.lastError().text());
             }
         }
         emit accept();
@@ -1606,6 +1646,28 @@ void EmployeeForm::contextIndustrialSecurity()
     industrialSecurityWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
+void EmployeeForm::contextPTM()
+{
+    QPixmap pixEdit(":/edit.png");
+    QAction *editAction = new QAction(trUtf8("Протокол ПТМ (Открыть)"),this);
+    editAction->setIcon(pixEdit);
+    connect(editAction,SIGNAL(triggered()),this,SLOT(ptm()));
+
+    fireProtectionWidget->addAction(editAction);
+    fireProtectionWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
+}
+
+void EmployeeForm::contextElectroProm()
+{
+    QPixmap pixEdit(":/edit.png");
+    QAction *editAction = new QAction(trUtf8("Протокол Электробезопасности (Открыть)"),this);
+    editAction->setIcon(pixEdit);
+    connect(editAction,SIGNAL(triggered()),this,SLOT(elektroprom()));
+
+    electroProtWidget->addAction(editAction);
+    electroProtWidget->setContextMenuPolicy(Qt::ActionsContextMenu);
+}
+
 void EmployeeForm::sizQuery()
 {
     int rowCount = 0;
@@ -1726,4 +1788,28 @@ void EmployeeForm::industrialSecurity()
     openForm.exec();
     industrialSecurityModel->select();
     industrialSecurityWidget->repaint();
+}
+
+void EmployeeForm::ptm()
+{
+    QModelIndex index = fireProtectionWidget->currentIndex();
+    QSqlRecord record = fireProtectionModel->record(index.row());
+
+    QString iDValue = record.value("ptmid").toString();
+    FireProtectionForm openForm(iDValue,indexTemp,this,false);
+    openForm.exec();
+    fireProtectionModel->select();
+    fireProtectionWidget->repaint();
+}
+
+void EmployeeForm::elektroprom()
+{
+    QModelIndex index = electroProtWidget->currentIndex();
+    QSqlRecord record = electroProtModel->record(index.row());
+
+    QString iDValue = record.value("electroprotid").toString();
+    ElectroBezForm openForm(iDValue,indexTemp,this,false);
+    openForm.exec();
+    electroProtModel->select();
+    electroProtWidget->repaint();
 }

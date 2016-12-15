@@ -81,7 +81,7 @@ ViewListTable::ViewListTable(QString idTable, QString nameTable, QWidget *parent
 
     connect(tableView,SIGNAL(doubleClicked(QModelIndex)),this,SLOT(accept()));
 
-    setWindowTitle(tr("List of %1").arg(labelName));
+    setWindowTitle(trUtf8("List of %1").arg(labelName));
     resize(tableView->size().width()+200,tableView->size().height());
 
     createContextMenu();
@@ -100,41 +100,41 @@ void ViewListTable::viewTemplateTable(QString)
     templateModel->setTable(tableName);
 
     if(tableName == "organization"){
-        templateModel->setHeaderData(1,Qt::Horizontal,tr("Name"));
+        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("Name"));
         labelName = trUtf8("Организации");
         if(setFilter){
             templateModel->setFilter(QString("organizationname LIKE '%%1%'").arg(filterTable));
         }
     }else if(tableName == "subdivision"){
-        templateModel->setHeaderData(1,Qt::Horizontal,tr("Name"));
+        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("Name"));
         templateModel->setRelation(2,QSqlRelation("organization","organizationid","organizationname"));
-        templateModel->setHeaderData(2,Qt::Horizontal,tr("Organization Name"));
+        templateModel->setHeaderData(2,Qt::Horizontal,trUtf8("Organization Name"));
         labelName = trUtf8("ПОдразделения");
         if(setFilter){
             templateModel->setFilter(QString("subdivisionname LIKE '%%1%'").arg(filterTable));
         }
     }if(tableName == "empcert"){
-        templateModel->setHeaderData(1,Qt::Horizontal,tr("FIO"));
+        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("FIO"));
         templateModel->setRelation(1,QSqlRelation("employee","employeeid","employeename"));
         labelName = "Employee Certification";
         if(setFilter){
             templateModel->setFilter(QString("employeename LIKE '%%1%'").arg(filterTable));
         }
     }else if(tableName == "testtask"){
-        templateModel->setHeaderData(1,Qt::Horizontal,tr("Name"));
+        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("Name"));
         labelName = "Test task";
         if(setFilter){
             templateModel->setFilter(QString("testtaskname LIKE '%%1%'").arg(filterTable));
         }
     }else if(tableName == "safetyreq"){
-        templateModel->setHeaderData(1,Qt::Horizontal,tr("Name"));
+        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("Name"));
         tableView->setColumnHidden(0,true);
         labelName = "Safety Requipment";
         if(setFilter){
             templateModel->setFilter(QString("safetyreqname LIKE '%%1%'").arg(filterTable));
         }
     }else if(tableName == "legalacts"){
-        templateModel->setHeaderData(1,Qt::Horizontal,tr("Name"));
+        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("Name"));
         tableView->setColumnHidden(0,true);
         labelName = "Legal Acts";
         if(setFilter){
@@ -155,11 +155,11 @@ void ViewListTable::viewTemplateTable(QString)
             templateModel->setFilter(QString("employeenameupper LIKE '%%1%'").arg(filterTable));
         }
     }else if(tableName == "empcertdate"){
-//        templateModel->setHeaderData(2,Qt::Horizontal,tr("Protokol date"));
-//        templateModel->setHeaderData(3,Qt::Horizontal,tr("Protokol number"));
+//        templateModel->setHeaderData(2,Qt::Horizontal,trUtf8("Protokol date"));
+//        templateModel->setHeaderData(3,Qt::Horizontal,trUtf8("Protokol number"));
 //        templateModel->setRelation(4,QSqlRelation("testtask","testtaskid","testtaskname"));
-//        templateModel->setHeaderData(4,Qt::Horizontal,tr("Test task"));
-//        templateModel->setHeaderData(5,Qt::Horizontal,tr("FIO"));
+//        templateModel->setHeaderData(4,Qt::Horizontal,trUtf8("Test task"));
+//        templateModel->setHeaderData(5,Qt::Horizontal,trUtf8("FIO"));
 //        templateModel->setRelation(5,QSqlRelation("employee","employeeid","employeename"));
         labelName = "Employees Certification Date";
 //        if(setFilter){
@@ -173,7 +173,7 @@ void ViewListTable::viewTemplateTable(QString)
             templateModel->setFilter(QString("postuppername LIKE '%%1%'").arg(filterTable));
         }
     }else if(tableName == "har"){
-        templateModel->setHeaderData(1,Qt::Horizontal,tr("Name"));
+        templateModel->setHeaderData(1,Qt::Horizontal,trUtf8("Name"));
         labelName = trUtf8("Характеристики");
         if(setFilter){
             templateModel->setFilter(QString("postname LIKE '%%1%'").arg(filterTable));
@@ -314,8 +314,8 @@ void ViewListTable::addRecord()
 void ViewListTable::deleteRecord()
 {
     QMessageBox msgBox(this);
-    msgBox.setWindowTitle(tr("Attention!!!"));
-    msgBox.setText(tr("Really delete?"));
+    msgBox.setWindowTitle(trUtf8("Attention!!!"));
+    msgBox.setText(trUtf8("Really delete?"));
     msgBox.setIcon(QMessageBox::Question);
     msgBox.addButton(QMessageBox::Yes);
     QPushButton *noButton = msgBox.addButton(QMessageBox::No);

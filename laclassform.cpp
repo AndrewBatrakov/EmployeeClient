@@ -10,17 +10,17 @@ LaClassForm::LaClassForm(QString id, QWidget *parent, bool onlyForRead) :
 {
     indexTemp = id;
 
-    labelName = new QLabel(tr("Name:"));
+    labelName = new QLabel(trUtf8("Name:"));
     editName = new LineEdit;
     editName->setReadOnly(onlyForRead);
     QRegExp regExp("[\\x4010-\\x044f 0-9 \\-  ]{150}");
     editName->setValidator(new QRegExpValidator(regExp,this));
     labelName->setBuddy(editName);
 
-    saveButton = new QPushButton(tr("Save"));
+    saveButton = new QPushButton(trUtf8("Save"));
     connect(saveButton,SIGNAL(clicked()),this,SLOT(editRecord()));
 
-    cancelButton = new QPushButton(tr("Cancel"));
+    cancelButton = new QPushButton(trUtf8("Cancel"));
     cancelButton->setDefault(true);
     cancelButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelButton,SIGNAL(clicked()),this,SLOT(accept()));
@@ -38,7 +38,7 @@ LaClassForm::LaClassForm(QString id, QWidget *parent, bool onlyForRead) :
         editName->setText(query.value(0).toString());
     }else{
         editName->clear();
-        editName->setText(QObject::tr("Name of Class"));
+        editName->setText(QObject::trUtf8("Name of Class"));
         editName->selectAll();
     }
     QGridLayout *mainLayout = new QGridLayout;
@@ -50,7 +50,7 @@ LaClassForm::LaClassForm(QString id, QWidget *parent, bool onlyForRead) :
     }
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Class"));
+    setWindowTitle(trUtf8("Class"));
 }
 
 void LaClassForm::editRecord()
@@ -82,8 +82,8 @@ void LaClassForm::editRecord()
             //ind = editName->text();
         }else{
             QString tempString = editName->text();
-            tempString += QObject::tr(" is availble!");
-            QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+            tempString += QObject::trUtf8(" is availble!");
+            QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
         }
     }
     emit accept();
@@ -102,7 +102,7 @@ void LaClassForm::deleteRecord()
         query.exec();
         query.next();
     }else{
-        QMessageBox::warning(this,QObject::tr("Attention"),QObject::tr("You dont may delete default value!"));
+        QMessageBox::warning(this,QObject::trUtf8("Attention"),QObject::trUtf8("You dont may delete default value!"));
     }
 }
 

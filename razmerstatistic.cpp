@@ -3,13 +3,13 @@
 
 RazmerStatistic::RazmerStatistic(QWidget *parent) : QDialog(parent)
 {
-//    QPushButton *execute = new QPushButton(tr("Execute"));
+//    QPushButton *execute = new QPushButton(trUtf8("Execute"));
 //    connect(execute,SIGNAL(clicked()),this,SLOT(printPreview()));
 
 //    QGridLayout *mainLayout = new QGridLayout;
 //    mainLayout->addWidget(execute,0,0);
 //    setLayout(mainLayout);
-//    setWindowTitle(tr("Statistika Razmerov"));
+//    setWindowTitle(trUtf8("Statistika Razmerov"));
     //printPreview();
 }
 
@@ -64,7 +64,7 @@ void RazmerStatistic::print(QPrinter *printer)
     QRect firstString(0,70,widthPage,100);
     painter.drawText(firstString,Qt::AlignHCenter,trUtf8("Статистика размеров сотрудников ЗПГС"));
 //    QRect secondString(0,170,widthPage,100);
-//    painter.drawText(secondString,Qt::AlignHCenter,tr(""));
+//    painter.drawText(secondString,Qt::AlignHCenter,trUtf8(""));
 
     int shapkaTop = 250;
     int shapkaBottom = 320;
@@ -118,7 +118,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("48 <"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("48 <"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -164,7 +164,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("48 - 50"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("48 - 50"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -210,7 +210,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("52 - 54"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("52 - 54"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -256,7 +256,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("54 >"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("54 >"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -300,7 +300,7 @@ void RazmerStatistic::print(QPrinter *printer)
     allCol.moveTop(newLineHight);
     allCol.setHeight(mHight);
     painter.drawRect(allCol);
-    painter.drawText(allCol,Qt::AlignCenter,tr("Shoes"));
+    painter.drawText(allCol,Qt::AlignCenter,trUtf8("Shoes"));
 
     //************************************************************
     newLineHight = allCol.bottom();
@@ -310,7 +310,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("40 <"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("40 <"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -354,7 +354,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("40 - 41"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("40 - 41"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -400,7 +400,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("42 - 43"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("42 - 43"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -446,7 +446,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("44 - 45"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("44 - 45"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -492,7 +492,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("45 >"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("45 >"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -547,7 +547,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("50 <"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("50 <"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -583,7 +583,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("50 - 52"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("50 - 52"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -619,7 +619,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("54 - 56"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("54 - 56"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -655,7 +655,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("57 - 60"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("57 - 60"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);
@@ -691,7 +691,7 @@ void RazmerStatistic::print(QPrinter *printer)
     razmerCol.setHeight(mHight);
     painter.drawRect(razmerCol);
     //painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(razmerCol,Qt::AlignCenter,tr("60 >"));
+    painter.drawText(razmerCol,Qt::AlignCenter,trUtf8("60 >"));
 
     winCol.moveTop(newLineHight);
     winCol.setHeight(mHight);

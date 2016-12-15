@@ -20,14 +20,14 @@ void BoolItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
         QStyleOptionViewItem myOption = option;
         myOption.displayAlignment = Qt::AlignCenter | Qt::AlignVCenter;
         if(date == true){
-            //text = tr("true");
+            //text = trUtf8("true");
             myOption.palette.setColor(QPalette::Text,QColor(Qt::darkBlue));
             //drawBackground(painter, myOption, index);
             //painter->fillRect(option.rect, QColor(Qt::red));
             //myOption.palette.background().setColor(Qt::red);
             state = Qt::Checked;
         }else{
-            //text = tr("false");
+            //text = trUtf8("false");
             myOption.palette.setColor(QPalette::Text,QColor(Qt::black));
             //drawBackground(painter, myOption, index);
             //painter->fillRect(option.rect, QColor(Qt::));

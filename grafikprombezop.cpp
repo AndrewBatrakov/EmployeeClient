@@ -10,7 +10,7 @@ GrafiKPromBezop::GrafiKPromBezop(QWidget *parent) :
     file.open(QFile::ReadOnly);
     QString styleSheetString = QLatin1String(file.readAll());
 
-    labelSMU = new QLabel(tr("SMU:"));
+    labelSMU = new QLabel(trUtf8("SMU:"));
     editSMU = new LineEdit;
     QSqlQueryModel *smuModel = new QSqlQueryModel;
     smuModel->setQuery("SELECT subdivisionname FROM subdivision");
@@ -22,26 +22,26 @@ GrafiKPromBezop::GrafiKPromBezop(QWidget *parent) :
 //    QToolButton *addButton = new QToolButton;
 //    QPixmap addPix(":/add.png");
 //    addButton->setIcon(addPix);
-//    addButton->setToolTip(tr("Add new record"));
+//    addButton->setToolTip(trUtf8("Add new record"));
 //    connect(addButton,SIGNAL(clicked()),this,SLOT(addOrgRecord()));
 //    addButton->setStyleSheet(styleSheetString);
 
     QToolButton *seeSubButton = new QToolButton;
     QPixmap seePix(":/see.png");
     seeSubButton->setIcon(seePix);
-    seeSubButton->setToolTip(tr("See select item"));
+    seeSubButton->setToolTip(trUtf8("See select item"));
     connect(seeSubButton,SIGNAL(clicked()),this,SLOT(seeSubRecord()));
     seeSubButton->setStyleSheet(styleSheetString);
 
     QToolButton *listSubButton = new QToolButton;
     QPixmap listPix(":/list.png");
     listSubButton->setIcon(listPix);
-    listSubButton->setToolTip(tr("See list of item"));
+    listSubButton->setToolTip(trUtf8("See list of item"));
     connect(listSubButton,SIGNAL(clicked()),this,SLOT(listSubRecord()));
     listSubButton->setStyleSheet(styleSheetString);
 
 
-    labelTestTask = new QLabel(tr("Test task:"));
+    labelTestTask = new QLabel(trUtf8("Test task:"));
     editTestTask = new LineEdit;
     QSqlQueryModel *testTaskModel = new QSqlQueryModel;
     testTaskModel->setQuery("SELECT cipher FROM testtask");
@@ -52,17 +52,17 @@ GrafiKPromBezop::GrafiKPromBezop(QWidget *parent) :
 
     QToolButton *seeTTButton = new QToolButton;
     seeTTButton->setIcon(seePix);
-    seeTTButton->setToolTip(tr("See select item"));
+    seeTTButton->setToolTip(trUtf8("See select item"));
     connect(seeTTButton,SIGNAL(clicked()),this,SLOT(seeTestTaskRecord()));
     seeTTButton->setStyleSheet(styleSheetString);
 
     QToolButton *listTTButton = new QToolButton;
     listTTButton->setIcon(listPix);
-    listTTButton->setToolTip(tr("See list of item"));
+    listTTButton->setToolTip(trUtf8("See list of item"));
     connect(listTTButton,SIGNAL(clicked()),this,SLOT(listTestTaskReccord()));
     listTTButton->setStyleSheet(styleSheetString);
 
-    QPushButton *execute = new QPushButton(tr("Execute"));
+    QPushButton *execute = new QPushButton(trUtf8("Execute"));
     connect(execute,SIGNAL(clicked()),this,SLOT(printPreview()));
 
     QGridLayout *mainLayout = new QGridLayout;
@@ -76,7 +76,7 @@ GrafiKPromBezop::GrafiKPromBezop(QWidget *parent) :
     mainLayout->addWidget(listTTButton,1,3);
     mainLayout->addWidget(execute,2,0,1,2);
     setLayout(mainLayout);
-    setWindowTitle(tr("Grafik Prom Bezop"));
+    setWindowTitle(trUtf8("Grafik Prom Bezop"));
 }
 
 void GrafiKPromBezop::printPreview()
@@ -127,19 +127,19 @@ void GrafiKPromBezop::print(QPrinter *printer)
     int widthPage = viewRegion.width();
 
     painter.setFont(QFont("Times New Roman",12,QFont::Normal));
-    painter.drawStaticText(3000,0,tr("Utverzdau"));
-    painter.drawStaticText(3000,120,tr("Zamestitel directora"));
-    painter.drawStaticText(3000,240,tr("po bezopasnosti proizvodstva"));
-    painter.drawStaticText(3000,360,tr("_______________ Gataulin F.A."));
-    painter.drawStaticText(3000,480,tr("\"___\"_____________ 20__ goda."));
+    painter.drawStaticText(3000,0,trUtf8("Utverzdau"));
+    painter.drawStaticText(3000,120,trUtf8("Zamestitel directora"));
+    painter.drawStaticText(3000,240,trUtf8("po bezopasnosti proizvodstva"));
+    painter.drawStaticText(3000,360,trUtf8("_______________ Gataulin F.A."));
+    painter.drawStaticText(3000,480,trUtf8("\"___\"_____________ 20__ goda."));
 
     painter.setFont(QFont("Times New Roman",12,QFont::Bold));
     QRect firstString(0,600,widthPage,100);
-    painter.drawText(firstString,Qt::AlignHCenter,tr("Grafik"));
+    painter.drawText(firstString,Qt::AlignHCenter,trUtf8("Grafik"));
     QRect secondString(0,700,widthPage,100);
-    painter.drawText(secondString,Qt::AlignHCenter,tr("prohozdeniya attestacii rukovoditeley i spezialistov"));
+    painter.drawText(secondString,Qt::AlignHCenter,trUtf8("prohozdeniya attestacii rukovoditeley i spezialistov"));
     QRect thirdhString(0,800,widthPage,100);
-    QString val1 = tr("podrazdeleniya: ");
+    QString val1 = trUtf8("podrazdeleniya: ");
     val1 += editSMU->text();
     painter.drawText(thirdhString,Qt::AlignHCenter|Qt::TextWordWrap,val1);
     QSqlQuery query;
@@ -164,22 +164,22 @@ void GrafiKPromBezop::print(QPrinter *printer)
 
     painter.drawRect(numerCol);
     painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-    painter.drawText(numerCol,Qt::AlignCenter,tr("N\np/p"));
+    painter.drawText(numerCol,Qt::AlignCenter,trUtf8("N\np/p"));
 
     painter.drawRect(employeeCol);
-    painter.drawText(employeeCol,Qt::AlignCenter,tr("FIO"));
+    painter.drawText(employeeCol,Qt::AlignCenter,trUtf8("FIO"));
 
     painter.drawRect(postCol);
-    painter.drawText(postCol,Qt::AlignCenter,tr("Post"));
+    painter.drawText(postCol,Qt::AlignCenter,trUtf8("Post"));
 
     painter.drawRect(prichCol);
-    painter.drawText(prichCol,Qt::AlignCenter,tr("N protokola i data\nattestazii"));
+    painter.drawText(prichCol,Qt::AlignCenter,trUtf8("N protokola i data\nattestazii"));
 
     painter.drawRect(normiCol);
-    painter.drawText(normiCol,Qt::AlignCenter,tr("Data\nsledujuzei\nattestazii"));
+    painter.drawText(normiCol,Qt::AlignCenter,trUtf8("Data\nsledujuzei\nattestazii"));
 
     painter.drawRect(primechCol);
-    painter.drawText(primechCol,Qt::AlignCenter,tr("Primechanie"));
+    painter.drawText(primechCol,Qt::AlignCenter,trUtf8("Primechanie"));
 
 
 }

@@ -17,22 +17,22 @@ TypeDocForm::TypeDocForm(QString id, QWidget *parent, bool onlyForRead) :
     file.open(QFile::ReadOnly);
     //QString styleSheetString = QLatin1String(file.readAll());
 
-    labelName = new QLabel(tr("Prichina Obuch:"));
+    labelName = new QLabel(trUtf8("Prichina Obuch:"));
     editName = new LineEdit;
     editName->setReadOnly(onlyForRead);
     QRegExp regExp("[\\x0410-\\x044f 0-9 ()\" -]{150}");
     editName->setValidator(new QRegExpValidator(regExp,this));
     labelName->setBuddy(editName);
 
-    savePushButton = new QPushButton(tr("Save"));
+    savePushButton = new QPushButton(trUtf8("Save"));
     connect(savePushButton,SIGNAL(clicked()),this,SLOT(editRecord()));
-    savePushButton->setToolTip(tr("Save And Close Button"));
+    savePushButton->setToolTip(trUtf8("Save And Close Button"));
 
-    cancelPushButton = new QPushButton(tr("Cancel"));
+    cancelPushButton = new QPushButton(trUtf8("Cancel"));
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(accept()));
-    cancelPushButton->setToolTip(tr("Cancel Button"));
+    cancelPushButton->setToolTip(trUtf8("Cancel Button"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(cancelPushButton,QDialogButtonBox::ActionRole);
@@ -60,7 +60,7 @@ TypeDocForm::TypeDocForm(QString id, QWidget *parent, bool onlyForRead) :
 
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Type doc"));
+    setWindowTitle(trUtf8("Type doc"));
     readSettings();
 }
 
@@ -87,7 +87,7 @@ void TypeDocForm::editRecord()
         query.bindValue(":typedocname",editName->text().simplified());
         query.exec();
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("Type Doc, UPDATE ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Type Doc, UPDATE ERROR!"),query.lastError().text());
             return;
         }
         line += "UPDATE typedoc SET typedocname = '";
@@ -111,7 +111,7 @@ void TypeDocForm::editRecord()
         queryInsert.bindValue(":name",editName->text().simplified());
         queryInsert.exec();
         if(!queryInsert.isActive()){
-            QMessageBox::warning(this,QObject::tr("Type Doc, INSERT ERROR!"),queryInsert.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Type Doc, INSERT ERROR!"),queryInsert.lastError().text());
             return;
         }
         line += "INSERT INTO typedoc (typedocid, typedocname) VALUES('";
@@ -139,7 +139,7 @@ void TypeDocForm::deleteRecord()
     ForDelete forDelete(indexTemp,"typedoc",this);
 
     forDelete.exec();
-    int k = QMessageBox::warning(this,tr("Attention!!!"),tr("Delete item?"),
+    int k = QMessageBox::warning(this,trUtf8("Attention!!!"),trUtf8("Delete item?"),
                                  QMessageBox::No|QMessageBox::Yes,QMessageBox::No);
     if(k == QMessageBox::Yes){
         forDelete.deleteOnDefault();

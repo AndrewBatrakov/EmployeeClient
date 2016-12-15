@@ -22,6 +22,8 @@ HEADERS +=  viewlisttable.h\
             sqlform.h \
             nashafirmaform.h\
             programmsettings.h\
+    $$PWD/initials.h \
+    $$PWD/exchangefile.h
 
 SOURCES +=  viewlisttable.cpp\
             databasedirection.cpp\
@@ -46,5 +48,7 @@ SOURCES +=  viewlisttable.cpp\
             sqlform.cpp \
             nashafirmaform.cpp\
             programmsettings.cpp\
+    $$PWD/initials.cpp \
+    $$PWD/exchangefile.cpp
 
 include(Import.pri)

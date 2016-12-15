@@ -10,7 +10,7 @@ PhotoLoad::PhotoLoad(QWidget *parent) :
 
 void PhotoLoad::importPhotoProcedure()
 {
-    QString dirName = QFileDialog::getExistingDirectory(this,tr("Open Files"),"/home",
+    QString dirName = QFileDialog::getExistingDirectory(this,trUtf8("Open Files"),"/home",
                                                         QFileDialog::ShowDirsOnly
                                                         | QFileDialog::DontResolveSymlinks);
 
@@ -20,7 +20,7 @@ void PhotoLoad::importPhotoProcedure()
 
     QProgressDialog progressR(this);
     progressR.setWindowModality(Qt::WindowModal);
-    progressR.setWindowTitle(tr("Load photo"));
+    progressR.setWindowTitle(trUtf8("Load photo"));
     int countValue = 1;
     progressR.setMinimum(countValue);
     progressR.setMaximum(fileNames.count());
@@ -62,7 +62,7 @@ void PhotoLoad::importPhotoProcedure()
                 }
                 query.next();
                 if(!query.isActive()){
-                    QMessageBox::warning(this,QObject::tr("Employee, SELECT Table ERROR!"),query.lastError().text());
+                    QMessageBox::warning(this,QObject::trUtf8("Employee, SELECT Table ERROR!"),query.lastError().text());
                 }
 
                 if(query.isValid()){
@@ -76,7 +76,7 @@ void PhotoLoad::importPhotoProcedure()
                     queryEx.exec();
                     queryEx.next();
                     if(!queryEx.isActive()){
-                        QMessageBox::warning(this,QObject::tr("Photo id, SELECT Table ERROR!"),queryEx.lastError().text());
+                        QMessageBox::warning(this,QObject::trUtf8("Photo id, SELECT Table ERROR!"),queryEx.lastError().text());
                     }
 
                     progressR.show();
@@ -92,7 +92,7 @@ void PhotoLoad::importPhotoProcedure()
                         query.bindValue(":photoname",imageByte);
                         query.exec();
                         if(!query.isActive()){
-                            QMessageBox::warning(this,QObject::tr("DataBase ERROR!"),query.lastError().text());
+                            QMessageBox::warning(this,QObject::trUtf8("DataBase ERROR!"),query.lastError().text());
                         }
                         progressR.show();
                         qApp->processEvents();

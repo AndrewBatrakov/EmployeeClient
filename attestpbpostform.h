@@ -17,13 +17,12 @@ public:
 
 public slots:
     void deleteRecord();
-    void printTable();
 
 private slots:
     void saveRecord();
     void cancelRecord();
     void editRecord();
-    void excelExport();
+    void shifrChange(QString);
 
     void readSettings();
     void writeSettings();
@@ -36,27 +35,12 @@ private slots:
     void updateTable();
     void createContextMenu();
 
-    void print(QPrinter *);
-    int printParagraph(QString, QPainter*, QRect*, int);
-
 private:
-    QLabel *labelNumber;
-    LineEdit *editNumber;
-    QLabel *labelDogovor;
-    LineEdit *editDogovor;
+    QLabel *labelShifr;
+    LineEdit *editShifr;
 
-    QLabel *labelDateDoc;
-    QDateEdit *editDateDoc;
-    QLabel *labelDateCor;
-    QDateEdit *editDateCor;
-    QLabel *labelDateObuch;
-    QDateEdit *editDateObuch;
-    QLabel *labelProtokolObuch;
-    LineEdit *editProtocolObuch;
-    QLabel *labelPrichina;
-    LineEdit *editPrichina;
-    QLabel *labelVidAtest;
-    LineEdit *editVidAtest;
+    QLabel *labelTestZad;
+    QTextEdit *editTestZad;
 
     QPushButton *savePushButton;
     QPushButton *cancelPushButton;
@@ -67,7 +51,7 @@ private:
     QAction *editAction;
 
     QString indexTemp;//, idPost, idPostSizTable;
-    QTableWidget *employeeView;
+    QTableWidget *postView;
     bool addIntoTable, updateRecord;
 
     QFile exchangeFile;

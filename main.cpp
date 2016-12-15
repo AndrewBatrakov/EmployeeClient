@@ -49,9 +49,18 @@ int main(int argc, char *argv[])
     //    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
     //    settings.setValue("Font", fontId);
 
+    QFile file;
+    file.setFileName("CE_SQLite.arh");
+    file.remove();
+    file.setFileName("CE_SQLite.dat");
+    if(file.isOpen()){
+        file.close();
+    }
+    file.setPermissions(QFile::ReadOwner | QFile::WriteOwner);
+    file.remove();
+
     UpLoadBase upLoad;
     upLoad.exeVersion();
-
 
     Registration registrationForm;
     if(!registrationForm.exec()){

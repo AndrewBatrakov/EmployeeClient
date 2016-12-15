@@ -16,18 +16,18 @@ ContractForm::ContractForm(QString id, QWidget *parent, bool onlyForRead) :
     file.open(QFile::ReadOnly);
     QString styleSheetString = QLatin1String(file.readAll());
 
-    labelNumber = new QLabel(tr("Number:"));
+    labelNumber = new QLabel(trUtf8("Number:"));
     editNumber = new LineEdit;
     editNumber->setReadOnly(onlyForRead);
     labelNumber->setBuddy(editNumber);
 
-    labelDate = new QLabel(tr("Date:"));
+    labelDate = new QLabel(trUtf8("Date:"));
     editDate = new QDateEdit;
     editDate->setCalendarPopup(true);
     editDate->setReadOnly(onlyForRead);
     editDate->setDate(QDate::currentDate());
 
-    labelEmployee = new QLabel(tr("FIO:"));
+    labelEmployee = new QLabel(trUtf8("FIO:"));
     editEmployee = new LineEdit;
     editEmployee->setReadOnly(onlyForRead);
     labelEmployee->setBuddy(editEmployee);
@@ -42,21 +42,21 @@ ContractForm::ContractForm(QString id, QWidget *parent, bool onlyForRead) :
     QToolButton *addButton = new QToolButton;
     QPixmap addPix(":/add.png");
     addButton->setIcon(addPix);
-    addButton->setToolTip(tr("Add new record"));
+    addButton->setToolTip(trUtf8("Add new record"));
     connect(addButton,SIGNAL(clicked()),this,SLOT(addRecord()));
     addButton->setStyleSheet(styleSheetString);
 
     QToolButton *seeButton = new QToolButton;
     QPixmap seePix(":/see.png");
     seeButton->setIcon(seePix);
-    seeButton->setToolTip(tr("See select item"));
+    seeButton->setToolTip(trUtf8("See select item"));
     connect(seeButton,SIGNAL(clicked()),this,SLOT(seeRecord()));
     seeButton->setStyleSheet(styleSheetString);
 
     QToolButton *listButton = new QToolButton;
     QPixmap listPix(":/list.png");
     listButton->setIcon(listPix);
-    listButton->setToolTip(tr("See list of item"));
+    listButton->setToolTip(trUtf8("See list of item"));
     connect(listButton,SIGNAL(clicked()),this,SLOT(listRecord()));
     listButton->setStyleSheet(styleSheetString);
 
@@ -69,19 +69,19 @@ ContractForm::ContractForm(QString id, QWidget *parent, bool onlyForRead) :
         editLayout->addWidget(listButton);
     }
 
-    savePushButton = new QPushButton(tr("Save"));
+    savePushButton = new QPushButton(trUtf8("Save"));
     connect(savePushButton,SIGNAL(clicked()),this,SLOT(editRecord()));
-    savePushButton->setToolTip(tr("Save And Close Button"));
+    savePushButton->setToolTip(trUtf8("Save And Close Button"));
 
-    cancelPushButton = new QPushButton(tr("Cancel"));
+    cancelPushButton = new QPushButton(trUtf8("Cancel"));
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(accept()));
-    cancelPushButton->setToolTip(tr("Cancel Button"));
+    cancelPushButton->setToolTip(trUtf8("Cancel Button"));
 
-    printPushButton = new QPushButton(tr("Print"));
+    printPushButton = new QPushButton(trUtf8("Print"));
     //connect(savePushButton,SIGNAL(clicked()),this,SLOT(editRecord()));
-    printPushButton->setToolTip(tr("Print Contract Button"));
+    printPushButton->setToolTip(trUtf8("Print Contract Button"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(printPushButton,QDialogButtonBox::ActionRole);
@@ -113,7 +113,7 @@ ContractForm::ContractForm(QString id, QWidget *parent, bool onlyForRead) :
 
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Organization"));
+    setWindowTitle(trUtf8("Organization"));
 }
 
 void ContractForm::editRecord()
@@ -145,8 +145,8 @@ void ContractForm::editRecord()
             //nameTemp = editOrganization->text();
         }else{
             //QString tempString = editOrganization->text();
-            //tempString += QObject::tr(" is availble!");
-            //QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+            //tempString += QObject::trUtf8(" is availble!");
+            //QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
         }
     }
     emit accept();
@@ -159,7 +159,7 @@ void ContractForm::deleteRecord()
 
     //if(forDelete.result() == QDialog::Accepted){
     forDelete.exec();
-    int k = QMessageBox::warning(this,tr("Attention!!!"),tr("Delete item with the replacement for default value?"),
+    int k = QMessageBox::warning(this,trUtf8("Attention!!!"),trUtf8("Delete item with the replacement for default value?"),
                                  QMessageBox::No|QMessageBox::Yes,QMessageBox::No);
     if(k == QMessageBox::Yes){
         forDelete.deleteOnDefault();
@@ -170,7 +170,7 @@ void ContractForm::deleteRecord()
             query.exec();
             query.next();
         }else{
-            QMessageBox::warning(this,QObject::tr("Attention"),QObject::tr("You dont may delete default value!"));
+            QMessageBox::warning(this,QObject::trUtf8("Attention"),QObject::trUtf8("You dont may delete default value!"));
         }
     }
 }

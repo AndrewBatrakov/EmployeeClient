@@ -15,7 +15,7 @@ XMLImport::XMLImport(QWidget *parent) : QDialog(parent)
     updateBase();
 }
 
-void XMLImport::updateDir(QString dir)
+void XMLImport::updateDir()
 {
 //    QDir::setCurrent(dir);
 //    QFile file;

@@ -10,23 +10,23 @@ LaTermForm::LaTermForm(QString id, QWidget *parent, bool onlyForRead) :
 {
     indexTemp = id;
 
-    labelName = new QLabel(tr("Name:"));
+    labelName = new QLabel(trUtf8("Name:"));
     editName = new LineEdit;
     editName->setReadOnly(onlyForRead);
     QRegExp regExp("[\\x0410-\\x044f 0-9 \" - , .]{150}");
     editName->setValidator(new QRegExpValidator(regExp,this));
     labelName->setBuddy(editName);
 
-    labelDescription = new QLabel(tr("Description:"));
+    labelDescription = new QLabel(trUtf8("Description:"));
     editDescription = new LineEdit;
     editDescription->setReadOnly(onlyForRead);
     editDescription->setValidator(new QRegExpValidator(regExp,this));
     labelDescription->setBuddy(editDescription);
 
-    saveButton = new QPushButton(tr("Save"));
+    saveButton = new QPushButton(trUtf8("Save"));
     connect(saveButton,SIGNAL(clicked()),this,SLOT(editRecord()));
 
-    cancelButton = new QPushButton(tr("Cancel"));
+    cancelButton = new QPushButton(trUtf8("Cancel"));
     cancelButton->setDefault(true);
     cancelButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelButton,SIGNAL(clicked()),this,SLOT(accept()));
@@ -45,9 +45,9 @@ LaTermForm::LaTermForm(QString id, QWidget *parent, bool onlyForRead) :
         editDescription->setText(query.value(2).toString());
     }else{
         editName->clear();
-//        editName->setText(QObject::tr("Name of Term"));
+//        editName->setText(QObject::trUtf8("Name of Term"));
 //        editName->selectAll();
-//        editDescription->setText(QObject::tr("Description of Term"));
+//        editDescription->setText(QObject::trUtf8("Description of Term"));
 //        editDescription->selectAll();
     }
 
@@ -62,7 +62,7 @@ LaTermForm::LaTermForm(QString id, QWidget *parent, bool onlyForRead) :
     }
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Term"));
+    setWindowTitle(trUtf8("Term"));
 }
 
 void LaTermForm::editRecord()
@@ -75,7 +75,7 @@ void LaTermForm::editRecord()
         query.bindValue(":id",indexTemp);
         query.exec();
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("UPDATE laterm, DataBase ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("UPDATE laterm, DataBase ERROR!"),query.lastError().text());
             return;
         }
     }else{
@@ -97,13 +97,13 @@ void LaTermForm::editRecord()
             query.bindValue(":des",editDescription->text().simplified());
             query.exec();
             if(!query.isActive()){
-                QMessageBox::warning(this,QObject::tr("INSERT laterm, DataBase ERROR!"),query.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("INSERT laterm, DataBase ERROR!"),query.lastError().text());
                 return;
             }
         }else{
             QString tempString = editName->text();
-            tempString += QObject::tr(" is availble!");
-            QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+            tempString += QObject::trUtf8(" is availble!");
+            QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
         }
     }
     emit accept();
@@ -122,7 +122,7 @@ void LaTermForm::deleteRecord()
         query.exec();
         query.next();
     }else{
-        QMessageBox::warning(this,QObject::tr("Attention"),QObject::tr("You dont may delete default value!"));
+        QMessageBox::warning(this,QObject::trUtf8("Attention"),QObject::trUtf8("You dont may delete default value!"));
     }
 }
 

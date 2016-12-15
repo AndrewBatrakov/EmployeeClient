@@ -36,7 +36,7 @@ FtpForm::FtpForm(QWidget *parent) :
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(accept()));
-    cancelPushButton->setToolTip(tr("Отмена"));
+    cancelPushButton->setToolTip(trUtf8("Отмена"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(cancelPushButton,QDialogButtonBox::ActionRole);

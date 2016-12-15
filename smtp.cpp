@@ -7,7 +7,7 @@ Smtp::Smtp(QString host, QString username, QString pass)
 
 void Smtp::disconnected()
 {
-    //QMessageBox::warning(this,tr("Disconnected!"),smtpsocet->errorString(),);
+    //QMessageBox::warning(this,trUtf8("Disconnected!"),smtpsocet->errorString(),);
 }
 
 void Smtp::connected()

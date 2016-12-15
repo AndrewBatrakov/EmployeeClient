@@ -9,7 +9,7 @@ ImportXmlTable::ImportXmlTable(QWidget *parent) : QDialog(parent)
 void ImportXmlTable::importXMLTable()
 {
     QDomDocument domDoc;
-    QString fileName = QFileDialog::getOpenFileName(this,tr("Open file"),".","*.xml");
+    QString fileName = QFileDialog::getOpenFileName(this,trUtf8("Open file"),".","*.xml");
     QFile file(fileName);
     if(file.open(QIODevice::ReadOnly)){
         if(domDoc.setContent(&file)){

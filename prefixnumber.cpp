@@ -11,10 +11,10 @@ PrefixNumber::PrefixNumber(QWidget *parent) :
     editPrefix->setValidator(new QRegExpValidator(regExp,this));
     labelPrefix->setBuddy(editPrefix);
 
-    savePushButton = new QPushButton(tr("Save"));
+    savePushButton = new QPushButton(trUtf8("Save"));
     connect(savePushButton,SIGNAL(clicked()),this,SLOT(editPN()));
 
-    cancelPushButton = new QPushButton(tr("Cancel"));
+    cancelPushButton = new QPushButton(trUtf8("Cancel"));
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(accept()));
@@ -25,7 +25,7 @@ PrefixNumber::PrefixNumber(QWidget *parent) :
 
     QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
     if(settings.value("numprefix").toString() == ""){
-        editPrefix->setText(tr("Three letters of the Latin alphabet"));
+        editPrefix->setText(trUtf8("Three letters of the Latin alphabet"));
         editPrefix->selectAll();
     }else{
         editPrefix->setText(settings.value("numprefix").toString());
@@ -37,7 +37,7 @@ PrefixNumber::PrefixNumber(QWidget *parent) :
     mainLayout->addWidget(buttonBox,1,1);
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Prefix Number "));
+    setWindowTitle(trUtf8("Prefix Number "));
 }
 
 void PrefixNumber::editPN()

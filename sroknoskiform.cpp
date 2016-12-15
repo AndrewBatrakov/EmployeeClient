@@ -13,7 +13,7 @@ SrokNoskiForm::SrokNoskiForm(QWidget *parent) : QDialog(parent)
     editDate->setCalendarPopup(true);
     editDate->setDate(QDate::currentDate());
 
-    QPushButton *printButton = new QPushButton(tr("Print"));
+    QPushButton *printButton = new QPushButton(trUtf8("Print"));
     QPixmap printAdd(":/print.png");
     printButton->setIcon(printAdd);
     connect(printButton,SIGNAL(clicked()),this,SLOT(printTable()));
@@ -104,7 +104,7 @@ void SrokNoskiForm::print(QPrinter *printer)
 
     //************************************************************
     //painter.drawRect(allCol);
-    //painter.drawText(allCol,Qt::AlignCenter,tr("Clothes"));
+    //painter.drawText(allCol,Qt::AlignCenter,trUtf8("Clothes"));
 
     int newLineHight;
     int mHight;

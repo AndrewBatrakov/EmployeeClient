@@ -13,7 +13,7 @@ AllEmployeeSiz::AllEmployeeSiz(QWidget *parent) : QDialog(parent)
     //    editDate->setCalendarPopup(true);
     //    editDate->setDate(QDate::currentDate());
 
-    QPushButton *printButton = new QPushButton(tr("Print"));
+    QPushButton *printButton = new QPushButton(trUtf8("Print"));
     QPixmap printAdd(":/print.png");
     printButton->setIcon(printAdd);
     connect(printButton,SIGNAL(clicked()),this,SLOT(printPreview()));
@@ -105,19 +105,19 @@ void AllEmployeeSiz::print(QPrinter *printer)
 
 //    painter.drawRect(numberCol);
 //    painter.setFont(QFont("Times New Roman",9,QFont::Bold));
-//    painter.drawText(numberCol,Qt::AlignCenter,tr("N\np/p"));
+//    painter.drawText(numberCol,Qt::AlignCenter,trUtf8("N\np/p"));
 
 //    painter.drawRect(employeeCol);
-//    painter.drawText(employeeCol,Qt::AlignCenter,tr("FIO"));
+//    painter.drawText(employeeCol,Qt::AlignCenter,trUtf8("FIO"));
 
 //    painter.drawRect(postCol);
-//    painter.drawText(postCol,Qt::AlignCenter,tr("Post"));
+//    painter.drawText(postCol,Qt::AlignCenter,trUtf8("Post"));
 
 //    painter.drawRect(prichCol);
-//    painter.drawText(prichCol,Qt::AlignCenter,tr("SIZ"));
+//    painter.drawText(prichCol,Qt::AlignCenter,trUtf8("SIZ"));
 
 //    painter.drawRect(normiCol);
-//    painter.drawText(normiCol,Qt::AlignCenter,tr("Srok"));
+//    painter.drawText(normiCol,Qt::AlignCenter,trUtf8("Srok"));
 
 //    QSqlQuery query;
 //    query.prepare("SELECT emp.employeename, (SELECT po.postname FROM post AS po WHERE po.postid = emp.postid), emp.postid, employeeid FROM employee AS emp LIMIT 50");

@@ -15,6 +15,7 @@ class EmployeeForm : public QDialog
 public:
     EmployeeForm(QString,QWidget *parent,bool);
     void done(int);
+    ~EmployeeForm();
 
 private slots:
     void editRecord();
@@ -41,6 +42,10 @@ private slots:
     void laborProtection();
     void contextIndustrialSecurity();
     void industrialSecurity();
+    void ptm();
+    void contextPTM();
+    void elektroprom();
+    void contextElectroProm();
 
 public slots:
     void deleteEmployee();
@@ -137,6 +142,10 @@ private:
     QSqlRelationalTableModel *laborProtectionModel;
     QTableView *industrialSecurityWidget;
     QSqlRelationalTableModel *industrialSecurityModel;
+    QTableView *fireProtectionWidget;
+    QSqlRelationalTableModel *fireProtectionModel;
+    QTableView *electroProtWidget;
+    QSqlRelationalTableModel *electroProtModel;
 
     QTabWidget *tabWidget;
     QAction *addAction;

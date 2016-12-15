@@ -86,24 +86,24 @@ OveralForm::OveralForm(QString id, QWidget *parent, bool onlyForRead) :
     editGasmask = new LineEdit;
     editGasmask->setReadOnly(onlyForRead);
 
-    labelMittens = new QLabel(tr("Mittens:"));
+    labelMittens = new QLabel(trUtf8("Mittens:"));
     editMittens = new LineEdit;
     editMittens->setReadOnly(onlyForRead);
 
-    labelGloves = new QLabel(tr("Gloves:"));
+    labelGloves = new QLabel(trUtf8("Gloves:"));
     editGloves = new LineEdit;
     editGloves->setReadOnly(onlyForRead);
 
 
-    savePushButton = new QPushButton(tr("Save"));
+    savePushButton = new QPushButton(trUtf8("Save"));
     connect(savePushButton,SIGNAL(clicked()),this,SLOT(editRecord()));
-    savePushButton->setToolTip(tr("Save And Close Button"));
+    savePushButton->setToolTip(trUtf8("Save And Close Button"));
 
-    cancelPushButton = new QPushButton(tr("Cancel"));
+    cancelPushButton = new QPushButton(trUtf8("Cancel"));
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(accept()));
-    cancelPushButton->setToolTip(tr("Cancel Button"));
+    cancelPushButton->setToolTip(trUtf8("Cancel Button"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(cancelPushButton,QDialogButtonBox::ActionRole);

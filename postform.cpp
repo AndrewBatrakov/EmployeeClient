@@ -156,7 +156,7 @@ void PostForm::deleteRecord()
 
     if(forDelete.result() == QDialog::Accepted){
         forDelete.exec();
-        int k = QMessageBox::warning(this,tr("Внимание!!!"),tr("Действительно удалить?"),
+        int k = QMessageBox::warning(this,trUtf8("Внимание!!!"),trUtf8("Действительно удалить?"),
                                      QMessageBox::No|QMessageBox::Yes,QMessageBox::No);
         if(k == QMessageBox::Yes){
             forDelete.deleteOnDefault();

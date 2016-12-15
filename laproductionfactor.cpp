@@ -7,20 +7,20 @@ LaProductionFactor::LaProductionFactor(QString id, QWidget *parent, bool onlyFor
 {
     indexTemp = id;
 
-    labelName = new QLabel(tr("Name:"));
+    labelName = new QLabel(trUtf8("Name:"));
     editName = new LineEdit;
 
-    labelSanatoryNorms = new QLabel(tr("Sanatory Norms:"));
+    labelSanatoryNorms = new QLabel(trUtf8("Sanatory Norms:"));
     editSanatoryNorms = new LineEdit;
-    labelApproved = new QLabel(tr("Approved:"));
+    labelApproved = new QLabel(trUtf8("Approved:"));
     editApproved = new LineEdit;
-    labelApprovedDate = new QLabel(tr("Approved Date:"));
+    labelApprovedDate = new QLabel(trUtf8("Approved Date:"));
     editApprovedDate = new LineEdit;
 
-    saveButton = new QPushButton(tr("Save"));
+    saveButton = new QPushButton(trUtf8("Save"));
     connect(saveButton,SIGNAL(clicked()),this,SLOT(editRecord()));
 
-    cancelButton = new QPushButton(tr("Cancel"));
+    cancelButton = new QPushButton(trUtf8("Cancel"));
     cancelButton->setDefault(true);
     cancelButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelButton,SIGNAL(clicked()),this,SLOT(accept()));
@@ -44,13 +44,13 @@ LaProductionFactor::LaProductionFactor(QString id, QWidget *parent, bool onlyFor
         editSanatoryNorms->clear();
         editApproved->clear();
         editApprovedDate->clear();
-        editName->setText(QObject::tr("Name of Production Factor"));
+        editName->setText(QObject::trUtf8("Name of Production Factor"));
         editName->selectAll();
-        editSanatoryNorms->setText(QObject::tr("Sanatory Norms of Production Factor"));
+        editSanatoryNorms->setText(QObject::trUtf8("Sanatory Norms of Production Factor"));
         editSanatoryNorms->selectAll();
-        editApproved->setText(QObject::tr("Approved of Production Factor"));
+        editApproved->setText(QObject::trUtf8("Approved of Production Factor"));
         editApproved->selectAll();
-        editApprovedDate->setText(QObject::tr("Approved Date of Production Factor"));
+        editApprovedDate->setText(QObject::trUtf8("Approved Date of Production Factor"));
         editApprovedDate->selectAll();
     }
 
@@ -69,7 +69,7 @@ LaProductionFactor::LaProductionFactor(QString id, QWidget *parent, bool onlyFor
     }
 
     setLayout(mainLayout);
-    setWindowTitle(tr("Production Factor"));
+    setWindowTitle(trUtf8("Production Factor"));
 }
 
 void LaProductionFactor::deleteRecord()
@@ -124,8 +124,8 @@ void LaProductionFactor::editRecord()
             //ind = editName->text();
         }else{
             QString tempString = editName->text();
-            tempString += QObject::tr(" is availble!");
-            QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+            tempString += QObject::trUtf8(" is availble!");
+            QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
         }
     }
     emit accept();

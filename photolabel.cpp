@@ -16,7 +16,7 @@ void PhotoLabel::mouseReleaseEvent(QMouseEvent *ev)
     if(ev->button() == Qt::RightButton){
         QMenu menu(this);
         QPixmap pixD(":/delete.png");
-        menu.addAction(pixD,tr("Delete Photo"));
+        menu.addAction(pixD,trUtf8("Delete Photo"));
         menu.setContextMenuPolicy(Qt::ActionsContextMenu);
         QAction *m = menu.exec(ev->globalPos());
         if(m){
@@ -28,10 +28,10 @@ void PhotoLabel::mouseReleaseEvent(QMouseEvent *ev)
             query.exec();
             query.next();
             if(!query.isActive()){
-                QMessageBox::warning(this,QObject::tr("DataBase ERROR!"),query.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("DataBase ERROR!"),query.lastError().text());
             }
             this->clear();
-            this->setText(tr("No Photo"));
+            this->setText(trUtf8("No Photo"));
         }
 
     }

@@ -57,11 +57,11 @@ Registration::Registration(QWidget *parent) :
 
 bool Registration::checkInput()
 {
-    QFile file("./CE_SQLite.dat");
-    if(!file.exists()){
-        UpLoadBase upLoad(this);
-        upLoad.exeVersion();
-    }
+//    QFile file("./CE_SQLite.dat");
+//    if(!file.exists()){
+//        UpLoadBase upLoad(this);
+//        upLoad.exeVersion();
+//    }
     bool rr;
 
     DataBaseDirection manipulation;

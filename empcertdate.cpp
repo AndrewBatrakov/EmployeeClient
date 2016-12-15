@@ -12,7 +12,7 @@ EmpCertDate::EmpCertDate(QString id, QWidget *parent, bool onlyForRead) :
     file.open(QFile::ReadOnly);
     QString toolButtonStyle = QLatin1String(file.readAll());
 
-    labelFIO = new QLabel(tr("FIO:"));
+    labelFIO = new QLabel(trUtf8("FIO:"));
     editFIO = new LineEdit;
     QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
     employeeId = settings.value("Employeeid").toString();
@@ -25,18 +25,18 @@ EmpCertDate::EmpCertDate(QString id, QWidget *parent, bool onlyForRead) :
     editFIO->setText(query.value(0).toString());
     editFIO->setReadOnly(true);
 
-    labelProtocolDate = new QLabel(tr("Date:"));
+    labelProtocolDate = new QLabel(trUtf8("Date:"));
     editProtocolDate = new QDateEdit;
     editProtocolDate->setCalendarPopup(true);
     labelProtocolDate->setBuddy(editProtocolDate);
     editFIO->setFocus();
 
-    labelProtocolNumber = new QLabel(tr("Number:"));
+    labelProtocolNumber = new QLabel(trUtf8("Number:"));
     editProtocolNumber = new LineEdit;
     editProtocolNumber->setReadOnly(onlyForRead);
     labelProtocolNumber->setBuddy(editProtocolNumber);
 
-    labelCipher = new QLabel(tr("Cipher:"));
+    labelCipher = new QLabel(trUtf8("Cipher:"));
     editCipher = new LineEdit;
     editCipher->setReadOnly(onlyForRead);
     labelCipher->setBuddy(editCipher);
@@ -44,25 +44,25 @@ EmpCertDate::EmpCertDate(QString id, QWidget *parent, bool onlyForRead) :
     QToolButton *seeCipherButton = new QToolButton;
     QPixmap seePix(":/list.png");
     seeCipherButton->setIcon(seePix);
-    seeCipherButton->setToolTip(tr("See list of item"));
+    seeCipherButton->setToolTip(trUtf8("See list of item"));
     seeCipherButton->setStyleSheet(toolButtonStyle);
     connect(seeCipherButton,SIGNAL(clicked()),this,SLOT(listTestTask()));
 
-    labelName = new QLabel(tr("Name:"));
+    labelName = new QLabel(trUtf8("Name:"));
     editName = new QLabel;
     editName->textFormat();
     editName->setWordWrap(true);
     labelName->setBuddy(editName);
 
-    savePushButton = new QPushButton(tr("Save"));
+    savePushButton = new QPushButton(trUtf8("Save"));
     connect(savePushButton,SIGNAL(clicked()),this,SLOT(editRecord()));
-    savePushButton->setToolTip(tr("Save And Close Button"));
+    savePushButton->setToolTip(trUtf8("Save And Close Button"));
 
-    cancelPushButton = new QPushButton(tr("Cancel"));
+    cancelPushButton = new QPushButton(trUtf8("Cancel"));
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(accept()));
-    cancelPushButton->setToolTip(tr("Cancel Button"));
+    cancelPushButton->setToolTip(trUtf8("Cancel Button"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(cancelPushButton,QDialogButtonBox::ActionRole);
@@ -115,7 +115,7 @@ EmpCertDate::EmpCertDate(QString id, QWidget *parent, bool onlyForRead) :
 
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Employee Certification Date, Number"));
+    setWindowTitle(trUtf8("Employee Certification Date, Number"));
     resize(300,200);
 }
 
@@ -142,7 +142,7 @@ void EmpCertDate::editRecord()
                 query.exec();
                 query.next();
                 if(!query.isActive()){
-                    QMessageBox::warning(this,QObject::tr("empcertdate, UPDATE ERROR!"),query.lastError().text());
+                    QMessageBox::warning(this,QObject::trUtf8("empcertdate, UPDATE ERROR!"),query.lastError().text());
                 }
             }else{
                 QSqlQuery query;
@@ -177,12 +177,12 @@ void EmpCertDate::editRecord()
                     queryInsert.bindValue(":employeeid",employeeId);
                     queryInsert.exec();
                     if(!queryInsert.isActive()){
-                        QMessageBox::warning(this,QObject::tr("empcertdate, INSERT ERROR!"),queryInsert.lastError().text());
+                        QMessageBox::warning(this,QObject::trUtf8("empcertdate, INSERT ERROR!"),queryInsert.lastError().text());
                     }
                 }
             }
         //}else{
-        //    QMessageBox::warning(this,QObject::tr("Attention!!!"),QObject::tr("Select the Cipher\n of test task!!!"));
+        //    QMessageBox::warning(this,QObject::trUtf8("Attention!!!"),QObject::trUtf8("Select the Cipher\n of test task!!!"));
         //}
     //}
     emit accept();

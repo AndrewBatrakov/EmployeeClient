@@ -21,7 +21,7 @@ EmployeeCertification::EmployeeCertification(QString id, QWidget *parent, bool o
     file.open(QFile::ReadOnly);
     QString toolButtonStyle = QLatin1String(file.readAll());
 
-    labelEmployee = new QLabel(tr("FIO:"));
+    labelEmployee = new QLabel(trUtf8("FIO:"));
     editEmployee = new LineEdit;
     editEmployee->setReadOnly(onlyForRead);
     connect(editEmployee,SIGNAL(textChanged(QString)),this,SLOT(setEnter(QString)));
@@ -36,25 +36,25 @@ EmployeeCertification::EmployeeCertification(QString id, QWidget *parent, bool o
     QToolButton *addEmployeeButton = new QToolButton;
     QPixmap addPix(":/add.png");
     addEmployeeButton->setIcon(addPix);
-    addEmployeeButton->setToolTip(tr("Add new record"));
+    addEmployeeButton->setToolTip(trUtf8("Add new record"));
     addEmployeeButton->setStyleSheet(toolButtonStyle);
     connect(addEmployeeButton,SIGNAL(clicked()),this,SLOT(addEmployeeRecord()));
 
     QToolButton *seeEmployeeButton = new QToolButton;
     QPixmap seePix(":/see.png");
     seeEmployeeButton->setIcon(seePix);
-    seeEmployeeButton->setToolTip(tr("See select item"));
+    seeEmployeeButton->setToolTip(trUtf8("See select item"));
     seeEmployeeButton->setStyleSheet(toolButtonStyle);
     connect(seeEmployeeButton,SIGNAL(clicked()),this,SLOT(seeEmployeeRecord()));
 
     QToolButton *listEmployeeButton = new QToolButton;
     QPixmap listPix(":/list.png");
     listEmployeeButton->setIcon(listPix);
-    listEmployeeButton->setToolTip(tr("See list of item"));
+    listEmployeeButton->setToolTip(trUtf8("See list of item"));
     listEmployeeButton->setStyleSheet(toolButtonStyle);
     connect(listEmployeeButton,SIGNAL(clicked()),this,SLOT(listEmployeeRecord()));
 
-    labelPeriodicity = new QLabel(tr("Periodicity"));
+    labelPeriodicity = new QLabel(trUtf8("Periodicity"));
     editPeriodicity = new LineEdit;
 
     QSqlQueryModel *queryPer = new QSqlQueryModel;
@@ -64,11 +64,11 @@ EmployeeCertification::EmployeeCertification(QString id, QWidget *parent, bool o
     perCompleter->setCaseSensitivity(Qt::CaseInsensitive);
     editPeriodicity->setCompleter(perCompleter);
 
-    QPushButton *addTableLine = new QPushButton(tr("Add record"));
+    QPushButton *addTableLine = new QPushButton(trUtf8("Add record"));
     addTableLine->setIcon(addPix);
     connect(addTableLine,SIGNAL(clicked()),this,SLOT(addRecordOfTable()));
 
-    QPushButton *deleteTableLine = new QPushButton(tr("Delete record"));
+    QPushButton *deleteTableLine = new QPushButton(trUtf8("Delete record"));
     QPixmap pixDelete(":/delete.png");
     deleteTableLine->setIcon(pixDelete);
     deleteTableLine->setStyleSheet("QPushButton:hover {color: red}");
@@ -81,7 +81,7 @@ EmployeeCertification::EmployeeCertification(QString id, QWidget *parent, bool o
 
     tableWidget = new QTableWidget(0,5);
 
-    tableWidget->setHorizontalHeaderLabels(QStringList()<<tr("Cipher")<<tr("Protocol Date")<<tr("Protocol Number")<<tr("Test task"));
+    tableWidget->setHorizontalHeaderLabels(QStringList()<<trUtf8("Cipher")<<trUtf8("Protocol Date")<<trUtf8("Protocol Number")<<trUtf8("Test task"));
     QHeaderView *head = tableWidget->horizontalHeader();
     tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -111,7 +111,7 @@ EmployeeCertification::EmployeeCertification(QString id, QWidget *parent, bool o
             queryTable.bindValue(":id",indexTemp);
             queryTable.exec();
             if(!queryTable.isActive()){
-                QMessageBox::warning(this,QObject::tr("EmpCert Table, SELECT Table ERROR!"),queryTable.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("EmpCert Table, SELECT Table ERROR!"),queryTable.lastError().text());
             }
             int rowCount = 0;
             while(queryTable.next()){
@@ -121,7 +121,7 @@ EmployeeCertification::EmployeeCertification(QString id, QWidget *parent, bool o
                 queryName.bindValue(":id",empcertdateId);
                 queryName.exec();
                 if(!queryName.isActive()){
-                    QMessageBox::warning(this,QObject::tr("EmpCert Table, SELECT Testtask ERROR!"),queryName.lastError().text());
+                    QMessageBox::warning(this,QObject::trUtf8("EmpCert Table, SELECT Testtask ERROR!"),queryName.lastError().text());
                 }
                 while(queryName.next()){
                     QSqlQuery queryId;
@@ -190,10 +190,10 @@ EmployeeCertification::EmployeeCertification(QString id, QWidget *parent, bool o
     }
     mainLayout->addWidget(tableWidget,3,0,1,5);
     if(!onlyForRead){
-        QPushButton *saveButton = new QPushButton(tr("Save"));
+        QPushButton *saveButton = new QPushButton(trUtf8("Save"));
         connect(saveButton,SIGNAL(clicked()),this,SLOT(saveRecord()));
 
-        QPushButton *cancelButton = new QPushButton(tr("Cancel"));
+        QPushButton *cancelButton = new QPushButton(trUtf8("Cancel"));
         cancelButton->setStyleSheet("QPushButton:hover {color: red}");
         connect(cancelButton,SIGNAL(clicked()),this,SLOT(cancelRecord()));
 
@@ -204,7 +204,7 @@ EmployeeCertification::EmployeeCertification(QString id, QWidget *parent, bool o
     }
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Employee Certification"));
+    setWindowTitle(trUtf8("Employee Certification"));
     connect(tableWidget,SIGNAL(cellDoubleClicked(int,int)),this,SLOT(seeRecordOfTable()));
 }
 
@@ -228,7 +228,7 @@ void EmployeeCertification::editRecord()
             queryU.bindValue(":periodicity",editPeriodicity->text().simplified());
             queryU.exec();
             if(!queryU.isActive()){
-                QMessageBox::warning(this,QObject::tr("Employee Cert, UPDATE ERROR!"),queryU.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("Employee Cert, UPDATE ERROR!"),queryU.lastError().text());
             }
         }else{
 
@@ -246,7 +246,7 @@ void EmployeeCertification::editRecord()
             queryInsert.bindValue(":periodicity",editPeriodicity->text().simplified());
             queryInsert.exec();
             if(!queryInsert.isActive()){
-                QMessageBox::warning(this,QObject::tr("Employee Cert, INSERT ERROR!"),queryInsert.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("Employee Cert, INSERT ERROR!"),queryInsert.lastError().text());
             }
 
         }
@@ -298,8 +298,8 @@ void EmployeeCertification::addRecordOfTable()
                     QString pp = queryCi.value(0).toString();
                     if(yy == pp){
                         QString tempString = queryCi.value(0).toString();
-                        tempString += QObject::tr(" is availble!");
-                        QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+                        tempString += QObject::trUtf8(" is availble!");
+                        QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
                         insert = false;
                         break;
                     }
@@ -356,7 +356,7 @@ void EmployeeCertification::addRecordOfTable()
                 queryCT.bindValue(":empcertdateid",empcertdateId);
                 queryCT.exec();
                 if(!queryCT.isActive()){
-                    QMessageBox::warning(this,QObject::tr("Employee Cert Table, INSERT ERROR!"),queryCT.lastError().text());
+                    QMessageBox::warning(this,QObject::trUtf8("Employee Cert Table, INSERT ERROR!"),queryCT.lastError().text());
                 }
             }
         }
@@ -365,8 +365,8 @@ void EmployeeCertification::addRecordOfTable()
 
 void EmployeeCertification::deleteRecordOfTable()
 {
-    int k = QMessageBox::question(this,tr("Attention!!"),
-                              tr("Really delete?"),
+    int k = QMessageBox::question(this,trUtf8("Attention!!"),
+                              trUtf8("Really delete?"),
                                   QMessageBox::Yes|QMessageBox::No,QMessageBox::No);
     if(k == QMessageBox::Yes){
 
@@ -377,7 +377,7 @@ void EmployeeCertification::deleteRecordOfTable()
         queryET.bindValue(":id",tableWidget->item(i,4)->text());
         queryET.exec();
         if(!queryET.isActive()){
-            QMessageBox::warning(this,QObject::tr("Table Value, DELETE ERROR!"),queryET.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Table Value, DELETE ERROR!"),queryET.lastError().text());
             return;
         }
         QSqlQuery queryETD;
@@ -385,7 +385,7 @@ void EmployeeCertification::deleteRecordOfTable()
         queryETD.bindValue(":id",tableWidget->item(i,4)->text());
         queryETD.exec();
         if(!queryETD.isActive()){
-            QMessageBox::warning(this,QObject::tr("empcertdate Value, DELETE ERROR!"),queryETD.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("empcertdate Value, DELETE ERROR!"),queryETD.lastError().text());
             return;
         }
         tableWidget->removeRow(tableWidget->currentRow());
@@ -474,7 +474,7 @@ void EmployeeCertification::cancelRecord()
             queryCD.bindValue(":id",tableWidget->item(row,4)->text());
             queryCD.exec();
             if(!queryCD.isActive()){
-                QMessageBox::warning(this,QObject::tr("EmpCert Table, DELETE ERROR!"),queryCD.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("EmpCert Table, DELETE ERROR!"),queryCD.lastError().text());
             }
         }
         QSqlQuery queryCT;
@@ -482,7 +482,7 @@ void EmployeeCertification::cancelRecord()
         queryCT.bindValue(":id",indexTemp);
         queryCT.exec();
         if(!queryCT.isActive()){
-            QMessageBox::warning(this,QObject::tr("EmpCert Table, DELETE ERROR!"),queryCT.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("EmpCert Table, DELETE ERROR!"),queryCT.lastError().text());
         }
     }
     indexTemp = "";//?????

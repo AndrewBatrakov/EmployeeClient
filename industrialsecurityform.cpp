@@ -5,6 +5,7 @@
 #include "viewlisttable.h"
 #include "laborprotprogform.h"
 #include "fordelete.h"
+#include "initials.h"
 
 IndustrialSecurityForm::IndustrialSecurityForm(QString id, QString idEmp, QWidget *parent, bool onlyForRead) :
     QDialog(parent)
@@ -46,21 +47,21 @@ IndustrialSecurityForm::IndustrialSecurityForm(QString id, QString idEmp, QWidge
     QToolButton *addEmpButton = new QToolButton;
     QPixmap addPix(":/add.png");
     addEmpButton->setIcon(addPix);
-    addEmpButton->setToolTip(tr("Добавить новую запись"));
+    addEmpButton->setToolTip(trUtf8("Добавить новую запись"));
     addEmpButton->setStyleSheet(toolButtonStyle);
     connect(addEmpButton,SIGNAL(clicked()),this,SLOT(addEmpRecord()));
 
     QToolButton *seeEmpButton = new QToolButton;
     QPixmap seePix(":/see.png");
     seeEmpButton->setIcon(seePix);
-    seeEmpButton->setToolTip(tr("Смотреть выбранную запись"));
+    seeEmpButton->setToolTip(trUtf8("Смотреть выбранную запись"));
     seeEmpButton->setStyleSheet(toolButtonStyle);
     connect(seeEmpButton,SIGNAL(clicked()),this,SLOT(seeEmpRecord()));
 
     QToolButton *listEmpButton = new QToolButton;
     QPixmap listPix(":/list.png");
     listEmpButton->setIcon(listPix);
-    listEmpButton->setToolTip(tr("Смотреть список записей"));
+    listEmpButton->setToolTip(trUtf8("Смотреть список записей"));
     listEmpButton->setStyleSheet(toolButtonStyle);
     connect(listEmpButton,SIGNAL(clicked()),this,SLOT(listEmpRecord()));
 
@@ -662,7 +663,7 @@ void IndustrialSecurityForm::print(QPrinter *printer)
     painter.drawLine(200,400,4400,400);
     QRect rect3(200,400,4400,100);
     painter.setFont(QFont("Times New Roman",8,QFont::Normal));
-    painter.drawText(rect3,Qt::AlignHCenter | Qt::AlignTop,trUtf8("(наименование аттестационной комиссии)"));
+    painter.drawText(rect3,Qt::AlignHCenter | Qt::AlignTop,trUtf8("(наименование организации)"));
     QRect rect4(200,800,4400,200);
     QString val = trUtf8("Протокол № ");
     val += editNumber->text();
@@ -687,7 +688,6 @@ void IndustrialSecurityForm::print(QPrinter *printer)
     queryPost.exec();
     queryPost.next();
     val1 += queryPost.value(0).toString();
-    qDebug()<<val1;
     painter.drawText(rect8,Qt::AlignLeft | Qt::AlignVCenter, val1);
     painter.drawLine(1200,1600,4000,1600);
     QRect rect9(200,1600,1000,200);
@@ -721,8 +721,11 @@ void IndustrialSecurityForm::print(QPrinter *printer)
     painter.drawLine(1200,2000,4000,2000);
 
     QRect rect12(200,2000,4600,200);
-    painter.drawText(rect12,Qt::AlignLeft | Qt::AlignVCenter, trUtf8("Проведена проверка знаний руководителей и специалистов"));
+    painter.setFont(QFont("Times New Roman",12,QFont::Normal));
+    painter.drawText(rect12,Qt::AlignLeft | Qt::AlignVCenter, trUtf8("Проведена проверка знаний руководителей и специалистов по"
+                                                                     "промышленной безопасности"));
     QRect rect13(200,2200,4600,200);
+    painter.setFont(QFont("Times New Roman",12,QFont::Bold));
     painter.drawText(rect13,Qt::AlignCenter, query.value(0).toString());
     painter.drawLine(200,2400,4600,2400);
     QRect rect14(200,2400,4600,200);
@@ -822,9 +825,9 @@ void IndustrialSecurityForm::print(QPrinter *printer)
     painter.drawText(sevenCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("сдано\n1"));
     painter.drawRect(sevenCol);
     eightCol.moveTop(newLineHight);
-//    eightCol.setHeight(mHight);
+    eightCol.setHeight(mHight);
 //    painter.drawText(eightCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("сдано\n1"));
-//    painter.drawRect(eightCol);
+    painter.drawRect(eightCol);
 
     newLineHight = oneCol.bottom();
     mHight = oneCol.height();
@@ -916,13 +919,14 @@ void IndustrialSecurityForm::print(QPrinter *printer)
     painter.setFont(QFont("Times New Roman",10,QFont::Normal));
     painter.drawStaticText(500,ww,trUtf8("Председатель комиссии:"));
     painter.drawLine(1350,ww + 85,3500,ww + 85);
-    painter.drawStaticText(3500,ww,trUtf8("С.В.Малиновский"));
+    Initials initials;
+    painter.drawStaticText(3500,ww,initials.getInitials(editEmp1->text()));
     painter.drawStaticText(500,ww + mHight,trUtf8("Член комиссии:"));
     painter.drawLine(1350,ww + 85 + mHight,3500,ww + 85 + mHight);
-    painter.drawStaticText(3500,ww + mHight,trUtf8("Ф.А.Гатауллин"));
+    painter.drawStaticText(3500,ww + mHight,initials.getInitials(editEmp2->text()));
     painter.drawStaticText(500,ww + mHight * 2,trUtf8("Член комиссии:"));
     painter.drawLine(1350,ww + 85 + mHight * 2,3500,ww + 85 + mHight * 2);
-    painter.drawStaticText(3500,ww + mHight * 2,trUtf8("А.А.Батраков"));
+    painter.drawStaticText(3500,ww + mHight * 2,initials.getInitials(editEmp3->text()));
 }
 
 void IndustrialSecurityForm::printUdTable()
@@ -945,11 +949,11 @@ void IndustrialSecurityForm::printUd(QPrinter *printer)
     if(checkFill()){
         QPainter painter(printer);
 
-        QRect rectUd(270,0,1080,100);
+        QRect rectUd(0,0,2160,100);
         painter.setFont(QFont("Times New Roman",7,QFont::Bold));
         QString rr = trUtf8("УДОСТОВЕРЕНИЕ № ");
         rr += editNumber->text();
-        painter.drawText(rectUd,Qt::AlignRight | Qt::AlignVCenter,rr);
+        painter.drawText(rectUd,Qt::AlignCenter,rr);
 
         QRect rectStrA(2430,0,2160,100);
         painter.setFont(QFont("Times New Roman",7,QFont::Normal));
@@ -961,7 +965,7 @@ void IndustrialSecurityForm::printUd(QPrinter *printer)
         QRect rectStrD(270,200,1890,100);
         painter.setFont(QFont("Times New Roman",9,QFont::Bold));
         painter.drawText(rectStrD,Qt::AlignCenter | Qt::TextWordWrap,editEmployee->text());
-        painter.drawLine(270,300,1890,300);
+        painter.drawLine(270,300,2160,300);
 
         QRect rect1(270,300,1890,100);
         painter.setFont(QFont("Times New Roman",5,QFont::Normal));
@@ -971,23 +975,25 @@ void IndustrialSecurityForm::printUd(QPrinter *printer)
         painter.drawText(rect2,Qt::AlignHCenter | Qt::AlignLeft,trUtf8("Ф.И.О."));
         painter.drawLine(2700,400,4860,400);
         QRect rect3(0,400,540,200);
-        painter.drawText(rect3,Qt::AlignLeft | Qt::AlignBottom,trUtf8("Место работы:"));
+        painter.drawText(rect3,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("Место работы:"));
         QRect rect4(540,400,1620,200);
         painter.drawText(rect4,Qt::AlignCenter | Qt::TextWordWrap, editSub->text());
+        painter.drawLine(540,600,2160,600);
 
         QRect rect5(2430,400,540,200);
-        painter.drawText(rect5,Qt::AlignLeft | Qt::AlignBottom, trUtf8("Место работы:"));
+        painter.drawText(rect5,Qt::AlignLeft | Qt::AlignVCenter, trUtf8("Место работы:"));
         painter.drawLine(2970,600,4860,600);
 
-        QRect rect6(0,600,540,100);
-        painter.drawText(rect6,Qt::AlignLeft | Qt::AlignBottom,trUtf8("Должность:"));
+        QRect rect6(0,600,540,200);
+        painter.drawText(rect6,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("Должность:"));
         QRect rect7(540,600,1620,200);
         painter.setFont(QFont("Times New Roman",7,QFont::Normal));
-        painter.drawText(rect7,Qt::AlignCenter | Qt::TextWordWrap, editPost->text());
+        painter.drawText(rect7,Qt::AlignCenter | Qt::AlignVCenter| Qt::TextWordWrap, editPost->text());
+        painter.drawLine(540,800,2160,800);
         QRect rect8(2430,600,540,200);
         painter.setFont(QFont("Times New Roman",9,QFont::Normal));
-        painter.drawText(rect8,Qt::AlignLeft | Qt::AlignBottom, trUtf8("Должность:"));
-        painter.drawLine(2970,700,4860,700);
+        painter.drawText(rect8,Qt::AlignLeft | Qt::AlignVCenter, trUtf8("Должность:"));
+        painter.drawLine(2970,800,4860,800);
 
         QRect rect9(0,800,2160,250);
         painter.setFont(QFont("Times New Roman",7,QFont::Normal));
@@ -1004,8 +1010,8 @@ void IndustrialSecurityForm::printUd(QPrinter *printer)
                                                  "инструктажа на рабочем месте и перечень вопросов "
                                                  "для проверки знаний и инструктажа по безопасным "
                                                  "методам и приемам труда для:"));
-        QRect rect11(0,1050,1350,100);
-        painter.setFont(QFont("Times New Roman",7,QFont::Normal));
+        QRect rect11(0,1000,1350,150);
+        painter.setFont(QFont("Times New Roman",8,QFont::Normal));
         painter.drawText(rect11,Qt::AlignCenter | Qt::TextWordWrap, editProgObuch->text());
         painter.drawLine(0,1150,1350,1150);
         QRect rect12(1350,1050,270,100);

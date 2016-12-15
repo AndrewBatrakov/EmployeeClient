@@ -23,20 +23,20 @@ SizPostForm::SizPostForm(QString id, QWidget *parent, bool onlyForRead) : QDialo
 
     savePushButton = new QPushButton(trUtf8("Записать"));
     connect(savePushButton,SIGNAL(clicked()),this,SLOT(saveRecord()));
-    savePushButton->setToolTip(tr("Save And Close Button"));
+    savePushButton->setToolTip(trUtf8("Save And Close Button"));
 
     cancelPushButton = new QPushButton(trUtf8("Отмена"));
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(cancelRecord()));
-    cancelPushButton->setToolTip(tr("Cancel Button"));
+    cancelPushButton->setToolTip(trUtf8("Cancel Button"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(cancelPushButton,QDialogButtonBox::ActionRole);
     buttonBox->addButton(savePushButton,QDialogButtonBox::ActionRole);
 
     postView = new QTableWidget(0,3);
-    postView->setHorizontalHeaderLabels(QStringList()<<tr("ID")<<tr("postID")<<trUtf8("Профессия по кадрам"));
+    postView->setHorizontalHeaderLabels(QStringList()<<trUtf8("ID")<<trUtf8("postID")<<trUtf8("Профессия по кадрам"));
     postView->hideColumn(0);
     postView->hideColumn(1);
     postView->setColumnWidth(2,300);
@@ -48,7 +48,7 @@ SizPostForm::SizPostForm(QString id, QWidget *parent, bool onlyForRead) : QDialo
     postView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     sizView = new QTableWidget(0,6);
-    sizView->setHorizontalHeaderLabels(QStringList()<<tr("ID")<<tr("postID")<<trUtf8("Наименование СИЗ")<<
+    sizView->setHorizontalHeaderLabels(QStringList()<<trUtf8("ID")<<trUtf8("postID")<<trUtf8("Наименование СИЗ")<<
                                        trUtf8("Характеристика")<<trUtf8("Количество")<<trUtf8("Срок эксп.(мес)"));
     sizView->hideColumn(0);
     sizView->hideColumn(1);
@@ -124,7 +124,7 @@ SizPostForm::SizPostForm(QString id, QWidget *parent, bool onlyForRead) : QDialo
         mainLayout->addWidget(buttonBox,10,1);
         editPostSIZ->selectAll();
     }
-    sizView->setHorizontalHeaderLabels(QStringList()<<tr("ID")<<tr("postID")<<trUtf8("Наименование СИЗ")<<
+    sizView->setHorizontalHeaderLabels(QStringList()<<trUtf8("ID")<<trUtf8("postID")<<trUtf8("Наименование СИЗ")<<
                                        trUtf8("Характеристика")<<trUtf8("Количество")<<trUtf8("Срок эксп.(мес)"));
     setLayout(mainLayout);
     setWindowTitle(trUtf8("Профессия по нормам СИЗ"));
@@ -154,7 +154,7 @@ void SizPostForm::deleteRecord()
     ForDelete forDelete(indexTemp,"postsiz",this);
 
     forDelete.exec();
-    int k = QMessageBox::warning(this,tr("Attention!!!"),tr("Delete item with the replacement for default value?"),
+    int k = QMessageBox::warning(this,trUtf8("Attention!!!"),trUtf8("Delete item with the replacement for default value?"),
                                  QMessageBox::No|QMessageBox::Yes,QMessageBox::No);
     if(k == QMessageBox::Yes){
         forDelete.deleteOnDefault();
@@ -234,7 +234,7 @@ void SizPostForm::editRecord()
         query.bindValue(":postsizname",editPostSIZ->text().simplified());
         query.exec();
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("Post SIZ, UPDATE ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Post SIZ, UPDATE ERROR!"),query.lastError().text());
             return;
         }
         line += "UPDATE postsiz SET postsizname = '";
@@ -256,7 +256,7 @@ void SizPostForm::editRecord()
         queryInsert.bindValue(":postsizname",editPostSIZ->text().simplified());
         queryInsert.exec();
         if(!queryInsert.isActive()){
-            QMessageBox::warning(this,QObject::tr("Post SIZ, INSERT ERROR!"),queryInsert.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Post SIZ, INSERT ERROR!"),queryInsert.lastError().text());
             return;
         }
         line += "INSERT INTO postsiz (postsizid, postsizname) VALUES('";
@@ -334,8 +334,8 @@ void SizPostForm::addRecordOfTablePost()
                     QString pp = query.value(1).toString();
                     if(yy == pp){
                         QString tempString = query.value(1).toString();
-                        tempString += QObject::tr(" is availble!");
-                        QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+                        tempString += QObject::trUtf8(" is availble!");
+                        QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
                         insert = false;
                         break;
                     }
@@ -369,7 +369,7 @@ void SizPostForm::addRecordOfTablePost()
                 queryPSL.bindValue(":postid",query.value(0).toString());
                 queryPSL.exec();
                 if(!queryPSL.isActive()){
-                    QMessageBox::warning(this,QObject::tr("Post SIZ List Table, INSERT ERROR!"),queryPSL.lastError().text());
+                    QMessageBox::warning(this,QObject::trUtf8("Post SIZ List Table, INSERT ERROR!"),queryPSL.lastError().text());
                     return;
                 }
                 line += "INSERT INTO postsizlist (postsizlistid, postsizid, postid) VALUES('";
@@ -394,8 +394,8 @@ void SizPostForm::deleteRecordOfTablePost()
         stream.readLine();
     }
 
-    int k = QMessageBox::question(this,tr("Attention!!"),
-                              tr("Really delete?"),
+    int k = QMessageBox::question(this,trUtf8("Attention!!"),
+                              trUtf8("Really delete?"),
                                   QMessageBox::Yes|QMessageBox::No,QMessageBox::No);
     if(k == QMessageBox::Yes){
         QSqlQuery query;
@@ -410,7 +410,7 @@ void SizPostForm::deleteRecordOfTablePost()
         query.exec();
 
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("Post Siz Table, DELETE ERROR!"),
+            QMessageBox::warning(this,QObject::trUtf8("Post Siz Table, DELETE ERROR!"),
                                  query.lastError().text());
             return;
         }

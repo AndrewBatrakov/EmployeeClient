@@ -1,4 +1,4 @@
-#include "protocollaborprotectionform.h"
+#include "electrobezform.h"
 #include <QtSql>
 #include "numprefix.h"
 #include "kommisiyaform.h"
@@ -7,7 +7,7 @@
 #include "fordelete.h"
 #include "initials.h"
 
-ProtocolLaborprotectionForm::ProtocolLaborprotectionForm(QString id, QString idEmp, QWidget *parent, bool onlyForRead) :
+ElectroBezForm::ElectroBezForm(QString id, QString idEmp, QWidget *parent, bool onlyForRead) :
     QDialog(parent)
 {
     exchangeFile.setFileName("Message.txt");
@@ -303,13 +303,13 @@ ProtocolLaborprotectionForm::ProtocolLaborprotectionForm(QString id, QString idE
     readSettings();
 }
 
-void ProtocolLaborprotectionForm::done(int result)
+void ElectroBezForm::done(int result)
 {
     writeSettings();
     QDialog::done(result);
 }
 
-void ProtocolLaborprotectionForm::deleteRecord()
+void ElectroBezForm::deleteRecord()
 {
     ForDelete forDelete(indexTemp,"laborprotection",this);
     forDelete.exec();
@@ -331,7 +331,7 @@ void ProtocolLaborprotectionForm::deleteRecord()
     stream<<line;
 }
 
-void ProtocolLaborprotectionForm::printTable()
+void ElectroBezForm::printTable()
 {
     if(checkFill()){
         QPrinter printer(QPrinter::HighResolution);
@@ -346,7 +346,7 @@ void ProtocolLaborprotectionForm::printTable()
     }
 }
 
-void ProtocolLaborprotectionForm::editRecord()
+void ElectroBezForm::editRecord()
 {
     QTextStream stream(&exchangeFile);
     QString line;
@@ -468,22 +468,22 @@ void ProtocolLaborprotectionForm::editRecord()
     emit accept();
 }
 
-void ProtocolLaborprotectionForm::addEmpRecord()
+void ElectroBezForm::addEmpRecord()
 {
 
 }
 
-void ProtocolLaborprotectionForm::seeEmpRecord()
+void ElectroBezForm::seeEmpRecord()
 {
 
 }
 
-void ProtocolLaborprotectionForm::listEmpRecord()
+void ElectroBezForm::listEmpRecord()
 {
 
 }
 
-void ProtocolLaborprotectionForm::addProgRecord()
+void ElectroBezForm::addProgRecord()
 {
     LaborProtProgForm orgForm("",this,false);
     orgForm.exec();
@@ -497,7 +497,7 @@ void ProtocolLaborprotectionForm::addProgRecord()
     }
 }
 
-void ProtocolLaborprotectionForm::seeProgRecord()
+void ElectroBezForm::seeProgRecord()
 {
     QSqlQuery query;
     query.prepare("SELECT otprogrammaid FROM otprogramma WHERE otprogrammaname = :name");
@@ -509,7 +509,7 @@ void ProtocolLaborprotectionForm::seeProgRecord()
     }
 }
 
-void ProtocolLaborprotectionForm::listProgRecord()
+void ElectroBezForm::listProgRecord()
 {
     QSqlQuery query;
     query.prepare("SELECT otprogrammaid FROM otprogramma WHERE otprogrammaname = :name)");
@@ -528,7 +528,7 @@ void ProtocolLaborprotectionForm::listProgRecord()
     }
 }
 
-void ProtocolLaborprotectionForm::addKomRecord()
+void ElectroBezForm::addKomRecord()
 {
     KommisiyaForm orgForm("",this,false);
     orgForm.exec();
@@ -542,7 +542,7 @@ void ProtocolLaborprotectionForm::addKomRecord()
     }
 }
 
-void ProtocolLaborprotectionForm::seeKomRecord()
+void ElectroBezForm::seeKomRecord()
 {
     QSqlQuery query;
     query.prepare("SELECT komissiyaid FROM komissiya WHERE emponeid = "
@@ -555,7 +555,7 @@ void ProtocolLaborprotectionForm::seeKomRecord()
     }
 }
 
-void ProtocolLaborprotectionForm::listKomRecord()
+void ElectroBezForm::listKomRecord()
 {
     QSqlQuery query;
     query.prepare("SELECT komissiyaid FROM komissiya WHERE emponeid = "
@@ -581,19 +581,19 @@ void ProtocolLaborprotectionForm::listKomRecord()
     }
 }
 
-void ProtocolLaborprotectionForm::readSettings()
+void ElectroBezForm::readSettings()
 {
     QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
     restoreGeometry(settings.value("ProtocolLaborprotectionForm").toByteArray());
 }
 
-void ProtocolLaborprotectionForm::writeSettings()
+void ElectroBezForm::writeSettings()
 {
     QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
     settings.setValue("ProtocolLaborprotectionForm", saveGeometry());
 }
 
-int ProtocolLaborprotectionForm::printParagraph(QString paragraphString, QPainter *painter, QRect *rect, int spacing)
+int ElectroBezForm::printParagraph(QString paragraphString, QPainter *painter, QRect *rect, int spacing)
 {
     QTextDocument document;
     document.setPlainText(paragraphString);
@@ -619,7 +619,7 @@ int ProtocolLaborprotectionForm::printParagraph(QString paragraphString, QPainte
     return y += painter->fontMetrics().lineSpacing();
 }
 
-bool ProtocolLaborprotectionForm::checkFill()
+bool ElectroBezForm::checkFill()
 {
     bool fill = true;
     if(editProgObuch->text() == ""){
@@ -655,7 +655,7 @@ bool ProtocolLaborprotectionForm::checkFill()
     return fill;
 }
 
-void ProtocolLaborprotectionForm::print(QPrinter *printer)
+void ElectroBezForm::print(QPrinter *printer)
 {
     QPainter painter(printer);
 
@@ -940,7 +940,7 @@ void ProtocolLaborprotectionForm::print(QPrinter *printer)
 
 }
 
-void ProtocolLaborprotectionForm::printUdTable()
+void ElectroBezForm::printUdTable()
 {
     if(checkFill()){
         QPrinter printer(QPrinter::HighResolution);
@@ -955,7 +955,7 @@ void ProtocolLaborprotectionForm::printUdTable()
     }
 }
 
-void ProtocolLaborprotectionForm::printUd(QPrinter *printer)
+void ElectroBezForm::printUd(QPrinter *printer)
 {
     QPainter painter(printer);
 

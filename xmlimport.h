@@ -11,7 +11,7 @@ public:
     XMLImport(QWidget *parent);
 
 public slots:
-    void updateDir(QString);
+    void updateDir();
     void updateBase();
     void traverseAllInformation(const QDomNode &node);
 

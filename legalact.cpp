@@ -11,22 +11,22 @@ LegalAct::LegalAct(QString id, QWidget *parent, bool onlyForRead) :
 {
     indexTemp = id;
 
-    labelName = new QLabel(tr("Name:"));
+    labelName = new QLabel(trUtf8("Name:"));
     editName = new LineEdit;
     editName->setReadOnly(onlyForRead);
     //QRegExp regExp("[\\x0410-\\x044f . , 0-9]{100}");
     //editName->setValidator(new QRegExpValidator(regExp,this));
     labelName->setBuddy(editName);
 
-    savePushButton = new QPushButton(tr("Save"));
+    savePushButton = new QPushButton(trUtf8("Save"));
     connect(savePushButton,SIGNAL(clicked()),this,SLOT(editRecord()));
-    savePushButton->setToolTip(tr("Save And Close Button"));
+    savePushButton->setToolTip(trUtf8("Save And Close Button"));
 
-    cancelPushButton = new QPushButton(tr("Cancel"));
+    cancelPushButton = new QPushButton(trUtf8("Cancel"));
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(accept()));
-    cancelPushButton->setToolTip(tr("Cancel Button"));
+    cancelPushButton->setToolTip(trUtf8("Cancel Button"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(cancelPushButton,QDialogButtonBox::ActionRole);
@@ -41,7 +41,7 @@ LegalAct::LegalAct(QString id, QWidget *parent, bool onlyForRead) :
             editName->setText(query.value(1).toString());
         }
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("Legalacts Update ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Legalacts Update ERROR!"),query.lastError().text());
         }
     }
 
@@ -55,7 +55,7 @@ LegalAct::LegalAct(QString id, QWidget *parent, bool onlyForRead) :
 
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Legal Act"));
+    setWindowTitle(trUtf8("Legal Act"));
     LegalAct::setTabOrder(editName,cancelPushButton);
 }
 
@@ -69,7 +69,7 @@ void LegalAct::editRecord()
         query.bindValue(":id",indexTemp);
         query.exec();
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("Legalacts Update ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Legalacts Update ERROR!"),query.lastError().text());
         }
     }else{
         QSqlQuery query;
@@ -90,12 +90,12 @@ void LegalAct::editRecord()
             query.bindValue(":name",editName->text().simplified());
             query.exec();
             if(!query.isActive()){
-                QMessageBox::warning(this,QObject::tr("Legalacts INSERT ERROR!"),query.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("Legalacts INSERT ERROR!"),query.lastError().text());
             }
         }else{
             QString tempString = editName->text();
-            tempString += QObject::tr(" is availble!");
-            QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+            tempString += QObject::trUtf8(" is availble!");
+            QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
         }
     }
     emit accept();
@@ -111,7 +111,7 @@ void LegalAct::deleteRecord()
     ForDelete forDelete(indexTemp,"legalacts",this);
 
     forDelete.exec();
-    int k = QMessageBox::warning(this,tr("Attention!!!"),tr("Delete item with the replacement for default value?"),
+    int k = QMessageBox::warning(this,trUtf8("Attention!!!"),trUtf8("Delete item with the replacement for default value?"),
                                  QMessageBox::No|QMessageBox::Yes,QMessageBox::No);
     if(k == QMessageBox::Yes){
         forDelete.deleteOnDefault();

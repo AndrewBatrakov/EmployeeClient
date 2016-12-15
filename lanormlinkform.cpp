@@ -16,7 +16,7 @@ LaNormLinkForm::LaNormLinkForm(QString id, QWidget *parent, bool onlyForRead) :
     tableView = new QTableView;
     model->setTable("lanormlinktable");
 
-    labelName = new QLabel(tr("Name:"));
+    labelName = new QLabel(trUtf8("Name:"));
     editName = new LineEdit;
     editName->setReadOnly(onlyForRead);
     labelName->setBuddy(editName);
@@ -28,10 +28,10 @@ LaNormLinkForm::LaNormLinkForm(QString id, QWidget *parent, bool onlyForRead) :
     fpCompleter->setCaseSensitivity(Qt::CaseInsensitive);
     editName->setCompleter(fpCompleter);
 
-    saveButton = new QPushButton(tr("Save"));
+    saveButton = new QPushButton(trUtf8("Save"));
     connect(saveButton,SIGNAL(clicked()),this,SLOT(editRecord()));
 
-    cancelButton = new QPushButton(tr("Cancel"));
+    cancelButton = new QPushButton(trUtf8("Cancel"));
     cancelButton->setDefault(true);
     cancelButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelButton,SIGNAL(clicked()),this,SLOT(accept()));
@@ -40,13 +40,13 @@ LaNormLinkForm::LaNormLinkForm(QString id, QWidget *parent, bool onlyForRead) :
     buttonBox->addButton(cancelButton,QDialogButtonBox::ActionRole);
     buttonBox->addButton(saveButton,QDialogButtonBox::ActionRole);
 
-    QPushButton *addRecordTableB = new QPushButton(tr("Add Record"));
+    QPushButton *addRecordTableB = new QPushButton(trUtf8("Add Record"));
     addRecordTableB->setIcon(QPixmap(":/add.png"));
     connect(addRecordTableB,SIGNAL(clicked()),this,SLOT(addRecordTable()));
-    QPushButton *deleteRecordTableB = new QPushButton(tr("Delete Record"));
+    QPushButton *deleteRecordTableB = new QPushButton(trUtf8("Delete Record"));
     deleteRecordTableB->setIcon(QPixmap(":/delete.png"));
     connect(deleteRecordTableB,SIGNAL(clicked()),this,SLOT(deleteRecordTable()));
-    QPushButton *editRecordTableB = new QPushButton(tr("EditRecordTable"));
+    QPushButton *editRecordTableB = new QPushButton(trUtf8("EditRecordTable"));
     editRecordTableB->setIcon(QPixmap(":/edit.png"));
     //connect(editRecordTableB,SIGNAL(clicked()),this,SLOT(editRecordTable()));
 
@@ -67,7 +67,7 @@ LaNormLinkForm::LaNormLinkForm(QString id, QWidget *parent, bool onlyForRead) :
         model->select();
     }else{
         editName->clear();
-        editName->setText(QObject::tr("Name of Production Factor"));
+        editName->setText(QObject::trUtf8("Name of Production Factor"));
         editName->selectAll();
     }
     QGridLayout *mainLayout = new QGridLayout;
@@ -79,8 +79,8 @@ LaNormLinkForm::LaNormLinkForm(QString id, QWidget *parent, bool onlyForRead) :
         mainLayout->addWidget(buttonBox,3,1);
         editName->selectAll();
     }
-    model->setHeaderData(2,Qt::Horizontal,tr("Number"));
-    model->setHeaderData(3,Qt::Horizontal,tr("Description"));
+    model->setHeaderData(2,Qt::Horizontal,trUtf8("Number"));
+    model->setHeaderData(3,Qt::Horizontal,trUtf8("Description"));
     tableView->setModel(model);
     tableView->setColumnHidden(0,true);
     tableView->setColumnHidden(1,true);
@@ -98,7 +98,7 @@ LaNormLinkForm::LaNormLinkForm(QString id, QWidget *parent, bool onlyForRead) :
     head->setStretchLastSection(true);
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Norm link"));
+    setWindowTitle(trUtf8("Norm link"));
 }
 
 void LaNormLinkForm::editRecord()
@@ -134,8 +134,8 @@ void LaNormLinkForm::editRecord()
             //ind = editName->text();
         }else{
             QString tempString = editName->text();
-            tempString += QObject::tr(" is availble!");
-            QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+            tempString += QObject::trUtf8(" is availble!");
+            QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
         }
     }
     emit accept();
@@ -154,7 +154,7 @@ void LaNormLinkForm::deleteRecord()
         query.exec();
         query.next();
     }else{
-        QMessageBox::warning(this,QObject::tr("Attention"),QObject::tr("You dont may delete default value!"));
+        QMessageBox::warning(this,QObject::trUtf8("Attention"),QObject::trUtf8("You dont may delete default value!"));
     }
 }
 

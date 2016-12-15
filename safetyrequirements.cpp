@@ -11,22 +11,22 @@ SafetyRequirements::SafetyRequirements(QString id, QWidget *parent, bool onlyFor
 {
     indexTemp = id;
 
-    labelName = new QLabel(tr("Name:"));
+    labelName = new QLabel(trUtf8("Name:"));
     editName = new LineEdit;
     editName->setReadOnly(onlyForRead);
     QRegExp regExp("[\\x0410-\\x044f . , 0-9]{100}");
     editName->setValidator(new QRegExpValidator(regExp,this));
     labelName->setBuddy(editName);
 
-    savePushButton = new QPushButton(tr("Save"));
+    savePushButton = new QPushButton(trUtf8("Save"));
     connect(savePushButton,SIGNAL(clicked()),this,SLOT(editRecord()));
-    savePushButton->setToolTip(tr("Save And Close Button"));
+    savePushButton->setToolTip(trUtf8("Save And Close Button"));
 
-    cancelPushButton = new QPushButton(tr("Cancel"));
+    cancelPushButton = new QPushButton(trUtf8("Cancel"));
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(accept()));
-    cancelPushButton->setToolTip(tr("Cancel Button"));
+    cancelPushButton->setToolTip(trUtf8("Cancel Button"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(cancelPushButton,QDialogButtonBox::ActionRole);
@@ -41,7 +41,7 @@ SafetyRequirements::SafetyRequirements(QString id, QWidget *parent, bool onlyFor
             editName->setText(query.value(1).toString());
         }
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("Safetyreq Update ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Safetyreq Update ERROR!"),query.lastError().text());
         }
     }
 
@@ -55,7 +55,7 @@ SafetyRequirements::SafetyRequirements(QString id, QWidget *parent, bool onlyFor
 
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Safetyreq"));
+    setWindowTitle(trUtf8("Safetyreq"));
     SafetyRequirements::setTabOrder(editName,cancelPushButton);
 }
 
@@ -69,7 +69,7 @@ void SafetyRequirements::editRecord()
         query.bindValue(":id",indexTemp);
         query.exec();
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("Safetyreq Update ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Safetyreq Update ERROR!"),query.lastError().text());
         }
     }else{
         QSqlQuery query;
@@ -90,12 +90,12 @@ void SafetyRequirements::editRecord()
             query.bindValue(":name",editName->text().simplified());
             query.exec();
             if(!query.isActive()){
-                QMessageBox::warning(this,QObject::tr("Safetyreq INSERT ERROR!"),query.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("Safetyreq INSERT ERROR!"),query.lastError().text());
             }
         }else{
             QString tempString = editName->text();
-            tempString += QObject::tr(" is availble!");
-            QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+            tempString += QObject::trUtf8(" is availble!");
+            QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
         }
     }
     emit accept();
@@ -111,7 +111,7 @@ void SafetyRequirements::deleteRecord()
     ForDelete forDelete(indexTemp,"safetyreq",this);
 
     forDelete.exec();
-    int k = QMessageBox::warning(this,tr("Attention!!!"),tr("Delete item with the replacement for default value?"),
+    int k = QMessageBox::warning(this,trUtf8("Attention!!!"),trUtf8("Delete item with the replacement for default value?"),
                                  QMessageBox::No|QMessageBox::Yes,QMessageBox::No);
     if(k == QMessageBox::Yes){
         forDelete.deleteOnDefault();

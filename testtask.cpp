@@ -11,28 +11,28 @@ TestTask::TestTask(QString id, QWidget *parent, bool onlyForRead) :
 {
     indexTemp = id;
 
-    labelName = new QLabel(tr("Name:"));
+    labelName = new QLabel(trUtf8("Name:"));
     editName = new LineEdit;
     editName->setReadOnly(onlyForRead);
     //QRegExp regExp("[\\x0410-\\x044f . , 0-9]{100}");
     //editName->setValidator(new QRegExpValidator(regExp,this));
     labelName->setBuddy(editName);
 
-    labelCipher = new QLabel(tr("Cipher:"));
+    labelCipher = new QLabel(trUtf8("Cipher:"));
     editCipher = new LineEdit;
     editCipher->setReadOnly(onlyForRead);
     //editCipher->setValidator(new QRegExpValidator(regExp,this));
     labelCipher->setBuddy(editCipher);
 
-    savePushButton = new QPushButton(tr("Save"));
+    savePushButton = new QPushButton(trUtf8("Save"));
     connect(savePushButton,SIGNAL(clicked()),this,SLOT(editRecord()));
-    savePushButton->setToolTip(tr("Save And Close Button"));
+    savePushButton->setToolTip(trUtf8("Save And Close Button"));
 
-    cancelPushButton = new QPushButton(tr("Cancel"));
+    cancelPushButton = new QPushButton(trUtf8("Cancel"));
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(accept()));
-    cancelPushButton->setToolTip(tr("Cancel Button"));
+    cancelPushButton->setToolTip(trUtf8("Cancel Button"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(cancelPushButton,QDialogButtonBox::ActionRole);
@@ -48,7 +48,7 @@ TestTask::TestTask(QString id, QWidget *parent, bool onlyForRead) :
             editCipher->setText(query.value(1).toString());
         }
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("Testtask Update ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Testtask Update ERROR!"),query.lastError().text());
         }
     }
 
@@ -64,7 +64,7 @@ TestTask::TestTask(QString id, QWidget *parent, bool onlyForRead) :
 
     setLayout(mainLayout);
 
-    setWindowTitle(tr("Test task"));
+    setWindowTitle(trUtf8("Test task"));
     TestTask::setTabOrder(editName,cancelPushButton);
 }
 
@@ -79,7 +79,7 @@ void TestTask::editRecord()
         query.bindValue(":cipher",editCipher->text());
         query.exec();
         if(!query.isActive()){
-            QMessageBox::warning(this,QObject::tr("Test task Update ERROR!"),query.lastError().text());
+            QMessageBox::warning(this,QObject::trUtf8("Test task Update ERROR!"),query.lastError().text());
         }
     }else{
         QSqlQuery query;
@@ -102,12 +102,12 @@ void TestTask::editRecord()
             query.bindValue(":cipher",editCipher->text().simplified());
             query.exec();
             if(!query.isActive()){
-                QMessageBox::warning(this,QObject::tr("Testtask INSERT ERROR!"),query.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("Testtask INSERT ERROR!"),query.lastError().text());
             }
         }else{
             QString tempString = editName->text();
-            tempString += QObject::tr(" is availble!");
-            QMessageBox::warning(this,QObject::tr("Atention!!!"),tempString);
+            tempString += QObject::trUtf8(" is availble!");
+            QMessageBox::warning(this,QObject::trUtf8("Atention!!!"),tempString);
         }
     }
     emit accept();
@@ -123,7 +123,7 @@ void TestTask::deleteRecord()
     ForDelete forDelete(indexTemp,"testtask",this);
 
     forDelete.exec();
-    int k = QMessageBox::warning(this,tr("Attention!!!"),tr("Delete item with the replacement for default value?"),
+    int k = QMessageBox::warning(this,trUtf8("Attention!!!"),trUtf8("Delete item with the replacement for default value?"),
                                  QMessageBox::No|QMessageBox::Yes,QMessageBox::No);
     if(k == QMessageBox::Yes){
         forDelete.deleteOnDefault();

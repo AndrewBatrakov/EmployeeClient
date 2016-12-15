@@ -55,7 +55,7 @@ SubDivisionForm::SubDivisionForm(QString id, QWidget *parent, bool onlyForRead) 
     QToolButton *listButton = new QToolButton;
     QPixmap listPix(":/list.png");
     listButton->setIcon(listPix);
-    listButton->setToolTip(tr("Просмотр списка записей"));
+    listButton->setToolTip(trUtf8("Просмотр списка записей"));
     connect(listButton,SIGNAL(clicked()),this,SLOT(listOrgRecord()));
 
     QHBoxLayout *editOrganizationLayout = new QHBoxLayout;
@@ -95,10 +95,10 @@ SubDivisionForm::SubDivisionForm(QString id, QWidget *parent, bool onlyForRead) 
         editOrganization->setText(query.value(1).toString());
     }else{
         editSubdivision->clear();
-        editSubdivision->setText(QObject::tr("Наименование подразделения"));
+        editSubdivision->setText(QObject::trUtf8("Наименование подразделения"));
         editSubdivision->selectAll();
         editOrganization->clear();
-        editOrganization->setText(QObject::tr("Наименование организации"));
+        editOrganization->setText(QObject::trUtf8("Наименование организации"));
         editOrganization->selectAll();
         newRecord = true;
     }
@@ -136,7 +136,7 @@ void SubDivisionForm::editRecord()
             query.bindValue(":orgname",editOrganization->text());
             query.exec();
             if(!query.isActive()){
-                QMessageBox::warning(this,QObject::tr("DataBase ERROR!"),query.lastError().text());
+                QMessageBox::warning(this,QObject::trUtf8("DataBase ERROR!"),query.lastError().text());
                 return;
             }
 
@@ -193,7 +193,7 @@ void SubDivisionForm::deleteRecord()
     ForDelete forDelete(indexTemp,"subdivision",this);
     //if(forDelete.result() == QDialog::Accepted){
     forDelete.exec();
-    //int k = QMessageBox::warning(this,tr("Attention!!!"),tr("Delete item with the replacement for default value?"),
+    //int k = QMessageBox::warning(this,trUtf8("Attention!!!"),trUtf8("Delete item with the replacement for default value?"),
     //                     QMessageBox::No|QMessageBox::Yes,QMessageBox::No);
     //if(k == QMessageBox::Yes){
     forDelete.deleteOnDefault();
@@ -214,7 +214,7 @@ void SubDivisionForm::deleteRecord()
         line += "\r\n";
         stream<<line;
     }else{
-        QMessageBox::warning(this,QObject::tr("Attention"),QObject::tr("You dont may delete default value!"));
+        QMessageBox::warning(this,QObject::trUtf8("Attention"),QObject::trUtf8("You dont may delete default value!"));
     }
 }
 

@@ -3,21 +3,21 @@
 
 ProgrammSettings::ProgrammSettings(QWidget *parent) : QDialog(parent)
 {
-    nameFont = new QLabel(tr("Font:"));
+    nameFont = new QLabel(trUtf8("Font:"));
     editFont = new QComboBox;
     editFont->addItems(QStringList() << "8" << "9" << "10" << "11" << "12");
     nameFont->setBuddy(editFont);
     connect(editFont,SIGNAL(currentIndexChanged(QString)),this,SLOT(fontSet()));
 
-    savePushButton = new QPushButton(tr("Save"));
+    savePushButton = new QPushButton(trUtf8("Save"));
     connect(savePushButton,SIGNAL(clicked()),this,SLOT(editRecord()));
-    savePushButton->setToolTip(tr("Save And Close Button"));
+    savePushButton->setToolTip(trUtf8("Save And Close Button"));
 
-    cancelPushButton = new QPushButton(tr("Cancel"));
+    cancelPushButton = new QPushButton(trUtf8("Cancel"));
     cancelPushButton->setDefault(true);
     cancelPushButton->setStyleSheet("QPushButton:hover {color: red}");
     connect(cancelPushButton,SIGNAL(clicked()),this,SLOT(accept()));
-    cancelPushButton->setToolTip(tr("Cancel Button"));
+    cancelPushButton->setToolTip(trUtf8("Cancel Button"));
 
     buttonBox = new QDialogButtonBox;
     buttonBox->addButton(cancelPushButton,QDialogButtonBox::ActionRole);
@@ -34,7 +34,7 @@ ProgrammSettings::ProgrammSettings(QWidget *parent) : QDialog(parent)
     setLayout(mainLayout);
 
 
-//    setWindowTitle(tr("Programm Settings"));
+//    setWindowTitle(trUtf8("Programm Settings"));
 //    QFont font("Arial",12,QFont::Bold);
 //    QApplication::setFont(font);
 }
