@@ -110,7 +110,7 @@ MainWindow::MainWindow()
     fileExchange.open(QIODevice::ReadWrite);
 
     QTimer *timer = new QTimer(this);
-    connect(timer,SIGNAL(timeout()),this,SLOT(getProcedure()));
+    connect(timer,SIGNAL(timeout()),this,SLOT(fileToServer()));
     timer->start(300000);
 }
 
@@ -174,6 +174,11 @@ MainWindow::~MainWindow()
     file.setFileName("CE_SQLite.dat");
     file.setPermissions(QFile::ReadOwner | QFile::WriteOwner);
     file.remove();
+    QFile forDel;
+    forDel.setFileName("Message.txt");
+    forDel.setPermissions(QFile::ReadOwner | QFile::WriteOwner);
+    forDel.close();
+    forDel.remove();
 }
 
 void MainWindow::createRightPanel()
@@ -226,8 +231,7 @@ void MainWindow::writeSettings()
     settings.setValue("MainWindow", saveGeometry());
     settings.remove("CurrentUser");
 
-    ExchangeFile ex;
-    ex.toServer();
+    getProcedure();
 }
 
 void MainWindow::createActions()
@@ -1785,11 +1789,14 @@ void MainWindow::putProcedure()
     backUp.BackUpProcedure();
 }
 
-void MainWindow::getProcedure()
+void MainWindow::fileToServer()
 {
-    fileExchange.close();
-    ExchangeFile ex;
-    ex.toServer();
+    getProcedure();
+
+    QFile file;
+
+    file.setFileName("null.txt");
+    file.remove();
 
     Update upDateFile(this);
     upDateFile.iniVersion();
@@ -1798,6 +1805,39 @@ void MainWindow::getProcedure()
     upLoad.exeVersion();
 
     removeFiles();
+}
+
+void MainWindow::getProcedure()
+{
+    fileExchange.close();
+    fileExchange.setFileName("Message.txt");
+    if(fileExchange.size() == 0){
+        fileExchange.remove();
+        return;
+    }else{
+        fileExchange.close();
+    }
+    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
+    QString fileName = settings.value("numprefix").toString();
+    fileName += "_SRV.txt";
+
+    fileExchange.rename(fileName);
+    fileExchange.close();
+
+    PutFile putFile;
+    putFile.putFile(fileName);
+
+    PutFile putFtp1;
+    QString nullFileName = "Null.txt";
+
+    QFile nullFile;
+    nullFile.setFileName(nullFileName);
+    nullFile.open(QIODevice::WriteOnly);
+    QByteArray rr = "22\n10";
+    nullFile.write(rr);
+    nullFile.close();
+    putFtp1.putFile(nullFileName);
+    nullFile.remove();
 }
 
 void MainWindow::vaccumProcedure()

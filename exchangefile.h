@@ -10,11 +10,6 @@ class ExchangeFile : public QObject
 public:
     ExchangeFile();
 
-public slots:
-    void toServer();
-
-private:
-    QFile exFile;
 };
 
 #endif // EXCHANGEFILE_H

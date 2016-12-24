@@ -7,7 +7,14 @@ UpLoadBase::UpLoadBase(QWidget *parent) :
     file.open(QFile::ReadOnly);
     QString styleSheetString = QLatin1String(file.readAll());
     QWidget::setStyleSheet(styleSheetString);
-    setGeometry(0,0,180,500);
+    //setGeometry(0,0,180,500);
+    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
+    QString name = "http://";
+    name += settings.value("FtpForm/Address", "").toString();
+    name += settings.value("FtpForm/Catalog", "").toString();
+    name += "/Base/CE_SQLite.arh";
+
+    url = name;
 }
 
 void UpLoadBase::exeVersion()
@@ -19,20 +26,7 @@ void UpLoadBase::exeVersion()
         QMessageBox::warning(this,trUtf8("Attention!!!"),trUtf8("Don't open file..."));
     }
 
-//    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
-//    QString name = settings.value("FtpForm/Address", "").toString();
-//    name += settings.value("FtpForm/Catalog", "").toString();
-//    name += "/Base/CE_SQLite.arh";
-
-//    url = name;
-//    url.setUserName(settings.value("FtpForm/Login", "").toString());
-//    url.setPassword(settings.value("FtpForm/Password", "").toString());
-//    url.setPort(21);
-
-    url = "http://90.150.87.95/EmployeeClient/Base/CE_SQLite.arh";
-
     replyExe = httpExe.get(QNetworkRequest(url));
-    connect(replyExe,SIGNAL(error(QNetworkReply::NetworkError)),this,SLOT(errorText()));
     connect(replyExe,SIGNAL(finished()),this,SLOT(httpDoneExe()));
     connect(replyExe,SIGNAL(uploadProgress(qint64,qint64)),this,SLOT(updateDataReadProgressExe(qint64,qint64)));
     connect(replyExe,SIGNAL(downloadProgress(qint64,qint64)),this,SLOT(updateDataReadProgressExe(qint64,qint64)));
@@ -46,17 +40,27 @@ void UpLoadBase::exeVersion()
 
 void UpLoadBase::httpDoneExe()
 {
-    if (fileHttpExe){
-        fileHttpExe->write(replyExe->readAll());
+    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
+
+    if(replyExe->isOpen()){
+        if (fileHttpExe){
+            fileHttpExe->write(replyExe->readAll());
+            fileHttpExe->close();
+            uncompressFile();
+            settings.setValue("OUT","false");
+        }
+    }else{
+        QMessageBox::warning(this,trUtf8("Внимание!"),trUtf8("Проверьте соединение с интернетом!"));
+        closeConnection();
+        settings.setValue("OUT","true");
     }
-    progressDialogExe->hide();
-    fileHttpExe->close();
-    uncompressFile();
     closeConnection();
 }
 
 void UpLoadBase::closeConnection()
 {
+    progressDialogExe->hide();
+    fileHttpExe->close();
     httpExe.destroyed();
 }
 
@@ -80,8 +84,3 @@ void UpLoadBase::uncompressFile()
     unCompressFile.close();
 }
 
-void UpLoadBase::errorText()
-{
-    qDebug()<<replyExe->errorString();
-    closeConnection();
-}

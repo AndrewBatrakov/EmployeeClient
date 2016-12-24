@@ -4,10 +4,6 @@
 #include <QtGui>
 #include "lineedit.h"
 
-class QLabel;
-class LineEdit;
-class QDialogButtonBox;
-
 class Registration : public QDialog
 {
     Q_OBJECT
@@ -17,7 +13,6 @@ public:
 
 private slots:
     bool checkInput();
-    void createBase();
 
 private:
     QLabel *labelUser;
@@ -29,7 +24,6 @@ private:
     LineEdit *editPassword;
     LineEdit *editHost;
     LineEdit *editBase;
-    //QCheckBox *
 
     QPushButton *okPushButton;
     QPushButton *cancelPushButton;

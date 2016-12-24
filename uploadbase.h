@@ -18,7 +18,6 @@ private slots:
     void closeConnection();
     void updateDataReadProgressExe(qint64, qint64);
     void uncompressFile();
-    void errorText();
 
 private:
     QUrl url;

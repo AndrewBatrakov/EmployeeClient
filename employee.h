@@ -5,6 +5,7 @@
 #include "lineedit.h"
 #include "photolabel.h"
 #include <QtSql>
+#include <QtPrintSupport>
 
 class PhotoLabel;
 class LineEdit;
@@ -32,6 +33,8 @@ private slots:
     void overalRecord();
     void createContextMenu();
     void ListPostSizRecord();
+    void printUd();
+    void printUdostov(QPrinter *);
 
     bool checkFill();
 
@@ -151,6 +154,8 @@ private:
     QAction *addAction;
     QAction *editAction;
     QFile exchangeFile;
+
+    QString numberLP, dateLP, programmaLP, numberPTM, datePTM, numberEP, dateEP;
 };
 
 #endif // EMPLOYEEFORM_H

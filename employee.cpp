@@ -15,6 +15,7 @@
 #include "fireprotectionform.h"
 #include "exchangefile.h"
 #include "electrobezform.h"
+//#include "udrabform.h"
 
 EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     QDialog(parent)
@@ -221,7 +222,20 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     connect(cancelButton,SIGNAL(clicked()),this,SLOT(accept()));
     cancelButton->setToolTip(trUtf8("Кнопка Отмена"));
 
+    QPushButton *printUdButton = new QPushButton(trUtf8("Печать Удостоверения"));
+    connect(printUdButton,SIGNAL(clicked(bool)),this,SLOT(printUd()));
+
     buttonBox = new QDialogButtonBox;
+    QSqlQuery queryItr;
+    queryItr.prepare("SELECT "
+                     "(SELECT post.itr FROM post WHERE post.postid = employee.postid), "
+                     "employee.employeename FROM employee WHERE employee.employeeid = :employeeid");
+    queryItr.bindValue(":employeeid",indexTemp);
+    queryItr.exec();
+    queryItr.next();
+    if(!queryItr.value(0).toBool()){
+        buttonBox->addButton(printUdButton,QDialogButtonBox::ActionRole);
+    }
     buttonBox->addButton(cancelButton,QDialogButtonBox::ActionRole);
     buttonBox->addButton(saveButton,QDialogButtonBox::ActionRole);
 
@@ -1812,4 +1826,201 @@ void EmployeeForm::elektroprom()
     openForm.exec();
     electroProtModel->select();
     electroProtWidget->repaint();
+}
+
+void EmployeeForm::printUd()
+{
+    bool printU = true;
+    QSqlQuery queryLP;
+    queryLP.prepare("SELECT laborprotection.laborprotectiondate, laborprotection.laborprotectionid, "
+                    "(SELECT otprogramma.otprogrammaname FROM otprogramma WHERE "
+                    "laborprotection.otprogrammaid = otprogramma.otprogrammaid) "
+                    "FROM laborprotection WHERE employeeid = :employeeid");
+    queryLP.bindValue(":employeeid",indexTemp);
+    queryLP.exec();
+    queryLP.next();
+    if(queryLP.value(0).toDate().addYears(1) < QDate::currentDate()){
+        QMessageBox::warning(this,trUtf8("Внимание!"),trUtf8("Необходим протокол по Охране труда!"));
+        tabWidget->setCurrentWidget(laborProtectionWidget);
+        printU = false;
+    }else{
+        dateLP = queryLP.value(0).toDate().toString("dd.MM.yyyy");
+        numberLP = queryLP.value(1).toString();
+        programmaLP = queryLP.value(2).toString();
+    }
+    QSqlQuery queryEP;
+    queryEP.prepare("SELECT electroprotdate, electroprotid FROM electroprot WHERE employeeid = :employeeid");
+    queryEP.bindValue(":employeeid",indexTemp);
+    queryEP.exec();
+    queryEP.next();
+    if(queryEP.value(0).toDate().addYears(1) < QDate::currentDate()){
+        QMessageBox::warning(this,trUtf8("Внимание!"),trUtf8("Необходим протокол по Электробезопасности!"));
+        tabWidget->setCurrentWidget(electroProtWidget);
+        printU = false;
+    }else{
+        dateEP = queryEP.value(0).toDate().toString("dd.MM.yyyy");
+        numberEP = queryEP.value(1).toString();
+    }
+    QSqlQuery queryPTM;
+    queryPTM.prepare("SELECT ptmdate, ptmid FROM ptm WHERE employeeid = :employeeid");
+    queryPTM.bindValue(":employeeid",indexTemp);
+    queryPTM.exec();
+    queryPTM.next();
+    if(queryPTM.value(0).toDate().addYears(1) < QDate::currentDate()){
+        QMessageBox::warning(this,trUtf8("Внимание!"),trUtf8("Необходим протокол по ПТМ!"));
+        tabWidget->setCurrentWidget(fireProtectionWidget);
+        printU = false;
+    }else{
+        datePTM = queryPTM.value(0).toDate().toString("dd.MM.yyyy");
+        numberPTM = queryPTM.value(1).toString();
+    }
+    if(printU){
+        QPrinter printer(QPrinter::HighResolution);
+        printer.setPageSize(QPrinter::A4);
+        printer.setOrientation(QPrinter::Portrait);
+        printer.setColorMode(QPrinter::GrayScale);
+        printer.setPageMargins(5.0,5.0,5.0,5.0,QPrinter::Millimeter);
+        QPrintPreviewDialog preview(&printer,this);
+        connect(&preview,SIGNAL(paintRequested(QPrinter*)),this,SLOT(printUdostov(QPrinter*)));
+        preview.showMaximized();
+        preview.exec();
+    }
+}
+
+void EmployeeForm::printUdostov(QPrinter *printer)
+{
+    QTextStream stream(&exchangeFile);
+    QString line;
+    while(!stream.atEnd()){
+        stream.readLine();
+    }
+
+    QString numberUd;
+    QDate dateUd;
+    QSqlQuery queryU;
+    queryU.prepare("SELECT * FROM udrab WHERE employeeid = :id");
+    queryU.bindValue(":id",indexTemp);
+    queryU.exec();
+    queryU.next();
+    if(!queryU.isValid()){
+        NumPrefix numPrefix;
+        numberUd = numPrefix.getPrefix("udrab");
+        dateUd = QDate::currentDate();
+        QSqlQuery queryUd;
+        queryUd.prepare("INSERT INTO udrab (udrabid, udrabdate, employeeid) VALUES(:udrabid, :udrabdate, :employeeid)");
+        queryUd.bindValue(":udrabid",numberUd);
+        queryUd.bindValue(":udrabdate",dateUd);
+        queryUd.bindValue(":employeeid",indexTemp);
+        queryUd.exec();
+
+        line += "INSERT INTO udrab (udrabid, udrabdate, employeeid) VALUES('";
+        line += numberUd.toUtf8();
+        line += "', '";
+        line += dateUd.toString("yyyy-MM-dd");
+        line += "', '";
+        line += indexTemp.toUtf8();
+        line += "')";
+        line += "\r\n";
+        stream<<line;
+    }else{
+        numberUd = queryU.value(0).toString();
+        dateUd = queryU.value(2).toDate();
+    }
+
+    QPainter painter(printer);
+    QRect rect25(0,0,2160,100);
+    painter.setFont(QFont("Times New Roman",10,QFont::Bold));
+    QSqlQuery query;
+    query.exec("SELECT * FROM nashafirma");
+    query.next();
+    painter.drawText(rect25,Qt::AlignCenter,query.value(0).toString());
+    painter.drawLine(100,100,2160,100);
+
+    QRect rect27(0,100,2160,100);
+    painter.setFont(QFont("Times New Roman",5,QFont::Normal));
+    painter.drawText(rect27,Qt::AlignHCenter | Qt::AlignTop,trUtf8("(наименование организации)"));
+
+    QRect rectUd(0,150,2160,100);
+    painter.setFont(QFont("Times New Roman",10,QFont::Bold));
+    QString rr = trUtf8("УДОСТОВЕРЕНИЕ № ");
+    rr += numberUd;
+    painter.drawText(rectUd,Qt::AlignCenter,rr);
+
+    QRect rectStrC(0,250,300,100);
+    painter.setFont(QFont("Times New Roman",10,QFont::Normal));
+    painter.drawText(rectStrC,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("Выдано:"));
+    QRect rectStrD(300,250,2160,100);
+    painter.setFont(QFont("Times New Roman",9,QFont::Bold));
+    painter.drawText(rectStrD,Qt::AlignCenter | Qt::TextWordWrap,editFIO->text());
+    painter.drawLine(270,350,2160,350);
+
+    QRect rect1(270,350,1890,100);
+    painter.setFont(QFont("Times New Roman",5,QFont::Normal));
+    painter.drawText(rect1,Qt::AlignTop | Qt::AlignHCenter,trUtf8("(Ф.И.О.)"));
+    QRect rect3(0,450,540,100);
+    painter.setFont(QFont("Times New Roman",10,QFont::Normal));
+    painter.drawText(rect3,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("Место работы:"));
+    QRect rect4(540,450,1620,100);
+    painter.drawText(rect4,Qt::AlignCenter | Qt::TextWordWrap, editSubdivision->text());
+
+    QRect rect6(0,550,540,100);
+    painter.drawText(rect6,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("Должность:"));
+    QRect rect7(540,550,1620,200);
+    painter.setFont(QFont("Times New Roman",8,QFont::Normal));
+    painter.drawText(rect7,Qt::AlignCenter | Qt::TextWordWrap, editPost->text());
+
+    QRect rect9(0,750,2160,250);
+    QString val = trUtf8("Проведена проверка знаний требований охраны труда по программе обучения безопасным "
+                  "методам и приемам труда для профессии: ");
+    val += programmaLP;
+    val += " в объеме 20 ч.";
+    painter.setFont(QFont("Times New Roman",7,QFont::Normal));
+    painter.drawText(rect9,Qt::AlignJustify |
+                     Qt::TextWordWrap,val);
+
+    QRect rect10(0,1000,2160,100);
+    painter.setFont(QFont("Times New Roman",10,QFont::Normal));
+    QString protocolOT = trUtf8("Протокол по ОТ № ");
+    protocolOT += numberLP;
+    protocolOT += trUtf8(" от ");
+    protocolOT += dateLP;
+    protocolOT += trUtf8(" г.");
+    painter.drawText(rect10,Qt::AlignLeft | Qt::AlignVCenter,protocolOT);
+
+    QRect rect11(0,1100,2160,100);
+    painter.drawText(rect11,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("Группа по электробезопасности 2."));
+
+    QRect rect12(0,1200,2160,100);
+    //painter.setFont(QFont("Times New Roman",8,QFont::Normal));
+    QString protocolET = trUtf8("Протокол по ЭБ № ");
+    protocolET += numberEP;
+    protocolET += trUtf8(" от ");
+    protocolET += dateEP;
+    protocolET += trUtf8(" г.");
+    painter.drawText(rect12,Qt::AlignLeft | Qt::AlignVCenter,protocolET);
+
+    QRect rect13(0,1300,2160,100);
+    //painter.setFont(QFont("Times New Roman",8,QFont::Normal));
+    QString protocolPTM = trUtf8("Протокол по ПТМ № ");
+    protocolPTM += numberPTM;
+    protocolPTM += trUtf8(" от ");
+    protocolPTM += datePTM;
+    protocolPTM += trUtf8(" г.");
+    painter.drawText(rect13,Qt::AlignLeft | Qt::AlignVCenter,protocolPTM);
+
+    QRect rect30(0,1400,1100,100);
+    painter.drawText(rect30,Qt::AlignCenter | Qt::AlignHCenter,trUtf8("М.П. Председатель комиссии:"));
+    QRect rect31(1000,1400,1160,100);
+    painter.drawText(rect31,Qt::AlignRight | Qt::AlignVCenter,trUtf8("С.В.Малиновский"));
+    painter.drawLine(810,1500,2160,1500);
+    QRect rect32(810,1500,1350,100);
+    painter.setFont(QFont("Times New Roman",7,QFont::Normal));
+    painter.drawText(rect32,Qt::AlignHCenter | Qt::AlignTop,trUtf8("(Ф.И.О., подпись)"));
+
+    QRect rect36(0,1500,810,100);
+    painter.setFont(QFont("Times New Roman",10,QFont::Normal));
+    painter.drawText(rect36,Qt::AlignCenter,dateUd.toString("dd.MM.yyyy"));
+
+    painter.drawLine(0,1600,4590,1600);
+    painter.drawLine(2160,0,2160,1600);
 }

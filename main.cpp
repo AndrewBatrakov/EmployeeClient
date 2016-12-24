@@ -62,6 +62,12 @@ int main(int argc, char *argv[])
     UpLoadBase upLoad;
     upLoad.exeVersion();
 
+    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
+    if(settings.value("OUT","true").toBool()){
+        settings.remove("OUT");
+        return 0;
+    }
+
     Registration registrationForm;
     if(!registrationForm.exec()){
         return 0;
@@ -69,6 +75,8 @@ int main(int argc, char *argv[])
 
     Update update;
     update.iniVersion();
+
+    settings.remove("OUT");
 
     QSplashScreen *splash = new QSplashScreen;
     splash->setPixmap(QPixmap(":/client.png"));

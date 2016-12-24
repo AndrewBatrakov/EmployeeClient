@@ -20,9 +20,6 @@ public slots:
 private slots:
     void printUdTable();
     void editRecord();
-    void addEmpRecord();
-    void seeEmpRecord();
-    void listEmpRecord();
     void addProgRecord();
     void seeProgRecord();
     void listProgRecord();

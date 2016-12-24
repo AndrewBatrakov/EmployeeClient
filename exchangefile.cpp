@@ -3,11 +3,7 @@
 
 ExchangeFile::ExchangeFile()
 {
-
-}
-
-void ExchangeFile::toServer()
-{
+    QFile exFile;
     exFile.setFileName("Message.txt");
     if(exFile.size() == 0){
         exFile.remove();

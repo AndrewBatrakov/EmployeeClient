@@ -95,8 +95,3 @@ bool Registration::checkInput()
 
     return rr;
 }
-
-void Registration::createBase()
-{
-
-}

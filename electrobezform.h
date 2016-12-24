@@ -20,12 +20,6 @@ public slots:
 private slots:
     void printUdTable();
     void editRecord();
-    void addEmpRecord();
-    void seeEmpRecord();
-    void listEmpRecord();
-    void addProgRecord();
-    void seeProgRecord();
-    void listProgRecord();
     void addKomRecord();
     void seeKomRecord();
     void listKomRecord();
@@ -51,8 +45,7 @@ private:
     LineEdit *editPost;
     QLabel *labelPrichina;
     LineEdit *editPrichina;
-    QLabel *labelProgObuch;
-    LineEdit *editProgObuch;
+
     QLabel *labelEmp1;
     LineEdit *editEmp1;
     QLabel *labelEmp2;

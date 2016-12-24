@@ -17,7 +17,8 @@ void PutFile::putFile(QString nameOfFile)
     filePut->open(QIODevice::ReadOnly);
 
     QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
-    QString name = settings.value("FtpForm/Address", "").toString();
+    QString name = "ftp://";
+    name += settings.value("FtpForm/Address", "").toString();
     name += settings.value("FtpForm/Catalog", "").toString();
     name += "/Change/";
     name += nameOfFile;

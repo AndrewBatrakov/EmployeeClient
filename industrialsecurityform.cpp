@@ -205,6 +205,16 @@ IndustrialSecurityForm::IndustrialSecurityForm(QString id, QString idEmp, QWidge
     connect(printUdButton,SIGNAL(clicked(bool)),this,SLOT(printUdTable()));
 
     buttonBox = new QDialogButtonBox;
+    QSqlQuery queryItr;
+    queryItr.prepare("SELECT "
+                     "(SELECT post.itr FROM post WHERE post.postid = employee.postid), "
+                     "employee.employeename FROM employee WHERE employee.employeeid = :employeeid");
+    queryItr.bindValue(":employeeid",idEmployee);
+    queryItr.exec();
+    queryItr.next();
+    if(queryItr.value(0).toBool()){
+        buttonBox->addButton(printUdButton,QDialogButtonBox::ActionRole);
+    }
     buttonBox->addButton(printUdButton,QDialogButtonBox::ActionRole);
     buttonBox->addButton(printButton,QDialogButtonBox::ActionRole);
     buttonBox->addButton(cancelButton,QDialogButtonBox::ActionRole);

@@ -18,17 +18,13 @@ void Update::iniVersion()
         QMessageBox::warning(this,trUtf8("Внимание!!!"),trUtf8("Не могу открыть файл %1").arg(localFileName));
     }
 
-//    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
-//    QString name = settings.value("FtpForm/Address", "").toString();
-//    name += settings.value("FtpForm/Catalog", "").toString();
-//    name += "/EmployeeClient.ini";
+    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
+    QString name = "http://";
+    name += settings.value("FtpForm/Address", "").toString();
+    name += settings.value("FtpForm/Catalog", "").toString();
+    name += "/EmployeeClient.ini";
 
-//    url = name;
-//    url.setUserName(settings.value("FtpForm/Login", "").toString());
-//    url.setPassword(settings.value("FtpForm/Password", "").toString());
-//    url.setPort(21);
-    url = "http://90.150.87.95/EmployeeClient/EmployeeClient.ini";
-
+    url = name;
 
     replyIni = httpIni.get(QNetworkRequest(url));
     connect(replyIni,SIGNAL(finished()),this,SLOT(httpDoneIni()));
@@ -88,16 +84,13 @@ void Update::exeVersion()
     fileR.rename("./EmployeeClient.exe.bak");
     fileR.close();
 
-//    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
-//    QString name = settings.value("FtpForm/Address", "").toString();
-//    name += settings.value("FtpForm/Catalog", "").toString();
-//    name += "/EmployeeClient";
+    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
+    QString name = "http://";
+    name += settings.value("FtpForm/Address", "").toString();
+    name += settings.value("FtpForm/Catalog", "").toString();
+    name += "/EmployeeClient";
 
-//    url = name;
-//    url.setUserName(settings.value("FtpForm/Login", "").toString());
-//    url.setPassword(settings.value("FtpForm/Password", "").toString());
-//    url.setPort(21);
-    url = "http://90.150.87.95/EmployeeClient/EmployeeClient";
+    url = name;
 
     replyExe = httpExe.get(QNetworkRequest(url));
     connect(replyExe,SIGNAL(finished()),this,SLOT(httpDoneExe()));
@@ -111,35 +104,6 @@ void Update::exeVersion()
 
 void Update::tranceVersion()
 {
-//    progressDialogTrance = new QProgressDialog(this);
-//    QString localFileName1 = "./EmployeeClient_ru.qm";
-//    if(localFileName1.isEmpty())
-//        localFileName1 = "null.out";
-//    fileHttpTrance = new QFile(localFileName1);
-//    if(!fileHttpTrance->open(QIODevice::WriteOnly)){
-
-//    }
-
-//    QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
-//    QString name = settings.value("FtpForm/Address", "").toString();
-//    name += settings.value("FtpForm/Catalog", "").toString();
-//    name += "/EmployeeClient_ru.qm";
-
-//    url = name;
-//    url.setUserName(settings.value("FtpForm/Login", "").toString());
-//    url.setPassword(settings.value("FtpForm/Password", "").toString());
-//    url.setPort(21);
-//    url = "http://90.150.87.95/EmployeeClient/Base/CE_SQLite.arh";
-    
-//    replyTrance = httpTrance.get(QNetworkRequest(url));
-//    connect(replyTrance,SIGNAL(finished()),this,SLOT(httpDoneTrance()));
-//    connect(replyTrance,SIGNAL(readyRead()),this,SLOT(httpReadyReadTrance()));
-//    connect(replyTrance,SIGNAL(uploadProgress(qint64,qint64)),this,SLOT(updateDataReadProgressTrance(qint64,qint64)));
-//    connect(replyTrance,SIGNAL(downloadProgress(qint64,qint64)),this,SLOT(updateDataReadProgressTrance(qint64,qint64)));
-
-//    progressDialogTrance->setLabelText(trUtf8("Загрузка %1 ...").arg(localFileName1));
-//    progressDialogTrance->setEnabled(false);
-//    progressDialogTrance->exec();
     closeConnection();
     restartProgramm();
 }
@@ -178,8 +142,9 @@ void Update::closeConnection()
 
 void Update::restartProgramm()
 {
-    QProcess::startDetached("./EmployeeClient.exe");
     qApp->quit();
+    QProcess::startDetached("./EmployeeClient.exe");
+
 }
 
 

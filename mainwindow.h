@@ -79,6 +79,7 @@ private slots:
     void getPhotoProcedure();
     void putProcedure();
     void getProcedure();
+    void fileToServer();
     void vaccumProcedure();
     void importXmlTable();
     void smtpProcedure();

@@ -136,7 +136,16 @@ FireProtectionForm::FireProtectionForm(QString id, QString idEmp, QWidget *paren
     connect(printUdButton,SIGNAL(clicked(bool)),this,SLOT(printUdTable()));
 
     buttonBox = new QDialogButtonBox;
-    buttonBox->addButton(printUdButton,QDialogButtonBox::ActionRole);
+//    QSqlQuery queryItr;
+//    queryItr.prepare("SELECT "
+//                     "(SELECT post.itr FROM post WHERE post.postid = employee.postid), "
+//                     "employee.employeename FROM employee WHERE employee.employeeid = :employeeid");
+//    queryItr.bindValue(":employeeid",idEmployee);
+//    queryItr.exec();
+//    queryItr.next();
+//    if(queryItr.value(0).toBool()){
+        buttonBox->addButton(printUdButton,QDialogButtonBox::ActionRole);
+//    }
     buttonBox->addButton(printButton,QDialogButtonBox::ActionRole);
     buttonBox->addButton(cancelButton,QDialogButtonBox::ActionRole);
     buttonBox->addButton(saveButton,QDialogButtonBox::ActionRole);
@@ -510,45 +519,30 @@ void FireProtectionForm::print(QPrinter *printer)
     QSqlQuery query;
     query.exec("SELECT nashafirmaid FROM nashafirma");
     query.next();
-    QRect rect(0,0,4400,200);
+    QRect rect1(0,0,4600,200);
+    painter.setFont(QFont("Times New Roman",12,QFont::Bold));
+    painter.drawText(rect1,Qt::AlignCenter,trUtf8("АТТЕСТАЦИОННАЯ КОМИССИЯ"));
+    QRect rect2(0,200,4600,200);
+    painter.drawText(rect2,Qt::AlignCenter,query.value(0).toString());
+    painter.drawLine(200,400,4400,400);
+    QRect rect3(200,400,4400,100);
+    painter.setFont(QFont("Times New Roman",8,QFont::Normal));
+    painter.drawText(rect3,Qt::AlignHCenter | Qt::AlignTop,trUtf8("(наименование организации)"));
+    QRect rect4(200,800,4400,200);
     QString val = trUtf8("Протокол № ");
     val += editNumber->text();
     painter.setFont(QFont("Times New Roman",12,QFont::Bold));
-    painter.drawText(rect,Qt::AlignCenter,val);
-
-    QRect rectQ(200,200,4400,200);
+    painter.drawText(rect4,Qt::AlignCenter,val);
+    QRect rect5(200,1000,4400,200);
     painter.setFont(QFont("Times New Roman",12,QFont::Normal));
-    QString stroka = trUtf8("От ");
-    stroka += editDate->date().toString("dd.MM.yyyy");
-    stroka += " г.";
-    painter.drawText(rectQ,Qt::AlignLeft | Qt::AlignVCenter, stroka);
-
-    QRect rect1(0,400,4600,200);
-    painter.setFont(QFont("Times New Roman",12,QFont::Normal));
-    painter.drawText(rect1,Qt::AlignCenter,trUtf8("заседания квалификационной комиссии по проверке "
-                                                  "знаний по пожарной безопасности"));
-    QRect rect2(0,600,4600,200);
-    painter.drawText(rect2,Qt::AlignCenter,trUtf8("в объеме пожарно-технического минимума"));
-    QRect rect3(0,800,4600,200);
-    painter.setFont(QFont("Times New Roman",12,QFont::Bold));
-    painter.drawText(rect3,Qt::AlignCenter,query.value(0).toString());
-    painter.drawLine(200,1000,4400,1000);
-    QRect rect4(200,1000,4400,100);
-    painter.setFont(QFont("Times New Roman",8,QFont::Normal));
-
-    painter.drawText(rect4,Qt::AlignHCenter | Qt::AlignTop,trUtf8("(полное наименование организации)"));
-
-    QRect rect5(200,1100,4400,200);
-    painter.setFont(QFont("Times New Roman",12,QFont::Normal));
-    painter.drawText(rect5,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("В соотвестствии с приказом:"));
-
-    QRect rect6(200,1300,3500,200);
-    painter.drawText(rect6,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("От 01 ноября 2016г. №3 квалификационная комиссия в составе:"));
-    QRect rect7(200,1500,1000,200);
+    painter.drawText(rect5,Qt::AlignLeft | Qt::AlignVCenter, editDate->date().toString("dd.MM.yyyy"));
+    QRect rect6(200,1200,1600,200);
+    painter.drawText(rect6,Qt::AlignLeft | Qt::AlignVCenter, trUtf8("Аттестационная комиссия в составе:"));
+    QRect rect7(200,1400,1000,200);
     painter.setFont(QFont("Times New Roman",12,QFont::Bold));
     painter.drawText(rect7,Qt::AlignLeft | Qt::AlignVCenter, trUtf8("Председателя:"));
-    QRect rect8(1200,1500,3200,200);
-    painter.setFont(QFont("Times New Roman",12,QFont::Normal));
+    QRect rect8(1200,1400,3200,200);
+    painter.setFont(QFont("Times New Roman",10,QFont::Normal));
     QString val1 = editEmp1->text();
     val1 += ", ";
     QSqlQuery queryPost;
@@ -559,12 +553,12 @@ void FireProtectionForm::print(QPrinter *printer)
     queryPost.next();
     val1 += queryPost.value(0).toString();
     painter.drawText(rect8,Qt::AlignLeft | Qt::AlignVCenter, val1);
-    painter.drawLine(1200,1700,4000,1700);
-    QRect rect9(200,1700,1000,200);
+    painter.drawLine(1200,1600,4000,1600);
+    QRect rect9(200,1600,1000,200);
     painter.setFont(QFont("Times New Roman",12,QFont::Bold));
     painter.drawText(rect9,Qt::AlignLeft | Qt::AlignVCenter, trUtf8("Членов комиссии:"));
-    QRect rect10(1200,1700,3400,200);
-    painter.setFont(QFont("Times New Roman",12,QFont::Normal));
+    QRect rect10(1200,1600,3200,200);
+    painter.setFont(QFont("Times New Roman",10,QFont::Normal));
     QString val2 = editEmp2->text();
     val2 += ", ";
     queryPost.clear();
@@ -575,9 +569,9 @@ void FireProtectionForm::print(QPrinter *printer)
     queryPost.next();
     val2 += queryPost.value(0).toString();
     painter.drawText(rect10,Qt::AlignLeft | Qt::AlignVCenter, val2);
-    painter.drawLine(1200,1900,4000,1900);
-    QRect rect11(1200,1900,3400,200);
-    painter.setFont(QFont("Times New Roman",12,QFont::Normal));
+    painter.drawLine(1200,1800,4000,1800);
+    QRect rect11(1200,1800,3200,200);
+    painter.setFont(QFont("Times New Roman",10,QFont::Normal));
     QString val3 = editEmp3->text();
     val3 += ", ";
     queryPost.clear();
@@ -588,9 +582,10 @@ void FireProtectionForm::print(QPrinter *printer)
     queryPost.next();
     val3 += queryPost.value(0).toString();
     painter.drawText(rect11,Qt::AlignLeft | Qt::AlignVCenter, val3);
-    painter.drawLine(1200,2100,4000,2100);
+    painter.drawLine(1200,2000,4000,2000);
 
     QRect rect12(200,2100,4600,400);
+    painter.setFont(QFont("Times New Roman",12,QFont::Normal));
     painter.drawText(rect12,Qt::AlignLeft | Qt::AlignVCenter | Qt::TextWordWrap,
                      trUtf8("Провела проверку знаний по пожарной безопасности в объеме "
                             "пожарно-технического минимума и установила следующие результаты:"));
@@ -605,7 +600,7 @@ void FireProtectionForm::print(QPrinter *printer)
 //    painter.setFont(QFont("Times New Roman",12,QFont::Normal));
 //    painter.drawText(rect15,Qt::AlignLeft | Qt::AlignVCenter, trUtf8("в объеме, соответствующем должностным обязанностям."));
 
-    int shapkaTop = 2600;
+    int shapkaTop = 2300;
     int shapkaBottom = 400;
     QRect oneCol(250,shapkaTop,100,shapkaBottom);
     QRect twoCol(350,shapkaTop,1000,shapkaBottom);
@@ -615,8 +610,6 @@ void FireProtectionForm::print(QPrinter *printer)
     QRect sixCol(3000,shapkaTop,500,shapkaBottom);
     QRect sevenCol(3500,shapkaTop,500,shapkaBottom);
     QRect eightCol(4000,shapkaTop,500,shapkaBottom);
-    QRect bigOneCol(2500,shapkaTop,1600,100);
-    QRect bigTwoCol(2500,shapkaTop,1600,100);
 
     int newLineHight;
     int mHight;
@@ -639,28 +632,24 @@ void FireProtectionForm::print(QPrinter *printer)
     painter.drawRect(threeCol);
     fourCol.moveTop(newLineHight);
     fourCol.setHeight(mHight);
-    painter.drawText(fourCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("Причина проверки знаний"));
+    painter.drawText(fourCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("Наименование подразделения"));
     painter.drawRect(fourCol);
-
-    QRect rect100(2500,3000,2000,100);
-    painter.drawText(rect100,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("Результаты проверки знаний"));
-    painter.drawRect(rect100);
-    QRect rect101(2500,3100,2000,100);
-    painter.drawText(rect101,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("Область аттестации*"));
-    painter.drawRect(rect101);
-    QRect rect102(2500,3200,500,200);
-    painter.drawText(rect102,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("A"));
-    painter.drawRect(rect102);
-    QRect rect103(3000,3200,500,200);
-    painter.drawText(rect103,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("Б"));
-    painter.drawRect(rect103);
-    QRect rect104(3500,3200,500,200);
-    painter.drawText(rect104,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("Г"));
-    painter.drawRect(rect104);
-    QRect rect105(4000,3200,500,200);
-    painter.drawText(rect105,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("Д"));
-    painter.drawRect(rect105);
-
+    fiveCol.moveTop(newLineHight);
+    fiveCol.setHeight(mHight);
+    painter.drawText(fiveCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("Заключение ПДК (сдал, не сдал)"));
+    painter.drawRect(fiveCol);
+    sixCol.moveTop(newLineHight);
+    sixCol.setHeight(mHight);
+    painter.drawText(sixCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("№ выданного удостоверения"));
+    painter.drawRect(sixCol);
+    sevenCol.moveTop(newLineHight);
+    sevenCol.setHeight(mHight);
+    painter.drawText(sevenCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("Причина проверки знаний"));
+    painter.drawRect(sevenCol);
+    eightCol.moveTop(newLineHight);
+    eightCol.setHeight(mHight);
+    painter.drawText(eightCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("Подпись аттестуемого"));
+    painter.drawRect(eightCol);
 
     newLineHight = oneCol.bottom();
     mHight = oneCol.height();
@@ -679,24 +668,24 @@ void FireProtectionForm::print(QPrinter *printer)
     painter.drawRect(threeCol);
     fourCol.moveTop(newLineHight);
     fourCol.setHeight(mHight);
-    painter.drawText(fourCol,Qt::AlignCenter | Qt::TextWordWrap,editPrichina->text());
+    painter.drawText(fourCol,Qt::AlignCenter | Qt::TextWordWrap,editSub->text());
     painter.drawRect(fourCol);
     fiveCol.moveTop(newLineHight);
     fiveCol.setHeight(mHight);
-    painter.drawText(fiveCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("сдано\n1"));
+    painter.drawText(fiveCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("сдал"));
     painter.drawRect(fiveCol);
     sixCol.moveTop(newLineHight);
     sixCol.setHeight(mHight);
-    //painter.drawText(sixCol,Qt::AlignCenter | Qt::TextWordWrap,editProgObuch->text());
+    painter.drawText(sixCol,Qt::AlignCenter | Qt::TextWordWrap,indexTemp);
     painter.drawRect(sixCol);
     sevenCol.moveTop(newLineHight);
     sevenCol.setHeight(mHight);
-    painter.drawText(sevenCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("сдано\n1"));
+    painter.drawText(sevenCol,Qt::AlignCenter | Qt::TextWordWrap,editPrichina->text());
     painter.drawRect(sevenCol);
     eightCol.moveTop(newLineHight);
-//    eightCol.setHeight(mHight);
-//    painter.drawText(eightCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("сдано\n1"));
-//    painter.drawRect(eightCol);
+    eightCol.setHeight(mHight);
+    painter.drawText(eightCol,Qt::AlignCenter | Qt::TextWordWrap,trUtf8("v"));
+    painter.drawRect(eightCol);
 
     newLineHight = oneCol.bottom();
     mHight = oneCol.height();
@@ -796,6 +785,7 @@ void FireProtectionForm::print(QPrinter *printer)
     painter.drawStaticText(500,ww + mHight * 2,trUtf8("Член комиссии:"));
     painter.drawLine(1350,ww + 85 + mHight * 2,3500,ww + 85 + mHight * 2);
     painter.drawStaticText(3500,ww + mHight * 2,initials.getInitials(editEmp3->text()));
+
 }
 
 void FireProtectionForm::printUdTable()
@@ -818,9 +808,9 @@ void FireProtectionForm::printUd(QPrinter *printer)
     if(checkFill()){
         QPainter painter(printer);
 
-        QRect rectUd(270,0,1080,100);
-        painter.setFont(QFont("Times New Roman",7,QFont::Bold));
-        QString rr = trUtf8("УДОСТОВЕРЕНИЕ № ");
+        QRect rectUd(0,0,2160,100);
+        painter.setFont(QFont("Times New Roman",8,QFont::Bold));
+        QString rr = trUtf8("КВАЛИФИКАЦИОННОЕ УДОСТОВЕРЕНИЕ № ");
         rr += editNumber->text();
         painter.drawText(rectUd,Qt::AlignRight | Qt::AlignVCenter,rr);
 
@@ -828,15 +818,16 @@ void FireProtectionForm::printUd(QPrinter *printer)
         painter.setFont(QFont("Times New Roman",7,QFont::Normal));
         painter.drawText(rectStrA,Qt::AlignCenter,trUtf8("СВЕДЕНИЯ"));
         QRect rectStrB(2430,100,2160,100);
-        painter.drawText(rectStrB,Qt::AlignCenter,trUtf8("О ПОВТОРНЫХ ПРОВЕРКАХ ЗНАНИЙ ТРЕБОВАНИЙ ОХРАНЫ ТРУДА"));
+        painter.setFont(QFont("Times New Roman",7,QFont::Bold));
+        painter.drawText(rectStrB,Qt::AlignCenter,trUtf8("О ПОВТОРНЫХ ПРОВЕРКАХ ЗНАНИЙ"));
         QRect rectStrC(0,200,270,100);
-        painter.drawText(rectStrC,Qt::AlignRight | Qt::AlignVCenter,trUtf8("Выдано:"));
-        QRect rectStrD(270,200,1890,100);
-        painter.setFont(QFont("Times New Roman",9,QFont::Bold));
+        painter.setFont(QFont("Times New Roman",8,QFont::Normal));
+        painter.drawText(rectStrC,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("Выдано:"));
+        QRect rectStrD(0,200,2160,100);
         painter.drawText(rectStrD,Qt::AlignCenter | Qt::TextWordWrap,editEmployee->text());
-        painter.drawLine(270,300,1890,300);
+        painter.drawLine(270,300,2160,300);
 
-        QRect rect1(270,300,1890,100);
+        QRect rect1(270,300,2160,100);
         painter.setFont(QFont("Times New Roman",5,QFont::Normal));
         painter.drawText(rect1,Qt::AlignTop | Qt::AlignHCenter,trUtf8("(Ф.И.О.)"));
         QRect rect2(2430,300,270,100);
@@ -844,146 +835,90 @@ void FireProtectionForm::printUd(QPrinter *printer)
         painter.drawText(rect2,Qt::AlignHCenter | Qt::AlignLeft,trUtf8("Ф.И.О."));
         painter.drawLine(2700,400,4860,400);
         QRect rect3(0,400,540,200);
-        painter.drawText(rect3,Qt::AlignLeft | Qt::AlignBottom,trUtf8("Место работы:"));
+        painter.drawText(rect3,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("Место работы:"));
         QRect rect4(540,400,1620,200);
         painter.drawText(rect4,Qt::AlignCenter | Qt::TextWordWrap, editSub->text());
 
         QRect rect5(2430,400,540,200);
-        painter.drawText(rect5,Qt::AlignLeft | Qt::AlignBottom, trUtf8("Место работы:"));
+        painter.drawText(rect5,Qt::AlignLeft | Qt::AlignVCenter, trUtf8("Место работы:"));
         painter.drawLine(2970,600,4860,600);
 
         QRect rect6(0,600,540,100);
-        painter.drawText(rect6,Qt::AlignLeft | Qt::AlignBottom,trUtf8("Должность:"));
+        painter.drawText(rect6,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("Должность:"));
+        painter.drawLine(0,800,2160,800);
         QRect rect7(540,600,1620,200);
         painter.setFont(QFont("Times New Roman",7,QFont::Normal));
         painter.drawText(rect7,Qt::AlignCenter | Qt::TextWordWrap, editPost->text());
         QRect rect8(2430,600,540,200);
         painter.setFont(QFont("Times New Roman",9,QFont::Normal));
-        painter.drawText(rect8,Qt::AlignLeft | Qt::AlignBottom, trUtf8("Должность:"));
-        painter.drawLine(2970,700,4860,700);
+        painter.drawText(rect8,Qt::AlignLeft | Qt::AlignVCenter, trUtf8("Должность:"));
+        painter.drawLine(2970,800,4860,800);
 
         QRect rect9(0,800,2160,250);
         painter.setFont(QFont("Times New Roman",7,QFont::Normal));
         painter.drawText(rect9,Qt::AlignJustify |
-                         Qt::TextWordWrap,trUtf8("Проведена проверка знаний требований охраны "
-                                                 "труда по программе производственного обучения, "
-                                                 "инструктажа на рабочем месте и перечень вопросов "
-                                                 "для проверки знаний и инструктажа по безопасным "
-                                                 "методам и приемам труда для:"));
+                         Qt::TextWordWrap,trUtf8("в том, что он (она) прошел (прошла) комиссионную проверку "
+                                                 "знаний по пожарной безопасности в объеме пожарно- технического "
+                                                 "минимума согласно должностным обязанностям."));
         QRect rect10(2430,800,2160,250);
         painter.drawText(rect10,Qt::AlignJustify |
-                         Qt::TextWordWrap,trUtf8("Проведена проверка знаний требований охраны "
-                                                 "труда по программе производственного обучения, "
-                                                 "инструктажа на рабочем месте и перечень вопросов "
-                                                 "для проверки знаний и инструктажа по безопасным "
-                                                 "методам и приемам труда для:"));
-        QRect rect11(0,1050,1350,100);
-        painter.setFont(QFont("Times New Roman",7,QFont::Normal));
-        //painter.drawText(rect11,Qt::AlignCenter | Qt::TextWordWrap, editProgObuch->text());
-        painter.drawLine(0,1150,1350,1150);
-        QRect rect12(1350,1050,270,100);
-        painter.setFont(QFont("Times New Roman",8,QFont::Normal));
-        painter.drawText(rect12,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("в объёме"));
-        QRect rect13(1600,1050,540,100);
-        painter.drawText(rect13,Qt::AlignCenter,trUtf8("40"));
-        painter.drawLine(1600,1150,2140,1150);
-        QRect rect14(0,1150,1350,100);
-        painter.setFont(QFont("Times New Roman",5,QFont::Normal));
-        painter.drawText(rect14,Qt::AlignTop | Qt::AlignHCenter,trUtf8("(наименование программы обучения по охране труда)"));
-        QRect rect15(1600,1150,540,100);
-        painter.drawText(rect15,Qt::AlignTop | Qt::AlignHCenter,trUtf8("(часов)"));
+                         Qt::TextWordWrap,trUtf8("в том, что он (она) прошел (прошла) комиссионную проверку "
+                                                 "знаний по пожарной безопасности в объеме пожарно- технического "
+                                                 "минимума согласно должностным обязанностям."));
 
-        painter.drawLine(2430,1150,3780,1150);
-        QRect rect16(3780,1050,270,100);
-        painter.setFont(QFont("Times New Roman",8,QFont::Normal));
-        painter.drawText(rect16,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("в объёме"));
-        painter.drawLine(4050,1150,4590,1150);
-        QRect rect17(2430,1150,1350,100);
-        painter.setFont(QFont("Times New Roman",5,QFont::Normal));
-        painter.drawText(rect17,Qt::AlignTop | Qt::AlignHCenter,trUtf8("(наименование программы обучения по охране труда)"));
-        QRect rect18(4050,1150,540,100);
-        painter.drawText(rect18,Qt::AlignTop | Qt::AlignHCenter,trUtf8("(часов)"));
 
-        QRect rect19(0,1250,270,100);
+        QRect rect19(0,1050,350,100);
         painter.setFont(QFont("Times New Roman",8,QFont::Normal));
-        painter.drawText(rect19,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("Протокол:"));
-        QRect rect20(270,1250,540,100);
-        painter.drawText(rect20,Qt::AlignCenter,editNumber->text());
-        painter.drawLine(270,1350,810,1350);
-        QRect rect21(810,1250,1350,100);
-        painter.setFont(QFont("Times New Roman",7,QFont::Normal));
-        painter.drawText(rect21,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("заседания комиссии по проверке знаний требований"));
+        painter.drawText(rect19,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("Протокол № :"));
+        QRect rect20(350,1050,2160,100);
+        QString qq = editNumber->text();
+        qq += " от ";
+        qq += editDate->date().toString("dd.MM.yyyy");
+        painter.drawText(rect20,Qt::AlignCenter,qq);
+        painter.drawLine(300,1150,2160,1150);
 
-        QRect rect22(2430,1250,270,100);
+        QRect rect22(2430,1050,350,100);
         painter.setFont(QFont("Times New Roman",8,QFont::Normal));
         painter.drawText(rect22,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("Протокол:"));
-        painter.drawLine(2700,1350,3240,1350);
-        QRect rect24(3240,1250,1350,100);
-        painter.setFont(QFont("Times New Roman",7,QFont::Normal));
-        painter.drawText(rect24,Qt::AlignLeft | Qt::AlignVCenter,trUtf8("заседания комиссии по проверке знаний требований"));
+        painter.drawLine(2700,1150,3240,1150);
 
-        QRect rect25(0,1350,2160,100);
-        painter.setFont(QFont("Times New Roman",8,QFont::Normal));
-        QString qq = trUtf8("охраны труда работников ");
-        QSqlQuery query;
-        query.exec("SELECT * FROM nashafirma");
-        query.next();
-        qq += query.value(0).toString();
-        painter.drawText(rect25,Qt::AlignCenter,qq);
-
-        QRect rect26(2430,1350,2160,100);
-        painter.setFont(QFont("Times New Roman",8,QFont::Normal));
-        painter.drawText(rect26,Qt::AlignVCenter | Qt::AlignLeft,trUtf8("охраны труда работников "));
-        painter.drawLine(0,1450,2160,1450);
-        painter.drawLine(2430,1450,4590,1450);
-
-        QRect rect27(0,1450,2160,100);
-        painter.setFont(QFont("Times New Roman",5,QFont::Normal));
-        painter.drawText(rect27,Qt::AlignHCenter | Qt::AlignTop,trUtf8("(наименование организации)"));
-
-        QRect rect28(2430,1450,2160,100);
-        painter.drawText(rect28,Qt::AlignHCenter | Qt::AlignTop,trUtf8("(наименование организации)"));
-
-        QRect rect29(0,1550,1080,100);
-        painter.setFont(QFont("Times New Roman",8,QFont::Normal));
-        painter.drawText(rect29,Qt::AlignCenter,editDate->date().toString("dd.MM.yyyy"));
-
-        QRect rect30(0,1650,810,100);
+        QRect rect30(0,1250,810,100);
         painter.drawText(rect30,Qt::AlignCenter | Qt::AlignHCenter,trUtf8("Председатель комиссии:"));
-        QRect rect31(810,1650,1350,100);
-        painter.drawText(rect31,Qt::AlignRight | Qt::AlignVCenter,trUtf8("С.В.Малиновский"));
-        painter.drawLine(810,1750,2160,1750);
-        QRect rect32(810,1750,1350,100);
+        QRect rect31(810,1250,1350,100);
+        Initials initials;
+        painter.drawText(rect31,Qt::AlignRight | Qt::AlignVCenter,initials.getInitials(editEmp1->text()));
+        painter.drawLine(810,1350,2160,1350);
+        QRect rect32(810,1350,1350,100);
         painter.setFont(QFont("Times New Roman",5,QFont::Normal));
         painter.drawText(rect32,Qt::AlignHCenter | Qt::AlignTop,trUtf8("(Ф.И.О., подпись)"));
 
-        QRect rect33(2430,1650,810,100);
+        QRect rect33(2430,1250,810,100);
         painter.setFont(QFont("Times New Roman",8,QFont::Normal));
         painter.drawText(rect33,Qt::AlignCenter | Qt::AlignHCenter,trUtf8("Председатель комиссии:"));
-        painter.drawLine(3240,1750,4590,1750);
-        QRect rect35(3240,1750,1350,100);
+        painter.drawLine(3240,1350,4590,1350);
+        QRect rect35(3240,1350,1350,100);
         painter.setFont(QFont("Times New Roman",5,QFont::Normal));
         painter.drawText(rect35,Qt::AlignHCenter | Qt::AlignTop,trUtf8("(Ф.И.О., подпись)"));
 
-        QRect rect36(0,1750,810,100);
+        QRect rect36(0,1450,810,100);
         painter.setFont(QFont("Times New Roman",8,QFont::Normal));
         painter.drawText(rect36,Qt::AlignCenter,editDate->date().toString("dd.MM.yyyy"));
 
-        QRect rect37(0,1850,810,100);
+        QRect rect37(0,1550,810,100);
         painter.setFont(QFont("Times New Roman",5,QFont::Normal));
         painter.drawText(rect37,Qt::AlignHCenter | Qt::AlignTop,trUtf8("Дата"));
-        painter.drawLine(0,1850,810,1850);
+        painter.drawLine(0,1550,810,1550);
 
-        QRect rect38(1620,1850,270,100);
+        QRect rect38(1620,1550,270,100);
         painter.drawText(rect38,Qt::AlignHCenter | Qt::AlignLeft,trUtf8("М.П."));
 
-        QRect rect39(2430,1850,810,100);
+        QRect rect39(2430,1550,810,100);
         painter.setFont(QFont("Times New Roman",5,QFont::Normal));
         painter.drawText(rect39,Qt::AlignHCenter | Qt::AlignTop,trUtf8("Дата"));
-        painter.drawLine(2430,1850,3540,1850);
+        painter.drawLine(2430,1550,3540,1550);
 
-        QRect rect40(4050,1850,270,100);
+        QRect rect40(4050,1550,270,100);
         painter.drawText(rect40,Qt::AlignHCenter | Qt::AlignLeft,trUtf8("М.П."));
-        painter.drawLine(0,1950,4590,1950);
+        painter.drawLine(0,1650,4590,1650);
     }
 }
