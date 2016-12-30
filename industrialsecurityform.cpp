@@ -283,8 +283,17 @@ IndustrialSecurityForm::IndustrialSecurityForm(QString id, QString idEmp, QWidge
         editNumber->setText(indexTemp);
         newRecord = true;
         editDate->setDate(QDate::currentDate());
-        //        editStartDate->setDate(QDate::currentDate());
-        //        editEndDate->setDate(QDate::currentDate());
+        QSqlQuery queryK;
+        queryK.exec("SELECT "
+                      "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.emponeid), "
+                      "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.emptwoid), "
+                      "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.empthreeid) "
+                      "FROM komissiya WHERE komissiya.komissiyaid = 'ADM000000001'");
+
+        queryK.next();
+        editEmp1->setText(queryK.value(0).toString());
+        editEmp2->setText(queryK.value(1).toString());
+        editEmp3->setText(queryK.value(2).toString());
     }
 
     QGridLayout *mainLayout = new QGridLayout;

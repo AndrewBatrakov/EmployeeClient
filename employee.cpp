@@ -43,6 +43,13 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     editFIO = new LineEdit;
     labelFIO->setBuddy(editFIO);
 
+    QSqlQueryModel *empModel = new QSqlQueryModel;
+    empModel->setQuery("SELECT employeename FROM employee");
+    QCompleter *empCompleter = new QCompleter(empModel);
+    empCompleter->setCompletionMode(QCompleter::PopupCompletion);
+    empCompleter->setCaseSensitivity(Qt::CaseInsensitive);
+    editFIO->setCompleter(empCompleter);
+
     QVBoxLayout *nameLayout = new QVBoxLayout;
     QVBoxLayout *editLayout = new QVBoxLayout;
     nameLayout->addWidget(labelFIO);
@@ -293,41 +300,45 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
 
     //*****************************************************
     //Kadry
-    nameLabelTabNumber = new QLabel(trUtf8("Табельный номер:"));
-    nameEditTabNumber = new LineEdit;
+    labelTabNumber = new QLabel(trUtf8("Табельный номер:"));
+    editTabNumber = new LineEdit;
 
-    nameLabelKarta = new QLabel(trUtf8("Код карты:"));
-    nameEditKarta = new LineEdit;
+    labelKarta = new QLabel(trUtf8("Код карты:"));
+    editKarta = new LineEdit;
 
-    nameLabelExperience = new QLabel(trUtf8("Стаж работы:"));
-    nameEditExperience = new LineEdit;
+    labelExperience = new QLabel(trUtf8("Стаж работы:"));
+    editExperience = new LineEdit;
 
-    nameLabelWithOrganization = new QLabel(trUtf8("Дата приема:"));
-    nameEditWithOrganization = new QDateEdit;
-    nameEditWithOrganization->setCalendarPopup(true);
-    nameEditWithOrganization->setDate(QDate::currentDate());
+    labelWithOrganization = new QLabel(trUtf8("Дата приема:"));
+    editWithOrganization = new QDateEdit;
+    editWithOrganization->setCalendarPopup(true);
+    editWithOrganization->setDate(QDate::currentDate());
 
     nameLabelGrafikRabot = new QLabel(trUtf8("График работы:"));
     nameEditGrafikRabot = new LineEdit;
 
     labelObosobl = new QLabel(trUtf8("Обособленка:"));
     editObosobl = new LineEdit;
+    labelOformlen = new QLabel(trUtf8("Пропуск оформлен:"));
+    editOformlen = new QCheckBox;
 
     QVBoxLayout *nameKadryLayout = new QVBoxLayout;
-    nameKadryLayout->addWidget(nameLabelTabNumber);
-    nameKadryLayout->addWidget(nameLabelKarta);
-    nameKadryLayout->addWidget(nameLabelExperience);
-    nameKadryLayout->addWidget(nameLabelWithOrganization);
+    nameKadryLayout->addWidget(labelTabNumber);
+    nameKadryLayout->addWidget(labelKarta);
+    nameKadryLayout->addWidget(labelExperience);
+    nameKadryLayout->addWidget(labelWithOrganization);
     nameKadryLayout->addWidget(nameLabelGrafikRabot);
     nameKadryLayout->addWidget(labelObosobl);
+    nameKadryLayout->addWidget(labelOformlen);
 
     QVBoxLayout *editKadryLayout = new QVBoxLayout;
-    editKadryLayout->addWidget(nameEditTabNumber);
-    editKadryLayout->addWidget(nameEditKarta);
-    editKadryLayout->addWidget(nameEditExperience);
-    editKadryLayout->addWidget(nameEditWithOrganization);
+    editKadryLayout->addWidget(editTabNumber);
+    editKadryLayout->addWidget(editKarta);
+    editKadryLayout->addWidget(editExperience);
+    editKadryLayout->addWidget(editWithOrganization);
     editKadryLayout->addWidget(nameEditGrafikRabot);
     editKadryLayout->addWidget(editObosobl);
+    editKadryLayout->addWidget(editOformlen);
 
     QHBoxLayout *allKadryLayout = new QHBoxLayout;
     allKadryLayout->addLayout(nameKadryLayout);
@@ -743,7 +754,8 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
                       "emp.passportissuedby, "
                       "emp.passportissueddate, "
                       "(SELECT grafik.grafikrabotname FROM grafikrabot AS grafik WHERE grafik.grafikrabotid = emp.grafikrabot), "
-                      "emp.genderid "
+                      "emp.genderid, "
+                      "oformlenie "
                       "FROM employee AS emp WHERE emp.employeeid = :id");
         query.bindValue(":id",indexTemp);
         query.exec();
@@ -757,18 +769,23 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
         editSubdivision->setText(query.value(2).toString());
         editPost->setText(query.value(3).toString());
         editDateBirthday->setDate(query.value(4).toDate());
-        nameEditTabNumber->setText(query.value(5).toString());
-        nameEditKarta->setText(query.value(6).toString());
-        nameEditWithOrganization->setDate(query.value(7).toDate());
+        editTabNumber->setText(query.value(5).toString());
+        editKarta->setText(query.value(6).toString());
+        editWithOrganization->setDate(query.value(7).toDate());
         editPassportSeriya->setText(query.value(8).toString());
         nameEditPassportNumber->setText(query.value(9).toString());
         nameEditPassportIssuedBy->setText(query.value(10).toString());
         nameEditPassportIssuedDate->setDate(query.value(11).toDate());
         nameEditGrafikRabot->setText(query.value(12).toString());
         editGender->setText(query.value(13).toString());
+        if(query.value(14).toBool()){
+            editOformlen->setChecked(true);
+        }else{
+            editOformlen->setChecked(false);
+        }
 
         QString experience;
-        QDate datePostupleniya = query.value(8).toDate();
+        QDate datePostupleniya = query.value(7).toDate();
         if(!datePostupleniya.isNull()){
             int years;
             int mounth;
@@ -810,24 +827,24 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
             }
             experience += QString::number(mounth);
             if(mounth == 1){
-                experience += trUtf8(" mesyaz, ");
+                experience += trUtf8(" месяц, ");
             }else if(mounth == 2 || mounth == 3 || mounth == 4){
-                experience += trUtf8(" mesyaza, ");
+                experience += trUtf8(" месяца, ");
             }else{
-                experience += trUtf8(" mesyazev, ");
+                experience += trUtf8(" месяцев, ");
             }
             experience += QString::number(days);
-            if(mounth == 1){
-                experience += trUtf8(" den.");
+            if(days == 1){
+                experience += trUtf8(" день.");
             }else if(mounth == 2 || mounth == 3 || mounth == 4){
-                experience += trUtf8(" dnya.");
+                experience += trUtf8(" дня.");
             }else{
-                experience += trUtf8(" dney.");
+                experience += trUtf8(" дней.");
             }
         }else{
             experience = "";
         }
-        nameEditExperience->setText(experience);
+        editExperience->setText(experience);
 
         QSqlQuery queryDriver;
         queryDriver.prepare("SELECT * FROM driver WHERE employeeid =  :id");
@@ -866,37 +883,11 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
         }
 
         sizQuery();
-        //        QSqlQuery queryN;
-        //        queryN.prepare("SELECT (SELECT siznaim.siznaimname FROM siznaim WHERE siznaim.siznaimid = siz.siznaimid) FROM siz WHERE (siz.employeeid = :employeeid)");
-        //        queryN.bindValue(":employeeid",indexTemp);
-        //        //queryBuh.bindValue(":siznaimid",querySIZNorm.value(4).toString());
-        //        queryN.exec();
-        //        qDebug()<<indexTemp;
-        //        int allRow = tableSizWidget->rowCount();
-
-        //        for(int rowC = 0; rowC < tableSizWidget->rowCount(); ++rowC){
-        //            while(queryN.next()){
-        //                QString qq = tableSizWidget->item(rowC,0)->text();
-        //                QString aa = queryN.value(0).toString();
-        //                if(aa != qq){
-        //                    tableSizWidget->insertRow(allRow);
-        //                    QTableWidgetItem *itemSIZName = new QTableWidgetItem;
-        //                    tableSizWidget->setItem(allRow,0,itemSIZName);
-        //                    tableSizWidget->item(allRow,0)->setText(queryN.value(0).toString());
-        //                    tableSizWidget->item(allRow,0)->setTextColor(Qt::darkBlue);
-        //                    ++allRow;
-        //                    //continue;
-        //                }else{
-        //                    qDebug()<<queryN.value(0).toString();
-        //                    continue;
-        //                }
-        //            }
-        //        }
-
     }else{
         editFIO->clear();
         editFIO->setText(QObject::trUtf8("Фамилия Имя Отчество"));
         editFIO->selectAll();
+
         newRecord = true;
         NumPrefix numPref;
         indexTemp = numPref.getPrefix("employee");
@@ -933,13 +924,21 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     if(!onlyForRead){
         mainLayout->addWidget(buttonBox);
     }
-    //mainLayout->addStretch();
     if(!loadPhoto){
         editFoto->setText(trUtf8("Нет Фото"));
     }
     setLayout(mainLayout);
 
     setWindowTitle(trUtf8("Сотрудник"));
+
+    //editFIO->setFocus();
+    setTabOrder(editFIO,editOrganization);
+    setTabOrder(editOrganization,editSubdivision);
+    setTabOrder(editSubdivision,editPost);
+    setTabOrder(editPost,editDateBirthday);
+    setTabOrder(editDateBirthday,editGender);
+    setTabOrder(editGender,saveButton);
+    setTabOrder(saveButton,editFIO);
 
 }
 
@@ -1054,9 +1053,11 @@ void EmployeeForm::editRecord()
                               "passportissuedby, "
                               "passportissueddate, "
                               "grafikrabot, "
-                              "obosoblid"
+                              "obosoblid, "
+                              "oformlenie"
                               ") VALUES("
-                              ":employeeid, :employeename, "
+                              ":employeeid, "
+                              ":employeename, "
                               ":employeenameupper, "
                               ":genderid, "
                               ":orgid, "
@@ -1071,7 +1072,8 @@ void EmployeeForm::editRecord()
                               ":passportissuedby, "
                               ":passportissueddate, "
                               "(SELECT grafikrabotid FROM grafikrabot WHERE grafikrabotname = :grafikrabot), "
-                              "(SELECT obosoblid FROM obosobl WHERE obosoblname = :obosoblid));"
+                              "(SELECT obosoblid FROM obosobl WHERE obosoblname = :obosoblid), "
+                              ":oformlenie);"
                               );
                 query.bindValue(":employeeid",indexTemp);
                 query.bindValue(":employeename",editFIO->text());
@@ -1096,15 +1098,20 @@ void EmployeeForm::editRecord()
                 queryOrg.next();
                 query.bindValue(":postid",queryOrg.value(0).toString());
                 query.bindValue(":datebirthday",editDateBirthday->date());
-                query.bindValue(":tabnumber",nameEditTabNumber->text());
-                query.bindValue(":kodkarty",nameEditKarta->text());
-                query.bindValue(":withorganization",nameEditWithOrganization->date());
+                query.bindValue(":tabnumber",editTabNumber->text());
+                query.bindValue(":kodkarty",editKarta->text());
+                query.bindValue(":withorganization",editWithOrganization->date());
                 query.bindValue(":passportseriya",editPassportSeriya->text());
                 query.bindValue(":passportnumber",nameEditPassportNumber->text());
                 query.bindValue(":passportissuedby",nameEditPassportIssuedBy->text());
                 query.bindValue(":passportissueddate",nameEditPassportIssuedDate->date());
                 query.bindValue(":grafikrabot",nameEditGrafikRabot->text());
                 query.bindValue(":obosoblid",editObosobl->text());
+                if(editOformlen->isChecked()){
+                    query.bindValue(":oformlenie",1);
+                }else{
+                    query.bindValue(":oformlenie",0);
+                }
                 query.exec();
                 if(!query.isActive()){
                     QMessageBox::warning(this,QObject::trUtf8("Ошибка Вставки в Базу данных!"),query.lastError().text());
@@ -1126,7 +1133,8 @@ void EmployeeForm::editRecord()
                         "passportissuedby, "
                         "passportissueddate, "
                         "grafikrabot, "
-                        "obosoblid"
+                        "obosoblid, "
+                        "oformlenie"
                         ") VALUES('";
                 line += indexTemp;
                 line += "', '";
@@ -1159,11 +1167,11 @@ void EmployeeForm::editRecord()
                 line += "', '";
                 line += editDateBirthday->date().toString("yyyy-MM-dd");
                 line += "', '";
-                line += nameEditTabNumber->text().toUtf8();
+                line += editTabNumber->text().toUtf8();
                 line += "', '";
-                line += nameEditKarta->text().toUtf8();
+                line += editKarta->text().toUtf8();
                 line += "', '";
-                line += nameEditWithOrganization->date().toString("yyyy-MM-dd");
+                line += editWithOrganization->date().toString("yyyy-MM-dd");
                 line += "', '";
                 line += editPassportSeriya->text().toUtf8();
                 line += "', '";
@@ -1186,9 +1194,18 @@ void EmployeeForm::editRecord()
                 queryTemp.exec();
                 queryTemp.next();
                 line += queryTemp.value(0).toString().toUtf8();
+                line += "', '";
+                if(editOformlen->isChecked()){
+                    line += "1";
+                }else{
+                    line += "0";
+                }
                 line += "')";
                 line += "\r\n";
                 stream<<line;
+            }else{
+                QMessageBox::warning(this,trUtf8("Внимание!"),trUtf8("Такой сотрудник в базе существует!!!"));
+                return;
             }
         }else{
             QSqlQuery query;
@@ -1206,7 +1223,8 @@ void EmployeeForm::editRecord()
                           "passportissuedby = :passportissuedby, "
                           "passportissueddate = :passportissueddate, "
                           "grafikrabot = (SELECT grafikrabotid FROM grafikrabot WHERE grafikrabotname =:grafikrabot), "
-                          "obosoblid = (SELECT obosoblid FROM obosobl WHERE obosoblname =:obosobl) "
+                          "obosoblid = (SELECT obosoblid FROM obosobl WHERE obosoblname =:obosobl), "
+                          "oformlenie = :oformlenie "
                           "WHERE employeeid = :empid");
             query.bindValue(":empid",indexTemp);
             query.bindValue(":empname",editFIO->text());
@@ -1216,15 +1234,20 @@ void EmployeeForm::editRecord()
             query.bindValue(":subname",editSubdivision->text());
             query.bindValue(":postname",editPost->text());
             query.bindValue(":datebirthday",editDateBirthday->date());
-            query.bindValue(":tabnumber",nameEditTabNumber->text());
-            query.bindValue(":kodkarty",nameEditKarta->text());
-            query.bindValue(":withorganization",nameEditWithOrganization->date());
+            query.bindValue(":tabnumber",editTabNumber->text());
+            query.bindValue(":kodkarty",editKarta->text());
+            query.bindValue(":withorganization",editWithOrganization->date());
             query.bindValue(":passportseriya",editPassportSeriya->text());
             query.bindValue(":passportnumber",nameEditPassportNumber->text());
             query.bindValue(":passportissuedby",nameEditPassportIssuedBy->text());
             query.bindValue(":passportissueddate",nameEditPassportIssuedDate->date());
             query.bindValue(":grafikrabot",nameEditGrafikRabot->text());
             query.bindValue(":obosobl",editObosobl->text());
+            if(editOformlen->isChecked()){
+                query.bindValue(":oformlenie",1);
+            }else{
+                query.bindValue(":oformlenie",0);
+            }
             query.exec();
             if(!query.isActive()){
                 QMessageBox::warning(this,QObject::trUtf8("Ошибка Обновления в Базу данных!"),query.lastError().text());
@@ -1259,11 +1282,11 @@ void EmployeeForm::editRecord()
             line += "', datebirthday = '";
             line += editDateBirthday->date().toString("yyyy-MM-dd");
             line += "', tabnumber = '";
-            line += nameEditTabNumber->text().toUtf8();
+            line += editTabNumber->text().toUtf8();
             line += "', kodkarty = '";
-            line += nameEditKarta->text().toUtf8();
+            line += editKarta->text().toUtf8();
             line += "', withorganization = '";
-            line += nameEditWithOrganization->date().toString("yyyy-MM-dd");
+            line += editWithOrganization->date().toString("yyyy-MM-dd");
             line += "', passportseriya = '";
             line += editPassportSeriya->text().toUtf8();
             line += "', passportnumber = '";
@@ -1286,7 +1309,12 @@ void EmployeeForm::editRecord()
             queryTemp.exec();
             queryTemp.next();
             line += queryTemp.value(0).toString().toUtf8();
-            line += "' WHERE employeeid = '";
+            if(editOformlen->isChecked()){
+                line += "', oformlenie = '1' ";
+            }else{
+                line += "', oformlenie = '0' ";
+            }
+            line += " WHERE employeeid = '";
             line += indexTemp;
             line += "'";
             line += "\r\n";

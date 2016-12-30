@@ -136,16 +136,16 @@ FireProtectionForm::FireProtectionForm(QString id, QString idEmp, QWidget *paren
     connect(printUdButton,SIGNAL(clicked(bool)),this,SLOT(printUdTable()));
 
     buttonBox = new QDialogButtonBox;
-//    QSqlQuery queryItr;
-//    queryItr.prepare("SELECT "
-//                     "(SELECT post.itr FROM post WHERE post.postid = employee.postid), "
-//                     "employee.employeename FROM employee WHERE employee.employeeid = :employeeid");
-//    queryItr.bindValue(":employeeid",idEmployee);
-//    queryItr.exec();
-//    queryItr.next();
-//    if(queryItr.value(0).toBool()){
+    QSqlQuery queryItr;
+    queryItr.prepare("SELECT "
+                     "(SELECT post.itr FROM post WHERE post.postid = employee.postid), "
+                     "employee.employeename FROM employee WHERE employee.employeeid = :employeeid");
+    queryItr.bindValue(":employeeid",idEmployee);
+    queryItr.exec();
+    queryItr.next();
+    if(queryItr.value(0).toBool()){
         buttonBox->addButton(printUdButton,QDialogButtonBox::ActionRole);
-//    }
+    }
     buttonBox->addButton(printButton,QDialogButtonBox::ActionRole);
     buttonBox->addButton(cancelButton,QDialogButtonBox::ActionRole);
     buttonBox->addButton(saveButton,QDialogButtonBox::ActionRole);
@@ -210,6 +210,17 @@ FireProtectionForm::FireProtectionForm(QString id, QString idEmp, QWidget *paren
         editNumber->setText(indexTemp);
         newRecord = true;
         editDate->setDate(QDate::currentDate());
+        QSqlQuery queryK;
+        queryK.exec("SELECT "
+                      "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.emponeid), "
+                      "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.emptwoid), "
+                      "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.empthreeid) "
+                      "FROM komissiya WHERE komissiya.komissiyaid = 'ADM000000001'");
+
+        queryK.next();
+        editEmp1->setText(queryK.value(0).toString());
+        editEmp2->setText(queryK.value(1).toString());
+        editEmp3->setText(queryK.value(2).toString());
     }
 
     QGridLayout *mainLayout = new QGridLayout;

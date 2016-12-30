@@ -141,10 +141,32 @@ ProtocolLaborprotectionForm::ProtocolLaborprotectionForm(QString id, QString idE
     komCompleter->setCaseSensitivity(Qt::CaseInsensitive);
     editEmp1->setCompleter(komCompleter);
 
+    QToolButton *addKomButton = new QToolButton;
+    addKomButton->setIcon(addPix);
+    addKomButton->setToolTip(trUtf8("Добавить новую запись"));
+    addKomButton->setStyleSheet(toolButtonStyle);
+    connect(addKomButton,SIGNAL(clicked()),this,SLOT(addKomRecord()));
+
+    QToolButton *seeKomButton = new QToolButton;
+    seeKomButton->setIcon(seePix);
+    seeKomButton->setToolTip(trUtf8("Смотреть выбранную запись"));
+    seeKomButton->setStyleSheet(toolButtonStyle);
+    connect(seeKomButton,SIGNAL(clicked()),this,SLOT(seeKomRecord()));
+
+    QToolButton *listKomButton = new QToolButton;
+    listKomButton->setIcon(listPix);
+    listKomButton->setToolTip(trUtf8("Смотреть список записей"));
+    listKomButton->setStyleSheet(toolButtonStyle);
+    connect(listKomButton,SIGNAL(clicked()),this,SLOT(listKomRecord()));
+
     QHBoxLayout *komLayout = new QHBoxLayout;
     komLayout->addWidget(labelEmp1);
     komLayout->addWidget(editEmp1);
-
+    if(!onlyForRead){
+        komLayout->addWidget(addKomButton);
+        komLayout->addWidget(seeKomButton);
+        komLayout->addWidget(listKomButton);
+    }
     labelEmp2 = new QLabel(trUtf8("Член комиссии:"));
     editEmp2 = new LineEdit;
     QHBoxLayout *kom2Layout = new QHBoxLayout;
@@ -261,8 +283,17 @@ ProtocolLaborprotectionForm::ProtocolLaborprotectionForm(QString id, QString idE
         editNumber->setText(indexTemp);
         newRecord = true;
         editDate->setDate(QDate::currentDate());
-        //        editStartDate->setDate(QDate::currentDate());
-        //        editEndDate->setDate(QDate::currentDate());
+        QSqlQuery queryK;
+        queryK.exec("SELECT "
+                      "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.emponeid), "
+                      "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.emptwoid), "
+                      "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.empthreeid) "
+                      "FROM komissiya WHERE komissiya.komissiyaid = 'ADM000000001'");
+
+        queryK.next();
+        editEmp1->setText(queryK.value(0).toString());
+        editEmp2->setText(queryK.value(1).toString());
+        editEmp3->setText(queryK.value(2).toString());
     }
 
     QGridLayout *mainLayout = new QGridLayout;
@@ -710,7 +741,7 @@ void ProtocolLaborprotectionForm::print(QPrinter *printer)
                                                                      "работников по программе производственного обучения, "
                                                                      "инструктажа на рабочем месте и перечень вопросов для "
                                                                      "проверки знаний и инструктажа по безопасным методам и "
-                                                                     "приемам труда"));
+                                                                     "приемам труда для:"));
     QRect rect13(200,2350,4600,200);
     painter.setFont(QFont("Times New Roman",12,QFont::Bold));
     painter.drawText(rect13,Qt::AlignCenter, editProgObuch->text());

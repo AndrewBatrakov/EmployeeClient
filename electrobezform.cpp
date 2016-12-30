@@ -171,10 +171,11 @@ ElectroBezForm::ElectroBezForm(QString id, QString idEmp, QWidget *parent, bool 
                         "komid, "
                         "(SELECT prichinaobuch.prichinaobuchname FROM prichinaobuch WHERE "
                         "prichinaobuch.prichinaobuchid = electroprot.prichinaid) "
-                        "FROM electroprot WHERE electroprotid = :id");
-        queryLP.bindValue(":id",indexTemp);
+                        "FROM electroprot WHERE employeeid = :id");
+        queryLP.bindValue(":id",idEmployee);
         queryLP.exec();
         queryLP.next();
+        qDebug()<<queryLP.lastError().text();
         QSqlQuery query;
         query.prepare("SELECT "
                       "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.emponeid), "
@@ -197,6 +198,7 @@ ElectroBezForm::ElectroBezForm(QString id, QString idEmp, QWidget *parent, bool 
         editPost->setText(queryS.value(1).toString());
 
         editNumber->setText(indexTemp);
+        qDebug()<<queryLP.value(1);
         editDate->setDate(queryLP.value(1).toDate());
         editEmployee->setText(queryLP.value(0).toString());
         editEmp1->setText(query.value(0).toString());
@@ -221,8 +223,17 @@ ElectroBezForm::ElectroBezForm(QString id, QString idEmp, QWidget *parent, bool 
         editNumber->setText(indexTemp);
         newRecord = true;
         editDate->setDate(QDate::currentDate());
-        //        editStartDate->setDate(QDate::currentDate());
-        //        editEndDate->setDate(QDate::currentDate());
+        QSqlQuery queryK;
+        queryK.exec("SELECT "
+                      "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.emponeid), "
+                      "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.emptwoid), "
+                      "(SELECT employee.employeename FROM employee WHERE employee.employeeid = komissiya.empthreeid) "
+                      "FROM komissiya WHERE komissiya.komissiyaid = 'ADM000000001'");
+
+        queryK.next();
+        editEmp1->setText(queryK.value(0).toString());
+        editEmp2->setText(queryK.value(1).toString());
+        editEmp3->setText(queryK.value(2).toString());
     }
 
     QGridLayout *mainLayout = new QGridLayout;
@@ -308,7 +319,7 @@ void ElectroBezForm::editRecord()
                          ":electroprotudnumber, :electroprotuddate, :komid, :prichinaid)");
         queryDoc.bindValue(":electroprotid",indexTemp);
         queryDoc.bindValue(":employeeid",idEmployee);
-        queryDoc.bindValue(":electroprotndate",editDate->date());
+        queryDoc.bindValue(":electroprotdate",editDate->date());
         queryDoc.bindValue(":electroprotnumber",editNumber->text());
         queryDoc.bindValue(":electroprotudnumber",indexTemp);
         queryDoc.bindValue(":electroprotuddate",editDate->date());

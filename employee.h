@@ -72,18 +72,20 @@ private:
     QLabel *labelDateBirthday;
     QDateEdit *editDateBirthday;
 
-    QLabel *nameLabelTabNumber;
-    LineEdit *nameEditTabNumber;
-    QLabel *nameLabelExperience;
-    LineEdit *nameEditExperience;
-    QLabel *nameLabelWithOrganization;
-    QDateEdit *nameEditWithOrganization;
-    QLabel *nameLabelKarta;
-    LineEdit *nameEditKarta;
-    QLabel *nameLabelEducation;
-    LineEdit *nameEditEducation;
+    QLabel *labelTabNumber;
+    LineEdit *editTabNumber;
+    QLabel *labelExperience;
+    LineEdit *editExperience;
+    QLabel *labelWithOrganization;
+    QDateEdit *editWithOrganization;
+    QLabel *labelKarta;
+    LineEdit *editKarta;
+    QLabel *labelEducation;
+    LineEdit *editEducation;
     QLabel *labelObosobl;
     LineEdit *editObosobl;
+    QLabel *labelOformlen;
+    QCheckBox *editOformlen;
 
     QLabel *nameLabelDriverLicenseSeriya;
     LineEdit *nameEditDriverLicenseSeriya;

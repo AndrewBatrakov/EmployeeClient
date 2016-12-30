@@ -67,6 +67,7 @@
 #include "attestpbpostform.h"
 #include "exchangefile.h"
 #include "update.h"
+#include "coloritemdelegate.h"
 
 MainWindow::MainWindow()
 {
@@ -146,8 +147,10 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
         viewTemplateTable(tm);
     }
     if(event->key() == Qt::Key_F5){
-        templateModel->select();
         tableView->reset();
+        templateModel->select();
+        tableView->repaint();
+        tableView->selectRow(0);
     }
 }
 
@@ -185,6 +188,7 @@ void MainWindow::createRightPanel()
 {
     rightPanel = new QWidget(this);
     tableView = new QTableView(this);
+    tableView->setStyleSheet("QTableView::item {selection-color: black; selection-background-color: rgba(30, 144, 255, 30%);}");
     templateModel = new QSqlRelationalTableModel(this);
     templateModel->setEditStrategy(QSqlRelationalTableModel::OnManualSubmit);
     queryModel = new QSqlQueryModel(this);
@@ -1010,7 +1014,8 @@ void MainWindow::viewTemplateTable(QString tempTable)
                 tableView->setColumnHidden(i,true);
             }
             tableView->setColumnWidth(5,300);
-            tableView->setColumnWidth(6,300);
+            tableView->setColumnWidth(6,300);            
+            tableView->setItemDelegate(new ColorItemDelegate);
         }
 
         tableView->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -1383,11 +1388,13 @@ void MainWindow::editRecordOfTable()
             }
         }
     }
-    MainWindow::updateRightPanel(index);
+    updateRightPanel(index);
 }
 
 void MainWindow::addRecordOfTable()
 {
+    QString idTable;
+    QString valueTemp = templateModel->tableName();
     QSettings settings("AO_Batrakov_Inc.", "EmployeeClient");
     QString userName = settings.value("CurrentUser").toString();
     QSqlQuery query;
@@ -1395,114 +1402,164 @@ void MainWindow::addRecordOfTable()
     query.bindValue(":id",userName);
     query.exec();
     query.next();
-    if(query.value(0).toInt() == 1){
-        QString valueTemp = templateModel->tableName();
+    if(query.value(0).toInt() == 1){     
         if(valueTemp == "organization"){
             OrganizationForm orgForm("",this,false);
             orgForm.exec();
+            idTable = orgForm.returnValue();
         }else if(valueTemp == "subdivision"){
             SubDivisionForm subForm("",this,false);
             subForm.exec();
+            idTable = subForm.returnValue();
         }else if(valueTemp == "post"){
             PostForm postForm("",this,false);
             postForm.exec();
+            idTable = postForm.returnValue();;
         }else if(valueTemp == "employee"){
             EmployeeForm employeeForm("",this,false);
             employeeForm.exec();
+            idTable = employeeForm.returnValue();
         }else if(valueTemp == "contractdoc"){
             ContractForm contractForm("",this,false);
             contractForm.exec();
+            idTable = contractForm.returnValue();
         }else if(valueTemp == "grafikrabot"){
             GrafikRabotForm grafikForm("",this,false);
             grafikForm.exec();
+            idTable = grafikForm.returnValue();
         }else if(valueTemp == "security"){
             Security openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "safetyreq"){
             SafetyRequirements openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "legalacts"){
             LegalAct openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "testtask"){
             TestTask openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "srp"){
             SafetyReqProd openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "venue"){
             Venue openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "trainingsafety"){
             TrainingSafety openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "lanormlink"){
             LaNormLinkForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "laterm"){
             LaTermForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "laclass"){
             LaClassForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "laspecial"){
             LaSpecialForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "empcert"){
             EmployeeCertification openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "laproductionfactor"){
             LaProductionFactor openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "siz"){
             SizForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "har"){
             HarForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "postsiz"){
             SizPostForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "siznaim"){
             SizNaimForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "obosobl"){
             ObosoblForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "prichinaobuch"){
             PrichinaObuchForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "vidatestlul"){
             VidAtestLulForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "typedoc"){
             TypeDocForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "obuchlul"){
             ObuchenieLulForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "score"){
             ScoreForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "nomen"){
             NomenForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "obuchptm"){
             ObucheniePtmForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "obuchvis"){
             ObuchenieVisForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "stagirovka"){
             StagirovkaForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "komissiya"){
             KommisiyaForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }else if(valueTemp == "attestpbpost"){
             AttestPBPostForm openForm("",this,false);
             openForm.exec();
+            idTable = openForm.returnValue();
         }
+
+        QSqlQuery query;
+        QString val1 = "SELECT * FROM ";
+        val1 += valueTemp;
+        val1 += " WHERE ";
+        val1 += valueTemp;
+        val1 += "id = :id";
+        query.prepare(val1);
+
+        query.bindValue(":id",idTable);
+        query.exec();
+        query.next();
+
+        filterTable = query.value(2).toString();
+        setFilter = true;
+        viewTemplateTable(valueTemp);
         QModelIndex modIndex = tableView->currentIndex();
         MainWindow::updateRightPanel(modIndex);
     }else{
@@ -1715,6 +1772,7 @@ void MainWindow::updateRightPanel(QModelIndex inDex)
     while(templateModel->canFetchMore())
         templateModel->fetchMore();
     tableView->setCurrentIndex(inDex);
+    //tableView->set
 }
 
 void MainWindow::createContextMenu()
