@@ -319,7 +319,7 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
 
     labelObosobl = new QLabel(trUtf8("Обособленка:"));
     editObosobl = new LineEdit;
-    labelOformlen = new QLabel(trUtf8("Пропуск оформлен:"));
+    labelOformlen = new QLabel(trUtf8("Пропуск на оформлении:"));
     editOformlen = new QCheckBox;
 
     QVBoxLayout *nameKadryLayout = new QVBoxLayout;
@@ -891,6 +891,7 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
         newRecord = true;
         NumPrefix numPref;
         indexTemp = numPref.getPrefix("employee");
+        editOformlen->setChecked(true);
     }
 
     tabWidget = new QTabWidget;
@@ -938,7 +939,7 @@ EmployeeForm::EmployeeForm(QString id, QWidget *parent, bool onlyForRead) :
     setTabOrder(editPost,editDateBirthday);
     setTabOrder(editDateBirthday,editGender);
     setTabOrder(editGender,saveButton);
-    setTabOrder(saveButton,editFIO);
+    //setTabOrder(saveButton,editFIO);
 
 }
 

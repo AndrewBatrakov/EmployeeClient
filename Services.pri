@@ -23,7 +23,8 @@ HEADERS +=  viewlisttable.h\
             nashafirmaform.h\
             programmsettings.h\
     $$PWD/initials.h \
-    $$PWD/exchangefile.h
+    $$PWD/exchangefile.h \
+    $$PWD/coloritemdelegate.h
 
 SOURCES +=  viewlisttable.cpp\
             databasedirection.cpp\
@@ -42,13 +43,13 @@ SOURCES +=  viewlisttable.cpp\
             boolitemdelegate.cpp\
             bolditemdelegate.cpp \
             uploadbase.cpp \
-            intitemdelegate.cpp \
             dateitemdelegate.cpp \
             putfile.cpp \
             sqlform.cpp \
             nashafirmaform.cpp\
             programmsettings.cpp\
     $$PWD/initials.cpp \
-    $$PWD/exchangefile.cpp
+    $$PWD/exchangefile.cpp \
+    $$PWD/coloritemdelegate.cpp
 
 include(Import.pri)

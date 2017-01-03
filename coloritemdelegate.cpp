@@ -19,9 +19,9 @@ void ColorItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt
 
     bool propusk = model->data(model->index(index.row(), 18)).toBool();
     if(propusk){
-        myOption.palette.setColor(QPalette::Text,Qt::black);
-    }else{
         myOption.palette.setColor(QPalette::Text,Qt::red);
+    }else{
+        myOption.palette.setColor(QPalette::Text,Qt::black);
     }
     drawBackground(painter, myOption, index);
     drawDisplay(painter,myOption,myOption.rect,text);
